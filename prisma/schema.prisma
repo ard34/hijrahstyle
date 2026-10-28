@@ -1,0 +1,353 @@
+// HijrahStyle E-Commerce Database Schema
+// Based on PRD Section 19-20
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─── Users ────────────────────────────────────────────
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  phone        String?
+  passwordHash String   @map("password_hash")
+  role         String   @default("CUSTOMER") // CUSTOMER | ADMIN
+  status       String   @default("ACTIVE") // ACTIVE | INACTIVE | BANNED
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  addresses     Address[]
+  orders        Order[]
+  wishlists     Wishlist[]
+  reviews       Review[]
+  notifications Notification[]
+  conversations Conversation[]
+  cart          Cart?
+
+  @@map("users")
+}
+
+// ─── Addresses ────────────────────────────────────────
+model Address {
+  id            String   @id @default(cuid())
+  userId        String   @map("user_id")
+  recipientName String   @map("recipient_name")
+  phone         String
+  province      String
+  city          String
+  district      String
+  postalCode    String   @map("postal_code")
+  addressDetail String   @map("address_detail")
+  note          String?
+  isDefault     Boolean  @default(false) @map("is_default")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders Order[]
+
+  @@map("addresses")
+}
+
+// ─── Categories ───────────────────────────────────────
+model Category {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  imageUrl    String?  @map("image_url")
+  status      String   @default("ACTIVE") // ACTIVE | INACTIVE
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  products Product[]
+
+  @@map("categories")
+}
+
+// ─── Products ─────────────────────────────────────────
+model Product {
+  id             String   @id @default(cuid())
+  categoryId     String   @map("category_id")
+  name           String
+  slug           String   @unique
+  sku            String   @unique
+  description    String?
+  material       String?
+  price          Float
+  compareAtPrice Float?   @map("compare_at_price")
+  status         String   @default("ACTIVE") // ACTIVE | INACTIVE | DRAFT
+  totalSold      Int      @default(0) @map("total_sold")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  category  Category        @relation(fields: [categoryId], references: [id])
+  images    ProductImage[]
+  variants  ProductVariant[]
+  wishlists Wishlist[]
+  reviews   Review[]
+
+  @@map("products")
+}
+
+// ─── Product Images ───────────────────────────────────
+model ProductImage {
+  id        String @id @default(cuid())
+  productId String @map("product_id")
+  imageUrl  String @map("image_url")
+  sortOrder Int    @default(0) @map("sort_order")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@map("product_images")
+}
+
+// ─── Product Variants ─────────────────────────────────
+model ProductVariant {
+  id            String  @id @default(cuid())
+  productId     String  @map("product_id")
+  sku           String  @unique
+  color         String
+  size          String
+  priceOverride Float?  @map("price_override")
+  stock         Int     @default(0)
+  status        String  @default("ACTIVE") // ACTIVE | INACTIVE
+
+  product    Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+
+  @@map("product_variants")
+}
+
+// ─── Wishlists ────────────────────────────────────────
+model Wishlist {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  productId String   @map("product_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, productId])
+  @@map("wishlists")
+}
+
+// ─── Carts ────────────────────────────────────────────
+model Cart {
+  id        String   @id @default(cuid())
+  userId    String   @unique @map("user_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items CartItem[]
+
+  @@map("carts")
+}
+
+// ─── Cart Items ───────────────────────────────────────
+model CartItem {
+  id               String   @id @default(cuid())
+  cartId           String   @map("cart_id")
+  productVariantId String   @map("product_variant_id")
+  quantity         Int      @default(1)
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  cart           Cart           @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  productVariant ProductVariant @relation(fields: [productVariantId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, productVariantId])
+  @@map("cart_items")
+}
+
+// ─── Orders ───────────────────────────────────────────
+model Order {
+  id             String   @id @default(cuid())
+  orderNumber    String   @unique @map("order_number")
+  userId         String   @map("user_id")
+  addressId      String   @map("address_id")
+  subtotal       Float
+  discountAmount Float    @default(0) @map("discount_amount")
+  shippingAmount Float    @default(0) @map("shipping_amount")
+  totalAmount    Float    @map("total_amount")
+  voucherId      String?  @map("voucher_id")
+  status         String   @default("PENDING_PAYMENT") // PENDING_PAYMENT | PAID | PROCESSING | PACKED | SHIPPED | DELIVERED | COMPLETED | CANCELLED | PAYMENT_FAILED | EXPIRED | REFUNDED
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  user     User        @relation(fields: [userId], references: [id])
+  address  Address     @relation(fields: [addressId], references: [id])
+  voucher  Voucher?    @relation(fields: [voucherId], references: [id])
+  items    OrderItem[]
+  payment  Payment?
+  shipment Shipment?
+
+  @@map("orders")
+}
+
+// ─── Order Items ──────────────────────────────────────
+model OrderItem {
+  id                  String  @id @default(cuid())
+  orderId             String  @map("order_id")
+  productVariantId    String  @map("product_variant_id")
+  productNameSnapshot String  @map("product_name_snapshot")
+  variantSnapshot     String  @map("variant_snapshot")
+  price               Float
+  quantity            Int
+  subtotal            Float
+
+  order          Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productVariant ProductVariant @relation(fields: [productVariantId], references: [id])
+  review         Review?
+
+  @@map("order_items")
+}
+
+// ─── Payments ─────────────────────────────────────────
+model Payment {
+  id                String    @id @default(cuid())
+  orderId           String    @unique @map("order_id")
+  provider          String    @default("manual") // midtrans | xendit | manual
+  providerPaymentId String?   @map("provider_payment_id")
+  paymentMethod     String?   @map("payment_method")
+  amount            Float
+  status            String    @default("pending") // pending | paid | failed | expired | cancelled | refunded
+  paidAt            DateTime? @map("paid_at")
+  expiredAt         DateTime? @map("expired_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  order  Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  events PaymentEvent[]
+
+  @@map("payments")
+}
+
+// ─── Payment Events ───────────────────────────────────
+model PaymentEvent {
+  id                String   @id @default(cuid())
+  paymentId         String   @map("payment_id")
+  eventType         String   @map("event_type")
+  providerReference String?  @map("provider_reference")
+  payload           String?
+  processedAt       DateTime @default(now()) @map("processed_at")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  payment Payment @relation(fields: [paymentId], references: [id], onDelete: Cascade)
+
+  @@map("payment_events")
+}
+
+// ─── Shipments ────────────────────────────────────────
+model Shipment {
+  id                String    @id @default(cuid())
+  orderId           String    @unique @map("order_id")
+  courier           String?
+  service           String?
+  trackingNumber    String?   @map("tracking_number")
+  shippingCost      Float     @default(0) @map("shipping_cost")
+  estimatedDelivery String?   @map("estimated_delivery")
+  shippedAt         DateTime? @map("shipped_at")
+  deliveredAt       DateTime? @map("delivered_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("shipments")
+}
+
+// ─── Vouchers ─────────────────────────────────────────
+model Voucher {
+  id              String    @id @default(cuid())
+  code            String    @unique
+  type            String // PERCENTAGE | FIXED
+  value           Float
+  minimumPurchase Float     @default(0) @map("minimum_purchase")
+  maximumDiscount Float?    @map("maximum_discount")
+  usageLimit      Int?      @map("usage_limit")
+  usageCount      Int       @default(0) @map("usage_count")
+  startsAt        DateTime  @map("starts_at")
+  expiresAt       DateTime  @map("expires_at")
+  status          String    @default("ACTIVE") // ACTIVE | INACTIVE | EXPIRED
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  orders Order[]
+
+  @@map("vouchers")
+}
+
+// ─── Reviews ──────────────────────────────────────────
+model Review {
+  id          String   @id @default(cuid())
+  userId      String   @map("user_id")
+  productId   String   @map("product_id")
+  orderItemId String   @unique @map("order_item_id")
+  rating      Int // 1-5
+  comment     String?
+  status      String   @default("PUBLISHED") // PUBLISHED | HIDDEN | PENDING
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  user      User      @relation(fields: [userId], references: [id])
+  product   Product   @relation(fields: [productId], references: [id])
+  orderItem OrderItem @relation(fields: [orderItemId], references: [id])
+
+  @@map("reviews")
+}
+
+// ─── Notifications ────────────────────────────────────
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String    @map("user_id")
+  type      String // ORDER | PAYMENT | PROMO | SYSTEM
+  title     String
+  message   String
+  readAt    DateTime? @map("read_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+// ─── Conversations ────────────────────────────────────
+model Conversation {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  status    String   @default("OPEN") // OPEN | CLOSED
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages Message[]
+
+  @@map("conversations")
+}
+
+// ─── Messages ─────────────────────────────────────────
+model Message {
+  id             String    @id @default(cuid())
+  conversationId String    @map("conversation_id")
+  senderId       String    @map("sender_id")
+  message        String
+  attachmentUrl  String?   @map("attachment_url")
+  readAt         DateTime? @map("read_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@map("messages")
+}
