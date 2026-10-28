@@ -92,7 +92,8 @@ export async function POST(request: NextRequest) {
     }
 
     const finalShippingCost = Number(shippingCost) || 0;
-    const totalAmount = subtotal - discountAmount + finalShippingCost;
+    const adminFee = 4000; // Biaya layanan & pengemasan
+    const totalAmount = subtotal - discountAmount + finalShippingCost + adminFee;
     const orderNumber = generateOrderNumber();
 
     // Prepare Midtrans transaction if online payment
@@ -112,6 +113,15 @@ export async function POST(request: NextRequest) {
           id: 'SHIPPING',
           name: `Ongkir (${shippingCourier || 'Kurir'})`,
           price: finalShippingCost,
+          quantity: 1,
+        });
+      }
+
+      if (adminFee > 0) {
+        midtransItems.push({
+          id: 'PACKAGING_FEE',
+          name: 'Biaya Layanan & Pengemasan',
+          price: adminFee,
           quantity: 1,
         });
       }
@@ -156,7 +166,8 @@ export async function POST(request: NextRequest) {
         addressId,
         subtotal,
         discountAmount,
-        shippingAmount: shippingCost,
+        shippingAmount: finalShippingCost,
+        adminFee,
         totalAmount,
         voucherId: voucher?.id || null,
         status: 'PENDING_PAYMENT',

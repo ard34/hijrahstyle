@@ -33,6 +33,7 @@ interface Order {
   totalAmount: number;
   subtotal: number;
   shippingAmount: number;
+  adminFee?: number;
   discountAmount: number;
   items: OrderItem[];
   payment?: {

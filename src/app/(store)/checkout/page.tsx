@@ -185,9 +185,10 @@ export default function CheckoutPage() {
     }, 0);
   };
 
+  const adminFee = 4000;
   const subtotal = calculateSubtotal();
   const discount = appliedVoucher ? appliedVoucher.discount : 0;
-  const grandTotal = subtotal - discount + shippingCost;
+  const grandTotal = subtotal - discount + shippingCost + adminFee;
 
   const handleSimulatePaymentSuccess = async () => {
     if (!mockSnapModal) return;
@@ -546,6 +547,13 @@ export default function CheckoutPage() {
                 <div className="flex justify-between text-slate-600">
                   <span>Biaya Pengiriman</span>
                   <span className="font-bold text-slate-900">{formatRupiah(shippingCost)}</span>
+                </div>
+                <div className="flex justify-between text-slate-600 items-center">
+                  <span className="flex items-center gap-1.5">
+                    Biaya Layanan &amp; Pengemasan
+                    <span className="text-[10px] px-1.5 py-0.5 bg-purple-50 text-purple-700 font-bold rounded-md border border-purple-200">Box &amp; Bubble Wrap</span>
+                  </span>
+                  <span className="font-bold text-slate-900">{formatRupiah(adminFee)}</span>
                 </div>
                 <div className="flex justify-between text-sm font-extrabold text-slate-900 border-t border-slate-100 pt-3 mt-3">
                   <span>Total Pembayaran</span>

@@ -70,6 +70,16 @@ export async function POST(
               },
             ]
           : []),
+        ...(order.adminFee && order.adminFee > 0
+          ? [
+              {
+                id: 'PACKAGING_FEE',
+                name: 'Biaya Layanan & Pengemasan',
+                price: order.adminFee,
+                quantity: 1,
+              },
+            ]
+          : []),
         ...(order.discountAmount > 0
           ? [
               {
