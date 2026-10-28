@@ -30,8 +30,15 @@ interface Address {
 
 interface CartItem {
   id: string;
+  productVariantId?: string;
+  productName?: string;
+  variantLabel?: string;
+  price?: number;
   quantity: number;
-  productVariant: {
+  imageUrl?: string;
+  stock?: number;
+  slug?: string;
+  productVariant?: {
     id: string;
     size: string;
     color: string;
@@ -152,10 +159,29 @@ export default function CheckoutPage() {
     }
   };
 
+  const getItemPrice = (item: CartItem) => {
+    if (typeof item.price === 'number') return item.price;
+    if (item.productVariant) {
+      return item.productVariant.priceOverride || item.productVariant.product?.price || 0;
+    }
+    return 0;
+  };
+
+  const getItemName = (item: CartItem) => {
+    return item.productName || item.productVariant?.product?.name || 'Produk Busana Muslim';
+  };
+
+  const getItemVariantLabel = (item: CartItem) => {
+    if (item.variantLabel) return item.variantLabel;
+    if (item.productVariant) {
+      return `${item.productVariant.color || ''} / ${item.productVariant.size || ''}`;
+    }
+    return '';
+  };
+
   const calculateSubtotal = () => {
     return cartItems.reduce((sum, item) => {
-      const price = item.productVariant.priceOverride || item.productVariant.product.price;
-      return sum + price * item.quantity;
+      return sum + getItemPrice(item) * item.quantity;
     }, 0);
   };
 
@@ -465,11 +491,11 @@ export default function CheckoutPage() {
                       👗
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-bold text-slate-900 truncate">{item.productVariant.product.name}</p>
-                      <p className="text-[11px] text-slate-400">{item.productVariant.color} / {item.productVariant.size} x {item.quantity}</p>
+                      <p className="font-bold text-slate-900 truncate">{getItemName(item)}</p>
+                      <p className="text-[11px] text-slate-400">{getItemVariantLabel(item)} x {item.quantity}</p>
                     </div>
                     <span className="font-extrabold text-slate-900">
-                      {formatRupiah((item.productVariant.priceOverride || item.productVariant.product.price) * item.quantity)}
+                      {formatRupiah(getItemPrice(item) * item.quantity)}
                     </span>
                   </div>
                 ))}
