@@ -53,12 +53,34 @@ export async function POST(
             }
           : undefined,
       },
-      items: order.items.map((item) => ({
-        id: item.productVariantId,
-        name: item.productNameSnapshot,
-        price: item.price,
-        quantity: item.quantity,
-      })),
+      items: [
+        ...order.items.map((item) => ({
+          id: item.productVariantId,
+          name: item.productNameSnapshot,
+          price: item.price,
+          quantity: item.quantity,
+        })),
+        ...(order.shippingAmount > 0
+          ? [
+              {
+                id: 'SHIPPING',
+                name: 'Ongkos Kirim',
+                price: order.shippingAmount,
+                quantity: 1,
+              },
+            ]
+          : []),
+        ...(order.discountAmount > 0
+          ? [
+              {
+                id: 'DISCOUNT',
+                name: 'Diskon Voucher',
+                price: -order.discountAmount,
+                quantity: 1,
+              },
+            ]
+          : []),
+      ],
     });
 
     // Update payment record with snapToken if available

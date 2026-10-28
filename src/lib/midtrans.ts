@@ -72,10 +72,39 @@ export async function createMidtransTransaction({
   const firstName = names[0] || 'Customer';
   const lastName = names.slice(1).join(' ') || firstName;
 
+  const roundedGross = Math.round(grossAmount);
+  
+  // Midtrans strict rule: sum(item_details[i].price * item_details[i].quantity) MUST equal transaction_details.gross_amount
+  const preparedItems = items.map((item) => ({
+    id: String(item.id).substring(0, 50),
+    price: Math.round(Number(item.price)),
+    quantity: Math.max(1, Math.round(Number(item.quantity) || 1)),
+    name: String(item.name).substring(0, 50),
+  }));
+
+  const itemsTotal = preparedItems.reduce((acc, it) => acc + it.price * it.quantity, 0);
+  const diff = roundedGross - itemsTotal;
+
+  if (diff > 0) {
+    preparedItems.push({
+      id: 'SHIPPING_OR_FEES',
+      price: diff,
+      quantity: 1,
+      name: 'Ongkir / Biaya Pengiriman',
+    });
+  } else if (diff < 0) {
+    preparedItems.push({
+      id: 'DISCOUNT',
+      price: diff,
+      quantity: 1,
+      name: 'Potongan / Diskon',
+    });
+  }
+
   const parameter = {
     transaction_details: {
       order_id: orderNumber,
-      gross_amount: Math.round(grossAmount),
+      gross_amount: roundedGross,
     },
     customer_details: {
       first_name: firstName,
@@ -93,12 +122,7 @@ export async function createMidtransTransaction({
           }
         : undefined,
     },
-    item_details: items.map((item) => ({
-      id: item.id.substring(0, 50),
-      price: Math.round(item.price),
-      quantity: item.quantity,
-      name: item.name.substring(0, 50),
-    })),
+    item_details: preparedItems,
     callbacks: {
       finish: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/orders?success=true&orderNumber=${orderNumber}`,
     },

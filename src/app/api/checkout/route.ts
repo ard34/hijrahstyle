@@ -91,7 +91,8 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    const totalAmount = subtotal - discountAmount + shippingCost;
+    const finalShippingCost = Number(shippingCost) || 0;
+    const totalAmount = subtotal - discountAmount + finalShippingCost;
     const orderNumber = generateOrderNumber();
 
     // Prepare Midtrans transaction if online payment
@@ -106,11 +107,11 @@ export async function POST(request: NextRequest) {
         quantity: item.quantity,
       }));
 
-      if (shippingCost > 0) {
+      if (finalShippingCost > 0) {
         midtransItems.push({
           id: 'SHIPPING',
           name: `Ongkir (${shippingCourier || 'Kurir'})`,
-          price: shippingCost,
+          price: finalShippingCost,
           quantity: 1,
         });
       }
