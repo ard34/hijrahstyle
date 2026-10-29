@@ -14,7 +14,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
     if (status === 'CANCELLED') {
       const result = await cancelOrderById(id, 'admin');
-      return NextResponse.json({ message: 'Order berhasil dibatalkan di sistem & Midtrans', order: result.order });
+      return NextResponse.json({ message: 'Order berhasil dibatalkan di sistem & Duitku', order: result.order });
     }
 
     const updateData: any = {};

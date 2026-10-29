@@ -47,7 +47,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const currentNav = navItems.find(i => pathname?.startsWith(i.href));
 
   return (
-    <div className="min-h-screen bg-slate-100 font-sans selection:bg-purple-500 selection:text-white">
+    <div className="min-h-screen bg-slate-100 font-sans selection:bg-blue-600 selection:text-white">
       
       {/* Mobile Overlay */}
       {sidebarOpen && (
@@ -67,12 +67,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {/* Brand Logo Header */}
           <div className="p-6 border-b border-slate-800/80 flex items-center justify-between">
             <Link href="/admin/dashboard" className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-600 to-indigo-700 flex items-center justify-center text-white font-extrabold text-lg shadow-md shadow-purple-600/30">
-                H
-              </div>
+              <img
+                src="/logo.png"
+                alt="Toko Sample BBN"
+                className="w-9 h-9 rounded-xl object-contain bg-slate-950 p-1 shadow-md shadow-blue-500/20 border border-slate-700/60"
+              />
               <div>
-                <span className="font-extrabold text-white text-base tracking-tight block leading-none">HijrahStyle</span>
-                <span className="text-[10px] font-semibold text-purple-400 uppercase tracking-widest block mt-1">Admin Panel</span>
+                <span className="font-extrabold text-white text-base tracking-tight block leading-none">Toko Sample BBN</span>
+                <span className="text-[10px] font-semibold text-blue-400 uppercase tracking-widest block mt-1">Admin Panel</span>
               </div>
             </Link>
             <button 
@@ -94,13 +96,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   onClick={() => setSidebarOpen(false)}
                   className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                     isActive
-                      ? 'bg-purple-600 text-white shadow-md shadow-purple-600/25'
+                      ? 'bg-blue-600 text-white shadow-md shadow-blue-600/25'
                       : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
                   }`}
                 >
                   <item.icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-slate-400'}`} />
                   <span>{item.label}</span>
-                  {isActive && <ChevronRight className="w-3.5 h-3.5 ml-auto text-purple-200" />}
+                  {isActive && <ChevronRight className="w-3.5 h-3.5 ml-auto text-blue-200" />}
                 </Link>
               );
             })}
@@ -110,12 +112,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* User Profile & Footer Actions */}
         <div className="p-4 border-t border-slate-800/80 space-y-3 bg-slate-950/40">
           <div className="flex items-center gap-3 px-2 py-1">
-            <div className="w-8 h-8 rounded-full bg-purple-600/20 border border-purple-500/30 text-purple-300 font-bold text-xs flex items-center justify-center">
+            <div className="w-8 h-8 rounded-full bg-blue-600/20 border border-blue-500/30 text-blue-300 font-bold text-xs flex items-center justify-center">
               {user?.name?.charAt(0).toUpperCase() || 'A'}
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-xs font-bold text-white truncate">{user?.name || 'Administrator'}</p>
-              <p className="text-[10px] text-slate-400 truncate">{user?.email || 'admin@hijrahstyle.id'}</p>
+              <p className="text-[10px] text-slate-400 truncate">{user?.email || 'admin@tokosamplebbn.com'}</p>
             </div>
           </div>
 
@@ -160,9 +162,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-50 text-purple-700 border border-purple-200 text-xs font-semibold">
-              <Sparkles className="w-3.5 h-3.5 text-purple-600" />
-              <span>HijrahStyle Control Center</span>
+            <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-xs font-semibold">
+              <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+              <span>Toko Sample BBN Control Center</span>
             </div>
           </div>
         </header>

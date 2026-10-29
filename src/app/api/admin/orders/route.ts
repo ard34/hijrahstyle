@@ -41,7 +41,7 @@ export async function PUT(request: NextRequest) {
 
     if (status === 'CANCELLED') {
       const result = await cancelOrderById(orderId, 'admin');
-      return NextResponse.json({ message: 'Order berhasil dibatalkan di sistem & Midtrans', order: result.order });
+      return NextResponse.json({ message: 'Order berhasil dibatalkan di sistem & Duitku', order: result.order });
     }
 
     const updateData: any = {};

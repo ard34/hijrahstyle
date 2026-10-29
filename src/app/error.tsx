@@ -34,7 +34,7 @@ export default function GlobalError({
         <div className="space-y-3">
           <button
             onClick={() => reset()}
-            className="w-full py-3 px-4 bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs rounded-xl shadow-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
           >
             <RefreshCw className="w-4 h-4" /> Coba Lagi
           </button>

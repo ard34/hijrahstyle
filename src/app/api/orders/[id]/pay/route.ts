@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
-import { createMidtransTransaction } from '@/lib/midtrans';
+import { createDuitkuTransaction } from '@/lib/duitku';
 
 export async function POST(
   request: NextRequest,
@@ -35,8 +35,8 @@ export async function POST(
       return NextResponse.json({ error: 'Pesanan ini sudah dibayar atau dibatalkan' }, { status: 400 });
     }
 
-    // Generate or re-generate Midtrans transaction
-    const snapResult = await createMidtransTransaction({
+    // Generate or re-generate Duitku transaction
+    const transactionResult = await createDuitkuTransaction({
       orderNumber: order.orderNumber,
       grossAmount: order.totalAmount,
       customer: {
@@ -55,7 +55,6 @@ export async function POST(
       },
       items: [
         ...order.items.map((item) => ({
-          id: item.productVariantId,
           name: item.productNameSnapshot,
           price: item.price,
           quantity: item.quantity,
@@ -63,7 +62,6 @@ export async function POST(
         ...(order.shippingAmount > 0
           ? [
               {
-                id: 'SHIPPING',
                 name: 'Ongkos Kirim',
                 price: order.shippingAmount,
                 quantity: 1,
@@ -73,7 +71,6 @@ export async function POST(
         ...(order.adminFee && order.adminFee > 0
           ? [
               {
-                id: 'PACKAGING_FEE',
                 name: 'Biaya Layanan & Pengemasan',
                 price: order.adminFee,
                 quantity: 1,
@@ -83,7 +80,6 @@ export async function POST(
         ...(order.discountAmount > 0
           ? [
               {
-                id: 'DISCOUNT',
                 name: 'Diskon Voucher',
                 price: -order.discountAmount,
                 quantity: 1,
@@ -94,21 +90,23 @@ export async function POST(
       paymentMethod: order.payment?.paymentMethod || undefined,
     });
 
-    // Update payment record with snapToken if available
-    if (order.payment && snapResult.token) {
+    // Update payment record with reference if available
+    if (order.payment && transactionResult.reference) {
       await prisma.payment.update({
         where: { id: order.payment.id },
         data: {
-          providerPaymentId: snapResult.token,
-          provider: 'midtrans',
+          providerPaymentId: transactionResult.reference,
+          provider: 'duitku',
         },
       });
     }
 
     return NextResponse.json({
-      snapToken: snapResult.token,
-      redirectUrl: snapResult.redirectUrl,
-      isMock: snapResult.isMock,
+      reference: transactionResult.reference,
+      snapToken: transactionResult.reference, // alias for backwards compatibility
+      paymentUrl: transactionResult.paymentUrl,
+      redirectUrl: transactionResult.paymentUrl,
+      isMock: transactionResult.isMock,
       order: {
         id: order.id,
         orderNumber: order.orderNumber,

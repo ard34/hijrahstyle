@@ -3,15 +3,15 @@ import "./globals.css";
 import ToastContainer from "@/components/ui/ToastContainer";
 
 export const metadata: Metadata = {
-  title: "HijrahStyle — Fashion Islami | Mudah, Aman & Terpercaya",
-  description: "Belanja fashion Islami berkualitas — gamis, hijab, koko, abaya, dan aksesoris muslimah. Koleksi lengkap dengan harga terjangkau. Pengiriman cepat ke seluruh Indonesia.",
-  keywords: "fashion islami, gamis, hijab, koko, abaya, muslimah, toko online, e-commerce islam",
+  title: "Toko Sample BBN — Mudah, Aman & Terpercaya",
+  description: "Belanja produk berkualitas di Toko Sample BBN. Koleksi lengkap dengan harga terjangkau. Pengiriman cepat ke seluruh Indonesia.",
+  keywords: "toko sample bbn, toko online, e-commerce, belanja online",
   openGraph: {
-    title: "HijrahStyle — Fashion Islami",
-    description: "Belanja fashion Islami — Mudah, Aman & Terpercaya",
+    title: "Toko Sample BBN",
+    description: "Belanja produk berkualitas di Toko Sample BBN — Mudah, Aman & Terpercaya",
     type: "website",
     locale: "id_ID",
-    siteName: "HijrahStyle",
+    siteName: "Toko Sample BBN",
   },
 };
 

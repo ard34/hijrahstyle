@@ -57,7 +57,7 @@ export default function AdminInventoryPage() {
             {loading ? (
               <tr>
                 <td colSpan={6} className="text-center py-8">
-                  <Loader2 className="w-6 h-6 animate-spin text-purple-600 mx-auto" />
+                  <Loader2 className="w-6 h-6 animate-spin text-blue-600 mx-auto" />
                 </td>
               </tr>
             ) : variants.length === 0 ? (

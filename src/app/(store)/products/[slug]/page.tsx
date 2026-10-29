@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const product = await prisma.product.findUnique({ where: { slug }, select: { name: true, description: true, price: true } });
   if (!product) return { title: 'Produk tidak ditemukan' };
   return {
-    title: `${product.name} — HijrahStyle`,
+    title: `${product.name} — Toko Sample BBN`,
     description: product.description?.substring(0, 160),
   };
 }

@@ -18,7 +18,7 @@ export default function AdminVouchersPage() {
           <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Manajemen Voucher Promo</h1>
           <p className="text-xs text-slate-500 font-medium mt-1">Kelola kode diskon, persentase potongan harga, dan batas minimal belanja.</p>
         </div>
-        <button className="px-4 py-2.5 bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs rounded-xl shadow-xs flex items-center gap-2 transition-all">
+        <button className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow-xs flex items-center gap-2 transition-all cursor-pointer">
           <Plus className="w-4 h-4" /> Buat Voucher Baru
         </button>
       </div>
@@ -39,9 +39,9 @@ export default function AdminVouchersPage() {
             </thead>
             <tbody className="divide-y divide-slate-100 text-xs font-normal text-slate-700">
               {vouchers.map((v) => (
-                <tr key={v.id} className="hover:bg-purple-50/30 transition-colors">
-                  <td className="py-4 px-6 font-mono font-extrabold text-purple-700 flex items-center gap-2">
-                    <Ticket className="w-4 h-4 text-purple-600 shrink-0" />
+                <tr key={v.id} className="hover:bg-blue-50/30 transition-colors">
+                  <td className="py-4 px-6 font-mono font-extrabold text-blue-600 flex items-center gap-2">
+                    <Ticket className="w-4 h-4 text-blue-600 shrink-0" />
                     <span>{v.code}</span>
                   </td>
                   <td className="py-4 px-6 font-semibold text-slate-700">{v.type === 'PERCENTAGE' ? 'Persentase (%)' : 'Potongan Tetap (Rp)'}</td>

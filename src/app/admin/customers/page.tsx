@@ -44,7 +44,7 @@ export default function AdminCustomersPage() {
           <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Manajemen Pelanggan</h1>
           <p className="text-xs text-slate-500 font-medium mt-1">Daftar pengguna terdaftar, riwayat keanggotaan, dan statistik total pesanan.</p>
         </div>
-        <div className="px-4 py-2 bg-purple-50 text-purple-700 font-bold text-xs rounded-xl border border-purple-200 flex items-center gap-2">
+        <div className="px-4 py-2 bg-blue-50 text-blue-700 font-bold text-xs rounded-xl border border-blue-200 flex items-center gap-2">
           <UserCheck className="w-4 h-4" /> {customers.length} Pelanggan Aktif
         </div>
       </div>
@@ -59,7 +59,7 @@ export default function AdminCustomersPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{ paddingLeft: '44px' }}
-            className="w-full text-xs h-10 pr-4 bg-slate-50 border border-slate-300 rounded-xl focus:border-purple-600 outline-none text-slate-900 placeholder:text-slate-400"
+            className="w-full text-xs h-10 pr-4 bg-slate-50 border border-slate-300 rounded-xl focus:border-blue-600 outline-none text-slate-900 placeholder:text-slate-400"
           />
         </div>
       </div>
@@ -81,7 +81,7 @@ export default function AdminCustomersPage() {
               {loading ? (
                 <tr>
                   <td colSpan={5} className="text-center py-12">
-                    <Loader2 className="w-6 h-6 animate-spin text-purple-700 mx-auto" />
+                    <Loader2 className="w-6 h-6 animate-spin text-blue-600 mx-auto" />
                   </td>
                 </tr>
               ) : filteredCustomers.length === 0 ? (
@@ -90,9 +90,9 @@ export default function AdminCustomersPage() {
                 </tr>
               ) : (
                 filteredCustomers.map((c) => (
-                  <tr key={c.id} className="hover:bg-purple-50/30 transition-colors">
+                  <tr key={c.id} className="hover:bg-blue-50/30 transition-colors">
                     <td className="py-4 px-6 font-bold text-slate-900 flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center font-extrabold text-xs shrink-0">
+                      <div className="w-9 h-9 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-extrabold text-xs shrink-0">
                         {c.name.charAt(0).toUpperCase()}
                       </div>
                       <span>{c.name}</span>
@@ -101,7 +101,7 @@ export default function AdminCustomersPage() {
                     <td className="py-4 px-6 text-slate-600 font-mono">{c.phone || '-'}</td>
                     <td className="py-4 px-6 text-slate-500 font-medium">{formatDate(c.createdAt)}</td>
                     <td className="py-4 px-6">
-                      <span className="px-2.5 py-1 rounded-lg bg-purple-50 text-purple-700 font-bold border border-purple-200 text-[11px]">
+                      <span className="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 font-bold border border-blue-200 text-[11px]">
                         {c._count?.orders || 0} Transaksi
                       </span>
                     </td>

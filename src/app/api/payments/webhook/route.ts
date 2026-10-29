@@ -1,44 +1,61 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
-import { verifyMidtransSignature, isMidtransConfigured } from '@/lib/midtrans';
+import { verifyDuitkuCallbackSignature, isDuitkuConfigured } from '@/lib/duitku';
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const {
-      order_id,
-      status_code,
-      gross_amount,
-      signature_key,
-      transaction_status,
-      fraud_status,
-      payment_type,
-      transaction_id,
-      is_mock,
-    } = body;
+    let body: any = {};
+    const contentType = request.headers.get('content-type') || '';
 
-    if (!order_id) {
-      return NextResponse.json({ error: 'Missing order_id' }, { status: 400 });
+    if (contentType.includes('application/x-www-form-urlencoded') || contentType.includes('multipart/form-data')) {
+      const formData = await request.formData();
+      formData.forEach((value, key) => {
+        body[key] = value.toString();
+      });
+    } else {
+      try {
+        body = await request.json();
+      } catch {
+        const text = await request.text();
+        const params = new URLSearchParams(text);
+        params.forEach((value, key) => {
+          body[key] = value;
+        });
+      }
     }
 
-    // If Midtrans is configured and it's not an internal mock call, verify signature
-    if (isMidtransConfigured() && !is_mock) {
-      const isValid = verifyMidtransSignature({
-        orderId: order_id,
-        statusCode: status_code,
-        grossAmount: gross_amount,
-        signatureKey: signature_key,
+    // Extract parameters (support Duitku naming and fallback aliases)
+    const merchantOrderId = body.merchantOrderId || body.order_id || body.orderNumber;
+    const resultCode = body.resultCode || (body.transaction_status === 'settlement' || body.transaction_status === 'capture' ? '00' : '01');
+    const amount = body.amount || body.gross_amount;
+    const reference = body.reference || body.transaction_id || '';
+    const signature = body.signature || body.signature_key || '';
+    const merchantCode = body.merchantCode || process.env.DUITKU_MERCHANT_CODE || '';
+    const paymentCode = body.paymentCode || body.payment_type || 'duitku';
+    const isMock = Boolean(body.is_mock);
+
+    if (!merchantOrderId) {
+      return NextResponse.json({ error: 'Missing merchantOrderId' }, { status: 400 });
+    }
+
+    // If Duitku is configured and not internal mock test, verify callback signature
+    if (isDuitkuConfigured() && !isMock && signature) {
+      const isValid = verifyDuitkuCallbackSignature({
+        merchantCode,
+        amount,
+        merchantOrderId,
+        signature,
       });
 
       if (!isValid) {
-        console.error('Invalid Midtrans signature for order:', order_id);
-        return NextResponse.json({ error: 'Invalid signature key' }, { status: 403 });
+        console.error('Invalid Duitku signature for order:', merchantOrderId);
+        return new Response('Bad Signature', { status: 400 });
       }
     }
 
     // Find the order (support exact orderNumber or base orderNumber if retry suffix was appended)
     let order = await prisma.order.findUnique({
-      where: { orderNumber: order_id },
+      where: { orderNumber: merchantOrderId },
       include: {
         payment: true,
         items: {
@@ -51,8 +68,8 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    if (!order && typeof order_id === 'string' && order_id.startsWith('HS-')) {
-      const parts = order_id.split('-');
+    if (!order && typeof merchantOrderId === 'string' && merchantOrderId.startsWith('HS-')) {
+      const parts = merchantOrderId.split('-');
       if (parts.length >= 3) {
         const baseOrderNumber = `${parts[0]}-${parts[1]}-${parts[2]}`;
         order = await prisma.order.findUnique({
@@ -72,7 +89,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!order) {
-      console.warn('Order not found for Midtrans notification:', order_id);
+      console.warn('Order not found for Duitku notification:', merchantOrderId);
       return NextResponse.json({ error: 'Order not found' }, { status: 404 });
     }
 
@@ -81,39 +98,21 @@ export async function POST(request: NextRequest) {
     let shouldRestoreStock = false;
     let paidAt: Date | null = null;
 
-    if (transaction_status === 'capture') {
-      if (fraud_status === 'challenge') {
-        newPaymentStatus = 'pending';
-        newOrderStatus = 'PENDING_PAYMENT';
-      } else if (fraud_status === 'accept') {
-        newPaymentStatus = 'paid';
-        newOrderStatus = 'PROCESSING';
-        paidAt = new Date();
-      }
-    } else if (transaction_status === 'settlement') {
+    if (resultCode === '00') {
+      // 00: Payment Success in Duitku
       newPaymentStatus = 'paid';
       newOrderStatus = 'PROCESSING';
       paidAt = new Date();
-    } else if (transaction_status === 'pending') {
-      newPaymentStatus = 'pending';
-      newOrderStatus = 'PENDING_PAYMENT';
-    } else if (
-      transaction_status === 'deny' ||
-      transaction_status === 'expire' ||
-      transaction_status === 'cancel'
-    ) {
-      newPaymentStatus = transaction_status === 'expire' ? 'expired' : 'cancelled';
+    } else {
+      // 01: Failed / Cancelled / Expired
+      newPaymentStatus = 'cancelled';
       newOrderStatus = 'CANCELLED';
-      // If order was not already cancelled, restore stock
       if (order.status !== 'CANCELLED') {
         shouldRestoreStock = true;
       }
-    } else if (transaction_status === 'refund') {
-      newPaymentStatus = 'refunded';
-      newOrderStatus = 'CANCELLED';
     }
 
-    // Process updates inside a transaction
+    // Process database updates inside transaction
     await prisma.$transaction(async (tx) => {
       // 1. Update Payment
       if (order.payment) {
@@ -121,8 +120,8 @@ export async function POST(request: NextRequest) {
           where: { id: order.payment.id },
           data: {
             status: newPaymentStatus,
-            paymentMethod: payment_type || order.payment.paymentMethod || 'midtrans',
-            providerPaymentId: transaction_id || order.payment.providerPaymentId,
+            paymentMethod: paymentCode || order.payment.paymentMethod || 'duitku',
+            providerPaymentId: reference || order.payment.providerPaymentId,
             paidAt: paidAt || order.payment.paidAt,
           },
         });
@@ -131,8 +130,8 @@ export async function POST(request: NextRequest) {
         await tx.paymentEvent.create({
           data: {
             paymentId: order.payment.id,
-            eventType: transaction_status || 'notification',
-            providerReference: transaction_id || null,
+            eventType: resultCode === '00' ? 'SUCCESS' : 'FAILED',
+            providerReference: reference || null,
             payload: JSON.stringify(body),
           },
         });
@@ -146,7 +145,7 @@ export async function POST(request: NextRequest) {
         },
       });
 
-      // 4. Restore stock if cancelled/expired
+      // 4. Restore stock if cancelled
       if (shouldRestoreStock) {
         for (const item of order.items) {
           await tx.productVariant.update({
@@ -161,10 +160,12 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    console.log(`✅ Webhook processed for order ${order_id}: ${newOrderStatus} (${newPaymentStatus})`);
-    return NextResponse.json({ status: 'OK', message: 'Notification processed' }, { status: 200 });
+    console.log(`✅ Duitku Webhook processed for order ${merchantOrderId}: ${newOrderStatus} (${newPaymentStatus})`);
+    
+    // Duitku expects HTTP 200 with 'OK' response text
+    return new Response('OK', { status: 200, headers: { 'Content-Type': 'text/plain' } });
   } catch (error) {
-    console.error('Midtrans Webhook Error:', error);
+    console.error('Duitku Webhook Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

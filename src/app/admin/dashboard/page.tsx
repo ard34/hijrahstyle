@@ -70,7 +70,7 @@ export default function AdminDashboardPage() {
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center">
-        <Loader2 className="w-8 h-8 animate-spin text-purple-700 mx-auto" />
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto" />
         <p className="text-xs text-slate-400 mt-2 font-medium">Memuat data ringkasan dashboard...</p>
       </div>
     );
@@ -105,7 +105,7 @@ export default function AdminDashboardPage() {
                 {formatRupiah(stats?.totalRevenue || 0)}
               </h3>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
               <DollarSign className="w-5 h-5" />
             </div>
           </div>
@@ -197,28 +197,28 @@ export default function AdminDashboardPage() {
 
               {/* Area Gradient */}
               <defs>
-                <linearGradient id="purpleGradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#5B21B6" stopOpacity="0.25" />
-                  <stop offset="100%" stopColor="#5B21B6" stopOpacity="0" />
+                <linearGradient id="blueGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#2563eb" stopOpacity="0.25" />
+                  <stop offset="100%" stopColor="#2563eb" stopOpacity="0" />
                 </linearGradient>
               </defs>
               <path
                 d="M 0,110 L 70,85 L 140,60 L 210,95 L 280,45 L 350,75 L 420,35 L 500,65 L 500,150 L 0,150 Z"
-                fill="url(#purpleGradient)"
+                fill="url(#blueGradient)"
               />
 
               {/* Line path */}
               <path
                 d="M 0,110 L 70,85 L 140,60 L 210,95 L 280,45 L 350,75 L 420,35 L 500,65"
                 fill="none"
-                stroke="#5B21B6"
+                stroke="#2563eb"
                 strokeWidth="3"
                 strokeLinecap="round"
               />
 
               {/* Points */}
               {[[0,110], [70,85], [140,60], [210,95], [280,45], [350,75], [420,35], [500,65]].map(([x, y], i) => (
-                <circle key={i} cx={x} cy={y} r="5" fill="#5B21B6" stroke="#ffffff" strokeWidth="2" />
+                <circle key={i} cx={x} cy={y} r="5" fill="#2563eb" stroke="#ffffff" strokeWidth="2" />
               ))}
             </svg>
 
@@ -238,7 +238,7 @@ export default function AdminDashboardPage() {
           <div>
             <div className="flex justify-between items-center pb-3 border-b border-slate-100">
               <h2 className="text-base font-bold text-slate-900">Pesanan Terbaru</h2>
-              <Link href="/admin/orders" className="text-xs font-bold text-[#5B21B6] hover:underline">
+              <Link href="/admin/orders" className="text-xs font-bold text-blue-600 hover:underline">
                 Lihat Semua
               </Link>
             </div>
@@ -250,7 +250,7 @@ export default function AdminDashboardPage() {
                 recentOrders.slice(0, 3).map((order) => (
                   <div key={order.id} className="p-3 bg-slate-50 border border-slate-200/60 rounded-xl flex items-center justify-between text-xs">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full bg-purple-100 text-[#5B21B6] flex items-center justify-center font-bold text-xs">
+                      <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">
                         {order.user?.name.charAt(0).toUpperCase()}
                       </div>
                       <div>

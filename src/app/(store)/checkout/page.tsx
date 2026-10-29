@@ -13,6 +13,8 @@ import { formatRupiah } from '@/lib/utils';
 declare global {
   interface Window {
     snap?: any;
+    checkout?: any;
+    duitku?: any;
   }
 }
 
@@ -83,13 +85,14 @@ export default function CheckoutPage() {
   const [appliedVoucher, setAppliedVoucher] = useState<{ code: string; discount: number } | null>(null);
   const [voucherError, setVoucherError] = useState('');
 
-  // Payment method & Midtrans state
+  // Payment method & Duitku state
   const [paymentMethod, setPaymentMethod] = useState('bank_transfer');
-  const [mockSnapModal, setMockSnapModal] = useState<{
+  const [mockDuitkuModal, setMockDuitkuModal] = useState<{
     orderId: string;
     orderNumber: string;
     totalAmount: number;
     paymentType: string;
+    paymentUrl?: string;
   } | null>(null);
   const [isSimulatingPayment, setIsSimulatingPayment] = useState(false);
 
@@ -191,25 +194,26 @@ export default function CheckoutPage() {
   const grandTotal = subtotal - discount + shippingCost + adminFee;
 
   const handleSimulatePaymentSuccess = async () => {
-    if (!mockSnapModal) return;
+    if (!mockDuitkuModal) return;
     try {
       setIsSimulatingPayment(true);
       const res = await fetch('/api/payments/webhook', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          order_id: mockSnapModal.orderNumber,
-          transaction_status: 'settlement',
-          gross_amount: String(mockSnapModal.totalAmount),
-          payment_type: mockSnapModal.paymentType,
+          merchantOrderId: mockDuitkuModal.orderNumber,
+          resultCode: '00',
+          amount: String(mockDuitkuModal.totalAmount),
+          paymentCode: mockDuitkuModal.paymentType,
+          reference: `TEST-REF-${mockDuitkuModal.orderNumber}`,
           is_mock: true,
         }),
       });
 
       if (res.ok) {
-        router.push(`/orders?success=true&orderId=${mockSnapModal.orderId}&status=paid`);
+        router.push(`/orders?success=true&orderId=${mockDuitkuModal.orderId}&status=paid`);
       } else {
-        alert('Gagal memproses simulasi webhook.');
+        alert('Gagal memproses simulasi webhook Duitku.');
       }
     } catch (err) {
       console.error(err);
@@ -249,30 +253,39 @@ export default function CheckoutPage() {
         return;
       }
 
-      // 2. If mock mode (sandbox dummy key without active Midtrans account)
-      if (data.isMock || !window.snap) {
-        setMockSnapModal({
+      const transactionRef = data.reference || data.snapToken;
+
+      // 2. If mock mode or Duitku POP script is not loaded
+      if (data.isMock || !window.checkout?.process) {
+        if (!data.isMock && data.paymentUrl) {
+          window.location.href = data.paymentUrl;
+          return;
+        }
+
+        setMockDuitkuModal({
           orderId: data.order.id,
           orderNumber: data.order.orderNumber,
           totalAmount: data.order.totalAmount,
           paymentType: paymentMethod,
+          paymentUrl: data.paymentUrl,
         });
         return;
       }
 
-      // 3. Real Midtrans Snap Modal
-      window.snap.pay(data.snapToken, {
-        onSuccess: function () {
+      // 3. Official Duitku Pop Checkout Process
+      window.checkout.process(transactionRef, {
+        defaultLanguage: 'id',
+        successEvent: function () {
           router.push(`/orders?success=true&orderId=${data.order.id}&status=paid`);
         },
-        onPending: function () {
+        pendingEvent: function () {
           router.push(`/orders?pending=true&orderId=${data.order.id}`);
         },
-        onError: function () {
+        errorEvent: function () {
           alert('Pembayaran dibatalkan atau gagal.');
           router.push(`/orders?orderId=${data.order.id}`);
         },
-        onClose: function () {
+        closeEvent: function () {
           router.push(`/orders?orderId=${data.order.id}`);
         },
       });
@@ -294,10 +307,10 @@ export default function CheckoutPage() {
   if (cartItems.length === 0) {
     return (
       <div className="max-w-md mx-auto py-20 text-center px-4">
-        <ShoppingBag className="w-16 h-16 text-purple-300 mx-auto mb-4" />
+        <ShoppingBag className="w-16 h-16 text-blue-300 mx-auto mb-4" />
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Keranjang Anda Kosong</h2>
         <p className="text-slate-500 text-xs mb-6">Tambahkan beberapa produk sebelum melangkah ke checkout.</p>
-        <Link href="/products" className="inline-flex items-center justify-center px-6 py-3 bg-purple-700 text-white rounded-xl text-xs font-semibold hover:bg-purple-800 transition-colors shadow-xs">
+        <Link href="/products" className="inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-xl text-xs font-semibold hover:bg-blue-700 transition-colors shadow-xs">
           Mulai Belanja
         </Link>
       </div>
@@ -308,7 +321,7 @@ export default function CheckoutPage() {
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         {/* Header */}
         <div className="flex items-center gap-4 mb-8 pb-4 border-b border-slate-200">
-          <Link href="/cart" className="p-2.5 bg-white border border-slate-200/80 rounded-xl shadow-2xs text-slate-600 hover:text-purple-700 transition-colors">
+          <Link href="/cart" className="p-2.5 bg-white border border-slate-200/80 rounded-xl shadow-2xs text-slate-600 hover:text-blue-600 transition-colors">
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
@@ -325,14 +338,14 @@ export default function CheckoutPage() {
             <div className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200/80 space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-slate-100">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center font-bold text-xs">1</div>
+                  <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-xs">1</div>
                   <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-purple-700" /> Alamat Pengiriman
+                    <MapPin className="w-4 h-4 text-blue-600" /> Alamat Pengiriman
                   </h2>
                 </div>
                 <button
                   onClick={() => setShowAddressModal(true)}
-                  className="text-xs font-semibold text-purple-700 hover:text-purple-800 flex items-center gap-1 bg-purple-50 px-3 py-1.5 rounded-xl border border-purple-200 transition-colors"
+                  className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1 bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200 transition-colors"
                 >
                   <Plus className="w-3.5 h-3.5" /> Tambah Alamat
                 </button>
@@ -343,7 +356,7 @@ export default function CheckoutPage() {
                   <p className="text-xs text-slate-500 mb-4">Belum ada alamat pengiriman tersimpan</p>
                   <button
                     onClick={() => setShowAddressModal(true)}
-                    className="px-4 py-2 bg-purple-700 text-white text-xs font-semibold rounded-xl hover:bg-purple-800 transition-colors shadow-xs"
+                    className="px-4 py-2 bg-blue-600 text-white text-xs font-semibold rounded-xl hover:bg-blue-700 transition-colors shadow-xs"
                   >
                     + Tambah Alamat Baru
                   </button>
@@ -356,16 +369,16 @@ export default function CheckoutPage() {
                       onClick={() => setSelectedAddressId(addr.id)}
                       className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
                         selectedAddressId === addr.id
-                          ? 'border-purple-700 bg-purple-50/40 shadow-2xs'
+                          ? 'border-blue-600 bg-blue-50/40 shadow-2xs'
                           : 'border-slate-200 hover:border-slate-300 bg-white'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-[10px] font-bold text-purple-900 bg-purple-100 px-2 py-0.5 rounded-md">
+                        <span className="text-[10px] font-bold text-blue-900 bg-blue-100 px-2 py-0.5 rounded-md">
                           Alamat Pengiriman
                         </span>
                         {selectedAddressId === addr.id && (
-                          <Check className="w-4 h-4 text-purple-700" />
+                          <Check className="w-4 h-4 text-blue-600" />
                         )}
                       </div>
                       <p className="font-bold text-xs text-slate-900">{addr.recipientName} ({addr.phone})</p>
@@ -381,9 +394,9 @@ export default function CheckoutPage() {
             {/* 2. Opsi Pengiriman */}
             <div className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200/80 space-y-4">
               <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
-                <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center font-bold text-xs">2</div>
+                <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-xs">2</div>
                 <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <Truck className="w-4 h-4 text-purple-700" /> Pengiriman &amp; Kurir
+                  <Truck className="w-4 h-4 text-blue-600" /> Pengiriman &amp; Kurir
                 </h2>
               </div>
 
@@ -401,12 +414,12 @@ export default function CheckoutPage() {
                     }}
                     className={`p-3.5 rounded-2xl border-2 cursor-pointer text-center transition-all ${
                       courier === c.id
-                        ? 'border-purple-700 bg-purple-50/40 shadow-2xs'
+                        ? 'border-blue-600 bg-blue-50/40 shadow-2xs'
                         : 'border-slate-200 hover:border-slate-300 bg-white'
                     }`}
                   >
                     <p className="font-bold text-xs text-slate-900">{c.name}</p>
-                    <p className="text-xs text-purple-700 font-extrabold mt-1">{formatRupiah(c.cost)}</p>
+                    <p className="text-xs text-blue-600 font-extrabold mt-1">{formatRupiah(c.cost)}</p>
                     <p className="text-[10px] text-slate-400 font-medium mt-0.5">Estimasi {c.etd}</p>
                   </div>
                 ))}
@@ -416,9 +429,9 @@ export default function CheckoutPage() {
             {/* 3. Metode Pembayaran */}
             <div className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200/80 space-y-4">
               <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
-                <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-800 flex items-center justify-center font-bold text-xs">3</div>
+                <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-xs">3</div>
                 <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <CreditCard className="w-4 h-4 text-purple-700" /> Metode Pembayaran
+                  <CreditCard className="w-4 h-4 text-blue-600" /> Metode Pembayaran
                 </h2>
               </div>
 
@@ -427,14 +440,14 @@ export default function CheckoutPage() {
                   { 
                     id: 'bank_transfer', 
                     name: 'Virtual Account Bank (BCA, Mandiri, BNI, BRI, Permata)', 
-                    desc: 'Otomatis terverifikasi instan via Midtrans Snap Virtual Account',
-                    badge: 'Midtrans VA' 
+                    desc: 'Otomatis terverifikasi instan via Duitku Virtual Account',
+                    badge: 'Duitku VA' 
                   },
                   { 
                     id: 'qris', 
-                    name: 'QRIS (GoPay, ShopeePay, OVO, DANA, LinkAja)', 
-                    desc: 'Scan QRIS langsung dari aplikasi e-wallet apa saja melalui Midtrans',
-                    badge: 'Midtrans QRIS' 
+                    name: 'QRIS & E-Wallet (GoPay, ShopeePay, OVO, DANA, LinkAja)', 
+                    desc: 'Scan QRIS langsung dari aplikasi e-wallet apa saja via Duitku Sandbox',
+                    badge: 'Duitku QRIS' 
                   },
                   { 
                     id: 'cod', 
@@ -447,7 +460,7 @@ export default function CheckoutPage() {
                     key={pm.id}
                     className={`flex items-start justify-between gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all ${
                       paymentMethod === pm.id
-                        ? 'border-purple-700 bg-purple-50/40 shadow-2xs'
+                        ? 'border-blue-600 bg-blue-50/40 shadow-2xs'
                         : 'border-slate-200 hover:border-slate-300 bg-white'
                     }`}
                   >
@@ -457,7 +470,7 @@ export default function CheckoutPage() {
                         name="payment"
                         checked={paymentMethod === pm.id}
                         onChange={() => setPaymentMethod(pm.id)}
-                        className="mt-1 accent-purple-700"
+                        className="mt-1 accent-blue-600"
                       />
                       <div>
                         <p className="font-bold text-xs text-slate-900">{pm.name}</p>
@@ -465,8 +478,8 @@ export default function CheckoutPage() {
                       </div>
                     </div>
                     <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0 ${
-                      pm.badge.includes('Midtrans') 
-                        ? 'text-purple-800 bg-purple-100 border border-purple-200' 
+                      pm.badge.includes('Duitku') 
+                        ? 'text-blue-700 bg-blue-50 border border-blue-200' 
                         : 'text-slate-600 bg-slate-100'
                     }`}>
                       {pm.badge}
@@ -488,8 +501,8 @@ export default function CheckoutPage() {
               <div className="space-y-3 max-h-60 overflow-y-auto pr-1 mb-4">
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex gap-3 text-xs items-center">
-                    <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center font-bold shrink-0 border border-purple-100">
-                      👗
+                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold shrink-0 border border-blue-100">
+                      📦
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="font-bold text-slate-900 truncate">{getItemName(item)}</p>
@@ -509,17 +522,17 @@ export default function CheckoutPage() {
                     <Tag className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none z-10" />
                     <input
                       type="text"
-                      placeholder="Kode Voucher (Coba: HIJRAH10)"
+                      placeholder="Kode Voucher (Coba: SAMPLE10)"
                       value={voucherCode}
                       onChange={(e) => setVoucherCode(e.target.value)}
                       style={{ paddingLeft: '44px' }}
-                      className="w-full text-xs h-10 pr-3 bg-slate-50 border border-slate-300 rounded-xl focus:border-purple-600 uppercase font-semibold text-slate-900 outline-none"
+                      className="w-full text-xs h-10 pr-3 bg-slate-50 border border-slate-300 rounded-xl focus:border-blue-600 uppercase font-semibold text-slate-900 outline-none"
                     />
                   </div>
                   <button
                     type="button"
                     onClick={handleApplyVoucher}
-                    className="px-4 h-10 bg-purple-700 text-white text-xs font-semibold rounded-xl hover:bg-purple-800 transition-colors shrink-0"
+                    className="px-4 h-10 bg-blue-600 text-white text-xs font-semibold rounded-xl hover:bg-blue-700 transition-colors shrink-0"
                   >
                     Gunakan
                   </button>
@@ -551,13 +564,13 @@ export default function CheckoutPage() {
                 <div className="flex justify-between text-slate-600 items-center">
                   <span className="flex items-center gap-1.5">
                     Biaya Layanan &amp; Pengemasan
-                    <span className="text-[10px] px-1.5 py-0.5 bg-purple-50 text-purple-700 font-bold rounded-md border border-purple-200">Box &amp; Bubble Wrap</span>
+                    <span className="text-[10px] px-1.5 py-0.5 bg-blue-50 text-blue-700 font-bold rounded-md border border-blue-200">Box &amp; Bubble Wrap</span>
                   </span>
                   <span className="font-bold text-slate-900">{formatRupiah(adminFee)}</span>
                 </div>
                 <div className="flex justify-between text-sm font-extrabold text-slate-900 border-t border-slate-100 pt-3 mt-3">
                   <span>Total Pembayaran</span>
-                  <span className="text-purple-700">{formatRupiah(grandTotal)}</span>
+                  <span className="text-blue-600">{formatRupiah(grandTotal)}</span>
                 </div>
               </div>
 
@@ -565,7 +578,7 @@ export default function CheckoutPage() {
               <button
                 onClick={handlePlaceOrder}
                 disabled={submitting || !selectedAddressId}
-                className="w-full mt-6 py-3.5 bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs rounded-xl shadow-xs transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full mt-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/25 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {submitting ? (
                   <>
@@ -573,7 +586,7 @@ export default function CheckoutPage() {
                   </>
                 ) : (
                   <>
-                    <ShieldCheck className="w-4 h-4" /> Buat Pesanan Sekarang
+                    <ShieldCheck className="w-4 h-4" /> Buat Pesanan &amp; Bayar via Duitku
                   </>
                 )}
               </button>
@@ -673,23 +686,23 @@ export default function CheckoutPage() {
         </div>
       )}
 
-      {/* Midtrans Sandbox Simulation Modal */}
-      {mockSnapModal && (
+      {/* Duitku Sandbox Simulation Modal */}
+      {mockDuitkuModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-purple-100 space-y-6 text-center">
-            <div className="w-16 h-16 bg-purple-100 text-purple-700 rounded-2xl flex items-center justify-center mx-auto shadow-inner">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-blue-100 space-y-6 text-center">
+            <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mx-auto shadow-inner">
               <CreditCard className="w-8 h-8" />
             </div>
 
             <div className="space-y-2">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
-                <Sparkles className="w-3.5 h-3.5 text-amber-600" /> Mode Midtrans Sandbox (Testing)
+                <Sparkles className="w-3.5 h-3.5 text-amber-600" /> Mode Duitku Sandbox (Testing)
               </div>
               <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">
-                Simulasi Pembayaran Midtrans
+                Simulasi Pembayaran Duitku
               </h3>
               <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                Pesanan <strong className="text-slate-800 font-mono">#{mockSnapModal.orderNumber}</strong> berhasil dibuat di sistem database.
+                Pesanan <strong className="text-slate-800 font-mono">#{mockDuitkuModal.orderNumber}</strong> berhasil dibuat di sistem database.
               </p>
             </div>
 
@@ -697,13 +710,13 @@ export default function CheckoutPage() {
               <div className="flex justify-between items-center text-slate-600">
                 <span>Metode Pembayaran:</span>
                 <span className="font-bold text-slate-900 uppercase">
-                  {mockSnapModal.paymentType === 'bank_transfer' ? 'Virtual Account Bank' : mockSnapModal.paymentType}
+                  {mockDuitkuModal.paymentType === 'bank_transfer' ? 'Virtual Account Bank' : mockDuitkuModal.paymentType}
                 </span>
               </div>
               <div className="flex justify-between items-center text-slate-600">
                 <span>Total Tagihan:</span>
-                <span className="font-extrabold text-purple-700 text-sm">
-                  {formatRupiah(mockSnapModal.totalAmount)}
+                <span className="font-extrabold text-blue-600 text-sm">
+                  {formatRupiah(mockDuitkuModal.totalAmount)}
                 </span>
               </div>
               <div className="flex justify-between items-center text-slate-600">
@@ -713,11 +726,22 @@ export default function CheckoutPage() {
             </div>
 
             <div className="space-y-2.5 pt-2">
+              {mockDuitkuModal.paymentUrl && (
+                <a
+                  href={mockDuitkuModal.paymentUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full py-3 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer border border-blue-200"
+                >
+                  Buka Halaman Pembayaran Duitku Sandbox &rarr;
+                </a>
+              )}
+
               <button
                 type="button"
                 onClick={handleSimulatePaymentSuccess}
                 disabled={isSimulatingPayment}
-                className="w-full py-3.5 bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {isSimulatingPayment ? (
                   <>
@@ -725,14 +749,14 @@ export default function CheckoutPage() {
                   </>
                 ) : (
                   <>
-                    <CheckCircle2 className="w-4 h-4" /> Simulasikan Bayar Lunas (Tes Webhook)
+                    <CheckCircle2 className="w-4 h-4" /> Simulasikan Bayar Lunas (Tes Webhook Duitku)
                   </>
                 )}
               </button>
 
               <button
                 type="button"
-                onClick={() => router.push(`/orders?orderId=${mockSnapModal.orderId}`)}
+                onClick={() => router.push(`/orders?orderId=${mockDuitkuModal.orderId}`)}
                 className="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all cursor-pointer"
               >
                 Bayar Nanti (Ke Daftar Pesanan)
@@ -740,16 +764,15 @@ export default function CheckoutPage() {
             </div>
 
             <p className="text-[10px] text-slate-400 leading-tight">
-              Tips: Masukkan Client Key &amp; Server Key Midtrans Anda di file <code className="font-mono text-purple-600">.env</code> untuk mengaktifkan Popup Snap resmi Midtrans.
+              Tips: Masukkan Merchant Code &amp; API Key Duitku Anda di file <code className="font-mono text-blue-600">.env</code> untuk mengaktifkan Popup POP resmi Duitku Sandbox.
             </p>
           </div>
         </div>
       )}
 
-      {/* Midtrans Snap JS Script */}
+      {/* Duitku Pop JS Sandbox Script */}
       <Script
-        src="https://app.sandbox.midtrans.com/snap/snap.js"
-        data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || 'SB-Mid-client-sample-key'}
+        src="https://app-sandbox.duitku.com/lib/js/duitku.js"
         strategy="afterInteractive"
       />
     </main>

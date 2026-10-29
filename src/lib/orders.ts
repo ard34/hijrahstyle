@@ -1,5 +1,5 @@
 import prisma from '@/lib/prisma';
-import { cancelMidtransTransaction } from '@/lib/midtrans';
+import { cancelDuitkuTransaction } from '@/lib/duitku';
 
 export async function cancelOrderById(orderId: string, cancelledBy: 'customer' | 'admin' = 'customer') {
   const order = await prisma.order.findUnique({
@@ -26,11 +26,11 @@ export async function cancelOrderById(orderId: string, cancelledBy: 'customer' |
     throw new Error('Pesanan yang sudah dalam proses pengiriman tidak dapat dibatalkan');
   }
 
-  // 1. Call Midtrans Cancel REST API to change transaction status in Midtrans Dashboard to 'cancel'
+  // 1. Cancel transaction context in Duitku
   try {
-    await cancelMidtransTransaction(order.orderNumber);
+    await cancelDuitkuTransaction(order.orderNumber);
   } catch (err) {
-    console.warn(`Midtrans cancel call warning for ${order.orderNumber}:`, err);
+    console.warn(`Duitku cancel call warning for ${order.orderNumber}:`, err);
   }
 
   // 2. Perform atomic database updates and restore product stock

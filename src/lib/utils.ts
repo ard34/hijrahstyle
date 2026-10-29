@@ -37,7 +37,7 @@ export function formatDateTime(date: Date | string): string {
 export function generateOrderNumber(): string {
   const timestamp = Date.now().toString(36).toUpperCase();
   const random = Math.random().toString(36).substring(2, 6).toUpperCase();
-  return `HS-${timestamp}-${random}`;
+  return `BBN-${timestamp}-${random}`;
 }
 
 export function generateSlug(text: string): string {
@@ -63,7 +63,7 @@ export const ORDER_STATUS_MAP: Record<string, { label: string; color: string }> 
   PENDING_PAYMENT: { label: 'Menunggu Pembayaran', color: 'bg-yellow-100 text-yellow-800' },
   PAID: { label: 'Dibayar', color: 'bg-blue-100 text-blue-800' },
   PROCESSING: { label: 'Diproses', color: 'bg-indigo-100 text-indigo-800' },
-  PACKED: { label: 'Dikemas', color: 'bg-purple-100 text-purple-800' },
+  PACKED: { label: 'Dikemas', color: 'bg-sky-100 text-sky-800' },
   SHIPPED: { label: 'Dikirim', color: 'bg-cyan-100 text-cyan-800' },
   DELIVERED: { label: 'Diterima', color: 'bg-green-100 text-green-800' },
   COMPLETED: { label: 'Selesai', color: 'bg-green-100 text-green-800' },

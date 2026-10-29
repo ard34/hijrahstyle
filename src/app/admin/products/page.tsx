@@ -118,7 +118,7 @@ export default function AdminProductsPage() {
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="px-4 py-2.5 bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs rounded-xl shadow-xs flex items-center gap-2 transition-all"
+          className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow-xs flex items-center gap-2 transition-all cursor-pointer"
         >
           <Plus className="w-4 h-4" /> Tambah Produk Baru
         </button>
@@ -134,7 +134,7 @@ export default function AdminProductsPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{ paddingLeft: '44px' }}
-            className="w-full text-xs h-10 pr-4 bg-slate-50 border border-slate-300 rounded-xl focus:border-purple-600 outline-none text-slate-900 placeholder:text-slate-400"
+            className="w-full text-xs h-10 pr-4 bg-slate-50 border border-slate-300 rounded-xl focus:border-blue-600 outline-none text-slate-900 placeholder:text-slate-400"
           />
         </div>
       </div>
@@ -157,7 +157,7 @@ export default function AdminProductsPage() {
               {loading ? (
                 <tr>
                   <td colSpan={6} className="text-center py-12">
-                    <Loader2 className="w-6 h-6 animate-spin text-purple-700 mx-auto" />
+                    <Loader2 className="w-6 h-6 animate-spin text-blue-600 mx-auto" />
                   </td>
                 </tr>
               ) : filteredProducts.length === 0 ? (
@@ -169,11 +169,16 @@ export default function AdminProductsPage() {
               ) : (
                 filteredProducts.map((product) => {
                   const totalStock = product.variants.reduce((sum, v) => sum + v.stock, 0);
+                  const firstImg = product.images?.[0]?.url;
                   return (
-                    <tr key={product.id} className="hover:bg-purple-50/30 transition-colors">
+                    <tr key={product.id} className="hover:bg-blue-50/30 transition-colors">
                       <td className="py-3.5 px-6 font-bold text-slate-900 flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center font-bold text-sm shrink-0 border border-purple-100">
-                          👗
+                        <div className="w-10 h-10 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center font-bold text-sm shrink-0 border border-slate-200 overflow-hidden">
+                          {firstImg ? (
+                            <img src={firstImg} alt={product.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <span>📦</span>
+                          )}
                         </div>
                         <span className="line-clamp-1">{product.name}</span>
                       </td>
@@ -304,7 +309,7 @@ export default function AdminProductsPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="flex-1 py-2.5 text-xs font-semibold text-white bg-purple-600 hover:bg-purple-700 rounded-xl transition"
+                  className="flex-1 py-2.5 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-xl transition shadow-xs cursor-pointer"
                 >
                   {submitting ? 'Menyimpan...' : 'Simpan Produk'}
                 </button>

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
 import { generateOrderNumber } from '@/lib/utils';
-import { createMidtransTransaction } from '@/lib/midtrans';
+import { createDuitkuTransaction } from '@/lib/duitku';
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
       shippingService, 
       shippingCost = 0, 
       voucherCode, 
-      paymentMethod = 'midtrans' 
+      paymentMethod = 'duitku' 
     } = body;
 
     if (!addressId) {
@@ -96,21 +96,19 @@ export async function POST(request: NextRequest) {
     const totalAmount = subtotal - discountAmount + finalShippingCost + adminFee;
     const orderNumber = generateOrderNumber();
 
-    // Prepare Midtrans transaction if online payment
-    let snapResult: { token: string; redirectUrl?: string; isMock?: boolean } | null = null;
+    // Prepare Duitku transaction if online payment
+    let transactionResult: { reference: string; paymentUrl?: string; token?: string; isMock?: boolean } | null = null;
     const isOnlinePayment = paymentMethod !== 'cod';
 
     if (isOnlinePayment) {
-      const midtransItems = cart.items.map((item) => ({
-        id: item.productVariant.id,
+      const duitkuItems = cart.items.map((item) => ({
         name: item.productVariant.product.name,
         price: item.productVariant.priceOverride || item.productVariant.product.price,
         quantity: item.quantity,
       }));
 
       if (finalShippingCost > 0) {
-        midtransItems.push({
-          id: 'SHIPPING',
+        duitkuItems.push({
           name: `Ongkir (${shippingCourier || 'Kurir'})`,
           price: finalShippingCost,
           quantity: 1,
@@ -118,8 +116,7 @@ export async function POST(request: NextRequest) {
       }
 
       if (adminFee > 0) {
-        midtransItems.push({
-          id: 'PACKAGING_FEE',
+        duitkuItems.push({
           name: 'Biaya Layanan & Pengemasan',
           price: adminFee,
           quantity: 1,
@@ -127,8 +124,7 @@ export async function POST(request: NextRequest) {
       }
 
       if (discountAmount > 0) {
-        midtransItems.push({
-          id: 'DISCOUNT',
+        duitkuItems.push({
           name: 'Diskon Voucher',
           price: -discountAmount,
           quantity: 1,
@@ -136,7 +132,7 @@ export async function POST(request: NextRequest) {
       }
 
       try {
-        snapResult = await createMidtransTransaction({
+        transactionResult = await createDuitkuTransaction({
           orderNumber,
           grossAmount: totalAmount,
           customer: {
@@ -151,11 +147,11 @@ export async function POST(request: NextRequest) {
               postalCode: address.postalCode,
             },
           },
-          items: midtransItems,
+          items: duitkuItems,
           paymentMethod,
         });
       } catch (err) {
-        console.error('Midtrans token generation error:', err);
+        console.error('Duitku transaction creation error:', err);
       }
     }
 
@@ -184,9 +180,9 @@ export async function POST(request: NextRequest) {
         },
         payment: {
           create: {
-            provider: isOnlinePayment ? 'midtrans' : 'manual',
+            provider: isOnlinePayment ? 'duitku' : 'manual',
             paymentMethod: paymentMethod,
-            providerPaymentId: snapResult?.token || null,
+            providerPaymentId: transactionResult?.reference || transactionResult?.token || null,
             amount: totalAmount,
             status: 'pending',
           },
@@ -236,9 +232,11 @@ export async function POST(request: NextRequest) {
         totalAmount: order.totalAmount,
         status: order.status,
       },
-      snapToken: snapResult?.token || null,
-      redirectUrl: snapResult?.redirectUrl || null,
-      isMock: snapResult?.isMock || false,
+      reference: transactionResult?.reference || null,
+      snapToken: transactionResult?.reference || transactionResult?.token || null, // alias for backwards compatibility
+      paymentUrl: transactionResult?.paymentUrl || null,
+      redirectUrl: transactionResult?.paymentUrl || null,
+      isMock: transactionResult?.isMock || false,
     }, { status: 201 });
   } catch (error) {
     console.error('Checkout error:', error);

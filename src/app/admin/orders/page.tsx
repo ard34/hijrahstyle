@@ -114,14 +114,14 @@ export default function AdminOrdersPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{ paddingLeft: '44px' }}
-            className="w-full text-xs h-10 pr-4 bg-slate-50 border border-slate-300 rounded-xl focus:border-purple-600 outline-none text-slate-900 placeholder:text-slate-400"
+            className="w-full text-xs h-10 pr-4 bg-slate-50 border border-slate-300 rounded-xl focus:border-blue-600 outline-none text-slate-900 placeholder:text-slate-400"
           />
         </div>
 
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="text-xs px-3.5 h-10 bg-slate-50 border border-slate-300 rounded-xl font-semibold text-slate-800 outline-none focus:border-purple-600"
+          className="text-xs px-3.5 h-10 bg-slate-50 border border-slate-300 rounded-xl font-semibold text-slate-800 outline-none focus:border-blue-600"
         >
           <option value="ALL">Semua Status Pesanan</option>
           <option value="PENDING_PAYMENT">Menunggu Pembayaran</option>
@@ -151,7 +151,7 @@ export default function AdminOrdersPage() {
               {loading ? (
                 <tr>
                   <td colSpan={7} className="text-center py-12">
-                    <Loader2 className="w-6 h-6 animate-spin text-purple-600 mx-auto" />
+                    <Loader2 className="w-6 h-6 animate-spin text-blue-600 mx-auto" />
                   </td>
                 </tr>
               ) : filteredOrders.length === 0 ? (
@@ -178,7 +178,7 @@ export default function AdminOrdersPage() {
                       <span className={`inline-flex px-2 py-0.5 rounded-full text-[11px] font-bold ${
                         order.status === 'PENDING_PAYMENT' ? 'bg-amber-100 text-amber-800' :
                         order.status === 'PAID' ? 'bg-blue-100 text-blue-800' :
-                        order.status === 'PROCESSING' ? 'bg-purple-100 text-purple-800' :
+                        order.status === 'PROCESSING' ? 'bg-sky-100 text-sky-800' :
                         order.status === 'SHIPPED' ? 'bg-indigo-100 text-indigo-800' :
                         order.status === 'CANCELLED' ? 'bg-rose-100 text-rose-800' :
                         'bg-emerald-100 text-emerald-800'
@@ -196,7 +196,7 @@ export default function AdminOrdersPage() {
                           setNewStatus(order.status);
                           setResi(order.shipment?.trackingNumber || '');
                         }}
-                        className="px-3 py-1.5 bg-purple-50 text-purple-700 hover:bg-purple-100 rounded-lg text-xs font-semibold flex items-center gap-1 ml-auto"
+                        className="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg text-xs font-semibold flex items-center gap-1 ml-auto cursor-pointer"
                       >
                         <Edit2 className="w-3.5 h-3.5" /> Kelola Status
                       </button>
@@ -257,7 +257,7 @@ export default function AdminOrdersPage() {
                 <button
                   type="submit"
                   disabled={updating}
-                  className="flex-1 py-2 text-xs font-semibold text-white bg-purple-600 hover:bg-purple-700 rounded-xl"
+                  className="flex-1 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-xl transition-all shadow-xs"
                 >
                   {updating ? 'Disimpan...' : 'Simpan Perubahan'}
                 </button>

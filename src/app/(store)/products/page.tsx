@@ -99,11 +99,11 @@ function ProductsContent() {
   return (
     <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 xl:px-16 py-4 pb-12 min-h-[calc(100vh-110px)]">
       
-      {/* 1. Breadcrumbs (Matching Reference Image) */}
+      {/* 1. Breadcrumbs */}
       <nav className="flex items-center gap-2 text-xs text-slate-500 mb-6 font-medium">
-        <Link href="/" className="hover:text-[#522880]">Beranda</Link>
+        <Link href="/" className="hover:text-blue-600">Beranda</Link>
         <span>&gt;</span>
-        <Link href="/products" className="hover:text-[#522880]">Kategori</Link>
+        <Link href="/products" className="hover:text-blue-600">Kategori</Link>
         {filters.category && (
           <>
             <span>&gt;</span>
@@ -114,7 +114,7 @@ function ProductsContent() {
 
       <div className="flex gap-10 items-start">
         
-        {/* 2. Left Sidebar Filter (Exact Match with Reference Image) */}
+        {/* 2. Left Sidebar Filter */}
         <aside className="hidden lg:block w-64 shrink-0 space-y-6 pr-4 pl-1">
           
           {/* Kategori List */}
@@ -124,27 +124,18 @@ function ProductsContent() {
               <button
                 onClick={() => setFilters(prev => ({ ...prev, category: '', page: 1 }))}
                 className={`w-full text-left px-4 py-2.5 rounded-xl font-medium transition-colors ${
-                  !filters.category ? 'bg-[#F2EDFA] text-[#522880] font-bold' : 'text-slate-600 hover:bg-slate-50'
+                  !filters.category ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-600 hover:bg-slate-50'
                 }`}
               >
                 Semua Kategori
               </button>
 
-              {[
-                { name: 'Gamis', slug: 'gamis' },
-                { name: 'Tunik', slug: 'tunik' },
-                { name: 'Hijab', slug: 'hijab' },
-                { name: 'Outerwear', slug: 'outerwear' },
-                { name: 'Setelan', slug: 'setelan' },
-                { name: 'Pria', slug: 'pria' },
-                { name: 'Anak', slug: 'anak' },
-                { name: 'Aksesoris', slug: 'aksesoris' },
-              ].map((cat) => (
+              {categories.map((cat) => (
                 <button
-                  key={cat.slug}
+                  key={cat.id || cat.slug}
                   onClick={() => setFilters(prev => ({ ...prev, category: cat.slug, page: 1 }))}
                   className={`w-full text-left px-4 py-2.5 rounded-xl font-medium transition-colors ${
-                    filters.category.toLowerCase() === cat.slug ? 'bg-[#F2EDFA] text-[#522880] font-bold' : 'text-slate-600 hover:bg-slate-50'
+                    filters.category.toLowerCase() === cat.slug.toLowerCase() ? 'bg-blue-50 text-blue-600 font-bold' : 'text-slate-600 hover:bg-slate-50'
                   }`}
                 >
                   {cat.name}
@@ -171,7 +162,7 @@ function ProductsContent() {
                     name="priceRange"
                     checked={filters.priceRange === opt.val}
                     onChange={() => handlePriceRangeSelect(opt.val, opt.min, opt.max)}
-                    className="accent-[#522880]"
+                    className="accent-blue-600"
                   />
                   <span>{opt.label}</span>
                 </label>
@@ -185,20 +176,20 @@ function ProductsContent() {
                 placeholder="Rp Min"
                 value={filters.minPrice}
                 onChange={(e) => setFilters(prev => ({ ...prev, minPrice: e.target.value, priceRange: 'custom', page: 1 }))}
-                className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs outline-none focus:border-[#522880] placeholder:text-slate-400 bg-white"
+                className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs outline-none focus:border-blue-600 placeholder:text-slate-400 bg-white"
               />
               <input
                 type="number"
                 placeholder="Rp Maks"
                 value={filters.maxPrice}
                 onChange={(e) => setFilters(prev => ({ ...prev, maxPrice: e.target.value, priceRange: 'custom', page: 1 }))}
-                className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs outline-none focus:border-[#522880] placeholder:text-slate-400 bg-white"
+                className="w-full h-9 px-3 rounded-lg border border-slate-200 text-xs outline-none focus:border-blue-600 placeholder:text-slate-400 bg-white"
               />
             </div>
 
             <button
               onClick={() => fetchProducts()}
-              className="w-full py-2.5 bg-[#F2EDFA] hover:bg-[#E6DBF7] text-[#522880] text-xs font-bold rounded-xl transition-colors mt-2"
+              className="w-full py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-600 text-xs font-bold rounded-xl transition-colors mt-2"
             >
               Terapkan
             </button>
@@ -215,8 +206,8 @@ function ProductsContent() {
                 { name: 'Terracotta', hex: '#D9531E' },
                 { name: 'Kuning', hex: '#EAB308' },
                 { name: 'Biru', hex: '#3B82F6' },
-                { name: 'Ungu Slate', hex: '#7C3AED' },
-                { name: 'Violet', hex: '#522880' },
+                { name: 'Navy', hex: '#1E3A8A' },
+                { name: 'Abu-Abu', hex: '#64748B' },
               ].map((c) => (
                 <button
                   key={c.name}
@@ -242,7 +233,7 @@ function ProductsContent() {
                   key={sz}
                   onClick={() => setFilters(prev => ({ ...prev, size: filters.size === sz ? '' : sz }))}
                   className={`w-9 h-9 rounded-lg border font-semibold flex items-center justify-center transition-colors ${
-                    filters.size === sz ? 'bg-[#522880] text-white border-[#522880]' : 'border-slate-200 text-slate-700 hover:border-slate-400 bg-white'
+                    filters.size === sz ? 'bg-blue-600 text-white border-blue-600' : 'border-slate-200 text-slate-700 hover:border-slate-400 bg-white'
                   }`}
                 >
                   {sz}
@@ -273,14 +264,14 @@ function ProductsContent() {
                 onClick={() => setShowMobileFilter(!showMobileFilter)}
                 className="px-4 py-2 border border-slate-200 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 rounded-xl flex items-center gap-2 shadow-2xs"
               >
-                <Filter className="w-4 h-4 text-[#522880]" /> Filter
+                <Filter className="w-4 h-4 text-blue-600" /> Filter
               </button>
 
               <div className="flex items-center gap-2">
                 <select
                   value={filters.sort}
                   onChange={(e) => setFilters(prev => ({ ...prev, sort: e.target.value, page: 1 }))}
-                  className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-700 outline-none focus:border-[#522880] shadow-2xs"
+                  className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-700 outline-none focus:border-blue-600 shadow-2xs"
                 >
                   <option value="newest">Urutkan: Terbaru</option>
                   <option value="price-low">Harga Terendah</option>
@@ -294,7 +285,7 @@ function ProductsContent() {
           {/* Product Grid (3 Columns on Desktop) */}
           {loading ? (
             <div className="py-24 text-center">
-              <Loader2 className="w-8 h-8 animate-spin text-[#522880] mx-auto" />
+              <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto" />
               <p className="text-xs text-slate-400 mt-2 font-medium">Memuat katalog produk...</p>
             </div>
           ) : products.length === 0 ? (
@@ -303,7 +294,7 @@ function ProductsContent() {
               <p className="text-xs text-slate-500 mb-4">Coba sesuaikan kata kunci atau pilihan filter Anda.</p>
               <button
                 onClick={() => setFilters({ search: '', category: '', sort: 'newest', priceRange: '', minPrice: '', maxPrice: '', color: '', size: '', page: 1 })}
-                className="px-4 py-2 bg-[#522880] text-white rounded-xl text-xs font-semibold hover:bg-[#421D6B] transition-colors shadow-xs"
+                className="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-semibold hover:bg-blue-700 transition-colors shadow-xs"
               >
                 Reset Semua Filter
               </button>
@@ -326,7 +317,7 @@ export default function ProductsPage() {
   return (
     <Suspense fallback={
       <div className="py-24 text-center">
-        <Loader2 className="w-8 h-8 animate-spin text-[#522880] mx-auto" />
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600 mx-auto" />
       </div>
     }>
       <ProductsContent />

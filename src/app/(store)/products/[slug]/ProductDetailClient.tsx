@@ -129,9 +129,9 @@ export default function ProductDetailClient({ product, relatedProducts, avgRatin
           </div>
 
           {/* Price Box */}
-          <div className="p-5 rounded-2xl bg-[#F7F5F2] border border-slate-200/80 space-y-1">
+          <div className="p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1">
             <div className="flex items-baseline gap-3 flex-wrap">
-              <span className="text-3xl sm:text-4xl font-extrabold text-[#522880] tracking-tight">
+              <span className="text-3xl sm:text-4xl font-extrabold text-blue-600 tracking-tight">
                 {formatPrice(currentPrice)}
               </span>
               {hasDiscount && (
@@ -146,7 +146,7 @@ export default function ProductDetailClient({ product, relatedProducts, avgRatin
           {colors.length > 0 && (
             <div className="space-y-2">
               <label className="text-xs font-bold text-slate-800 block">
-                Pilih Warna: <span className="text-[#522880] font-extrabold">{selectedColor}</span>
+                Pilih Warna: <span className="text-blue-600 font-extrabold">{selectedColor}</span>
               </label>
               <div className="flex flex-wrap gap-2.5">
                 {colors.map((color) => (
@@ -155,7 +155,7 @@ export default function ProductDetailClient({ product, relatedProducts, avgRatin
                     onClick={() => setSelectedColor(color)}
                     className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all ${
                       selectedColor === color
-                        ? 'border-[#522880] bg-[#F2EDFA] text-[#522880] font-bold shadow-2xs'
+                        ? 'border-blue-600 bg-blue-50 text-blue-700 font-bold shadow-2xs'
                         : 'border-slate-200 text-slate-700 hover:border-slate-300 bg-white'
                     }`}
                   >
@@ -170,7 +170,7 @@ export default function ProductDetailClient({ product, relatedProducts, avgRatin
           {sizes.length > 0 && (
             <div className="space-y-2">
               <label className="text-xs font-bold text-slate-800 block">
-                Pilih Ukuran: <span className="text-[#522880] font-extrabold">{selectedSize}</span>
+                Pilih Ukuran: <span className="text-blue-600 font-extrabold">{selectedSize}</span>
               </label>
               <div className="flex flex-wrap gap-2.5">
                 {sizes.map((size) => (
@@ -179,7 +179,7 @@ export default function ProductDetailClient({ product, relatedProducts, avgRatin
                     onClick={() => setSelectedSize(size)}
                     className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all min-w-[3.5rem] ${
                       selectedSize === size
-                        ? 'border-[#522880] bg-[#F2EDFA] text-[#522880] font-bold shadow-2xs'
+                        ? 'border-blue-600 bg-blue-50 text-blue-700 font-bold shadow-2xs'
                         : 'border-slate-200 text-slate-700 hover:border-slate-300 bg-white'
                     }`}
                   >
@@ -223,7 +223,7 @@ export default function ProductDetailClient({ product, relatedProducts, avgRatin
             <button
               onClick={handleAddToCart}
               disabled={stock === 0 || isAddingToCart}
-              className="flex-1 py-3.5 px-6 rounded-xl bg-[#522880] hover:bg-[#421D6B] text-white font-bold text-xs sm:text-sm shadow-xs transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+              className="flex-1 py-3.5 px-6 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-md shadow-blue-600/25 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
             >
               {isAddingToCart ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -248,7 +248,7 @@ export default function ProductDetailClient({ product, relatedProducts, avgRatin
               { icon: RotateCcw, label: 'Bisa Retur' },
             ].map(({ icon: Icon, label }) => (
               <div key={label} className="text-center space-y-1">
-                <div className="w-8 h-8 rounded-full bg-[#F2EDFA] text-[#522880] flex items-center justify-center mx-auto">
+                <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto">
                   <Icon className="w-4 h-4" />
                 </div>
                 <span className="text-[11px] font-semibold text-slate-600 block">{label}</span>

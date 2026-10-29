@@ -60,7 +60,7 @@ export default function AdminCategoriesPage() {
               {loading ? (
                 <tr>
                   <td colSpan={5} className="text-center py-12">
-                    <Loader2 className="w-6 h-6 animate-spin text-purple-700 mx-auto" />
+                    <Loader2 className="w-6 h-6 animate-spin text-blue-600 mx-auto" />
                   </td>
                 </tr>
               ) : categories.length === 0 ? (
@@ -71,9 +71,9 @@ export default function AdminCategoriesPage() {
                 </tr>
               ) : (
                 categories.map((cat) => (
-                  <tr key={cat.id} className="hover:bg-purple-50/30 transition-colors">
+                  <tr key={cat.id} className="hover:bg-blue-50/30 transition-colors">
                     <td className="py-4 px-6 font-bold text-slate-900 flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center font-bold text-xs shrink-0 border border-purple-100">
+                      <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs shrink-0 border border-blue-100">
                         <Tag className="w-4 h-4" />
                       </div>
                       <span>{cat.name}</span>
