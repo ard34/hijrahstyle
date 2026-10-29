@@ -136,7 +136,28 @@ export async function createMidtransTransaction({
       isMock: false,
     };
   } catch (error: any) {
-    console.error('Midtrans Snap Error:', error);
+    console.error('Midtrans Snap Error:', error?.ApiResponse || error?.message || error);
+
+    // If order_id has already been used in a previous attempt, automatically retry with a unique attempt suffix
+    const errText = JSON.stringify(error?.ApiResponse || error?.message || error || '').toLowerCase();
+    if (errText.includes('sudah digunakan') || errText.includes('already') || errText.includes('duplicate')) {
+      try {
+        const retrySuffix = Math.floor(Date.now() / 1000).toString(36).toUpperCase();
+        const retryOrderId = `${orderNumber}-${retrySuffix}`;
+        console.log(`Auto-retrying Midtrans Snap with fresh unique order_id: ${retryOrderId}`);
+
+        parameter.transaction_details.order_id = retryOrderId;
+        const retryTx = await snap.createTransaction(parameter);
+        return {
+          token: retryTx.token,
+          redirectUrl: retryTx.redirect_url,
+          isMock: false,
+        };
+      } catch (retryErr) {
+        console.error('Midtrans Snap Retry Failed:', retryErr);
+      }
+    }
+
     // If it failed due to bad keys in dev, fallback gracefully so user flow continues
     return {
       token: `mock-snap-token-${orderNumber}`,

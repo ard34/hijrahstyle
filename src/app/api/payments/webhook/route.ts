@@ -36,8 +36,8 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Find the order
-    const order = await prisma.order.findUnique({
+    // Find the order (support exact orderNumber or base orderNumber if retry suffix was appended)
+    let order = await prisma.order.findUnique({
       where: { orderNumber: order_id },
       include: {
         payment: true,
@@ -50,6 +50,26 @@ export async function POST(request: NextRequest) {
         },
       },
     });
+
+    if (!order && typeof order_id === 'string' && order_id.startsWith('HS-')) {
+      const parts = order_id.split('-');
+      if (parts.length >= 3) {
+        const baseOrderNumber = `${parts[0]}-${parts[1]}-${parts[2]}`;
+        order = await prisma.order.findUnique({
+          where: { orderNumber: baseOrderNumber },
+          include: {
+            payment: true,
+            items: {
+              include: {
+                productVariant: {
+                  include: { product: true },
+                },
+              },
+            },
+          },
+        });
+      }
+    }
 
     if (!order) {
       console.warn('Order not found for Midtrans notification:', order_id);
