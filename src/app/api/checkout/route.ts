@@ -152,6 +152,7 @@ export async function POST(request: NextRequest) {
             },
           },
           items: midtransItems,
+          paymentMethod,
         });
       } catch (err) {
         console.error('Midtrans token generation error:', err);

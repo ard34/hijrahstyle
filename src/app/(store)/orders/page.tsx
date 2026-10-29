@@ -57,6 +57,7 @@ function OrdersContent() {
 
   // Midtrans Payment state
   const [payingOrderId, setPayingOrderId] = useState<string | null>(null);
+  const [cancellingOrderId, setCancellingOrderId] = useState<string | null>(null);
   const [mockSnapModal, setMockSnapModal] = useState<{
     orderId: string;
     orderNumber: string;
@@ -119,6 +120,29 @@ function OrdersContent() {
       alert(err.message);
     } finally {
       setPayingOrderId(null);
+    }
+  };
+
+  const handleCancelOrder = async (orderId: string, orderNumber: string) => {
+    const isConfirmed = window.confirm(
+      `Apakah Anda yakin ingin membatalkan pesanan #${orderNumber}?\n\nTagihan pembayaran di Midtrans akan otomatis dibatalkan dan stok produk akan dikembalikan.`
+    );
+    if (!isConfirmed) return;
+
+    try {
+      setCancellingOrderId(orderId);
+      const res = await fetch(`/api/orders/${orderId}/cancel`, {
+        method: 'POST',
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Gagal membatalkan pesanan');
+
+      alert('Pesanan berhasil dibatalkan dan tagihan Midtrans telah dihapus.');
+      fetchOrders();
+    } catch (err: any) {
+      alert(err.message || 'Terjadi kesalahan saat membatalkan pesanan');
+    } finally {
+      setCancellingOrderId(null);
     }
   };
 
@@ -313,21 +337,39 @@ function OrdersContent() {
                 </div>
 
                 {order.status === 'PENDING_PAYMENT' && (
-                  <button
-                    onClick={() => handlePayNow(order.id)}
-                    disabled={payingOrderId === order.id}
-                    className="px-4 py-2.5 bg-purple-700 hover:bg-purple-800 text-white rounded-xl text-xs font-bold shadow-xs transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
-                  >
-                    {payingOrderId === order.id ? (
-                      <>
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" /> Menghubungkan...
-                      </>
-                    ) : (
-                      <>
-                        <CreditCard className="w-3.5 h-3.5" /> Bayar Sekarang (Midtrans)
-                      </>
-                    )}
-                  </button>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      onClick={() => handleCancelOrder(order.id, order.orderNumber)}
+                      disabled={cancellingOrderId === order.id || payingOrderId === order.id}
+                      className="px-3.5 py-2.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                    >
+                      {cancellingOrderId === order.id ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" /> Membatalkan...
+                        </>
+                      ) : (
+                        <>
+                          <AlertCircle className="w-3.5 h-3.5 text-rose-600" /> Batalkan Pesanan
+                        </>
+                      )}
+                    </button>
+
+                    <button
+                      onClick={() => handlePayNow(order.id)}
+                      disabled={payingOrderId === order.id || cancellingOrderId === order.id}
+                      className="px-4 py-2.5 bg-purple-700 hover:bg-purple-800 text-white rounded-xl text-xs font-bold shadow-xs transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                    >
+                      {payingOrderId === order.id ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" /> Menghubungkan...
+                        </>
+                      ) : (
+                        <>
+                          <CreditCard className="w-3.5 h-3.5" /> Bayar Sekarang (Midtrans)
+                        </>
+                      )}
+                    </button>
+                  </div>
                 )}
               </div>
             </div>

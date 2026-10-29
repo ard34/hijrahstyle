@@ -51,11 +51,13 @@ export async function createMidtransTransaction({
   grossAmount,
   customer,
   items,
+  paymentMethod,
 }: {
   orderNumber: string;
   grossAmount: number;
   customer: MidtransCustomer;
   items: MidtransItem[];
+  paymentMethod?: string;
 }): Promise<{ token: string; redirectUrl?: string; isMock?: boolean }> {
   // If no valid key is set yet, return a safe mock token for simulation/demo
   if (!isMidtransConfigured()) {
@@ -101,7 +103,15 @@ export async function createMidtransTransaction({
     });
   }
 
-  const parameter = {
+  // Filter payment methods based on customer's choice at checkout
+  let enabledPayments: string[] | undefined = undefined;
+  if (paymentMethod === 'bank_transfer') {
+    enabledPayments = ['bca_va', 'bni_va', 'bri_va', 'echannel', 'permata_va', 'other_va'];
+  } else if (paymentMethod === 'qris') {
+    enabledPayments = ['qris', 'gopay', 'shopeepay'];
+  }
+
+  const parameter: any = {
     transaction_details: {
       order_id: orderNumber,
       gross_amount: roundedGross,
@@ -123,6 +133,7 @@ export async function createMidtransTransaction({
         : undefined,
     },
     item_details: preparedItems,
+    ...(enabledPayments ? { enabled_payments: enabledPayments } : {}),
     callbacks: {
       finish: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/orders?success=true&orderNumber=${orderNumber}`,
     },
@@ -190,3 +201,37 @@ export function verifyMidtransSignature({
 
   return computedHash.toLowerCase() === signatureKey.toLowerCase();
 }
+
+/**
+ * Cancel a transaction in Midtrans Dashboard
+ * Official Midtrans REST API: POST /v2/{order_id}/cancel
+ */
+export async function cancelMidtransTransaction(orderId: string): Promise<{ success: boolean; data?: any; error?: string }> {
+  if (!isMidtransConfigured()) {
+    return { success: true, data: { status_code: '200', transaction_status: 'cancel', isMock: true } };
+  }
+
+  const isProduction = process.env.MIDTRANS_IS_PRODUCTION === 'true';
+  const baseUrl = isProduction ? 'https://api.midtrans.com' : 'https://api.sandbox.midtrans.com';
+  const serverKey = process.env.MIDTRANS_SERVER_KEY || '';
+  const authHeader = 'Basic ' + Buffer.from(serverKey + ':').toString('base64');
+
+  try {
+    const res = await fetch(`${baseUrl}/v2/${orderId}/cancel`, {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': authHeader,
+      },
+    });
+
+    const data = await res.json();
+    console.log(`Midtrans cancel response for ${orderId}:`, data);
+    return { success: res.ok, data };
+  } catch (error: any) {
+    console.error(`Midtrans cancel error for ${orderId}:`, error);
+    return { success: false, error: error?.message || 'Gagal membatalkan transaksi di Midtrans' };
+  }
+}
+

@@ -91,6 +91,7 @@ export async function POST(
             ]
           : []),
       ],
+      paymentMethod: order.payment?.paymentMethod || undefined,
     });
 
     // Update payment record with snapToken if available

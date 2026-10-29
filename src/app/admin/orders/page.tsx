@@ -180,6 +180,7 @@ export default function AdminOrdersPage() {
                         order.status === 'PAID' ? 'bg-blue-100 text-blue-800' :
                         order.status === 'PROCESSING' ? 'bg-purple-100 text-purple-800' :
                         order.status === 'SHIPPED' ? 'bg-indigo-100 text-indigo-800' :
+                        order.status === 'CANCELLED' ? 'bg-rose-100 text-rose-800' :
                         'bg-emerald-100 text-emerald-800'
                       }`}>
                         {order.status}

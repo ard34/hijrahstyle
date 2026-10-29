@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
+import { cancelOrderById } from '@/lib/orders';
 
 export async function GET() {
   try {
@@ -36,6 +37,11 @@ export async function PUT(request: NextRequest) {
 
     if (!orderId) {
       return NextResponse.json({ error: 'Order ID wajib' }, { status: 400 });
+    }
+
+    if (status === 'CANCELLED') {
+      const result = await cancelOrderById(orderId, 'admin');
+      return NextResponse.json({ message: 'Order berhasil dibatalkan di sistem & Midtrans', order: result.order });
     }
 
     const updateData: any = {};

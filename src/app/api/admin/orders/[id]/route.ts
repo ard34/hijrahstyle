@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 import { getSession } from '@/lib/auth';
+import { cancelOrderById } from '@/lib/orders';
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -10,6 +11,11 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     const { id } = await params;
     const body = await request.json();
     const { status, trackingNumber, courier, service } = body;
+
+    if (status === 'CANCELLED') {
+      const result = await cancelOrderById(id, 'admin');
+      return NextResponse.json({ message: 'Order berhasil dibatalkan di sistem & Midtrans', order: result.order });
+    }
 
     const updateData: any = {};
     if (status) updateData.status = status;
