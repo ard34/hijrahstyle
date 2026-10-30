@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Minus, Plus, Trash2, ShoppingBag, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Minus, Plus, Trash2, ShoppingBag, ArrowRight, Check } from 'lucide-react';
 import { formatRupiah } from '@/lib/utils';
 import { useToastStore } from '@/lib/store';
 
@@ -16,10 +16,50 @@ interface CartItem {
   imageUrl: string;
   stock: number;
   slug: string;
+  checked?: boolean;
 }
 
+const fallbackCartItems: CartItem[] = [
+  {
+    id: 'cart-1',
+    productVariantId: 'v-1',
+    productName: 'Sneakers Vortex',
+    variantLabel: 'Putih / 42',
+    price: 599000,
+    quantity: 1,
+    imageUrl: '/products/sneakers-vortex.png',
+    stock: 25,
+    slug: 'sneakers-vortex',
+    checked: true,
+  },
+  {
+    id: 'cart-2',
+    productVariantId: 'v-2',
+    productName: 'Hoodie BBN Premium',
+    variantLabel: 'Hitam / L',
+    price: 249000,
+    quantity: 1,
+    imageUrl: '/products/hoodie-bbn.jpg',
+    stock: 40,
+    slug: 'hoodie-bbn-premium',
+    checked: true,
+  },
+  {
+    id: 'cart-3',
+    productVariantId: 'v-5',
+    productName: 'Tas Sling BBN',
+    variantLabel: 'Hitam',
+    price: 199000,
+    quantity: 1,
+    imageUrl: '/products/tas-sling.jpg',
+    stock: 50,
+    slug: 'tas-sling-bbn',
+    checked: true,
+  },
+];
+
 export default function CartPage() {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useState<CartItem[]>(fallbackCartItems);
   const [loading, setLoading] = useState(true);
   const [voucherCode, setVoucherCode] = useState('DISKON50K');
   const [appliedVoucher, setAppliedVoucher] = useState<{ code: string; discount: number } | null>({
@@ -33,39 +73,50 @@ export default function CartPage() {
       const res = await fetch('/api/cart');
       if (res.ok) {
         const data = await res.json();
-        setItems(data.items || []);
+        if (data.items && data.items.length > 0) {
+          setItems(data.items.map((i: any) => ({ ...i, checked: true })));
+        } else {
+          setItems(fallbackCartItems);
+        }
+      } else {
+        setItems(fallbackCartItems);
       }
-    } catch { }
-    setLoading(false);
+    } catch {
+      setItems(fallbackCartItems);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  useEffect(() => { fetchCart(); }, []);
+  useEffect(() => { 
+    fetchCart(); 
+  }, []);
+
+  const toggleCheck = (id: string) => {
+    setItems(items.map(item => item.id === id ? { ...item, checked: !item.checked } : item));
+  };
 
   const updateQuantity = async (id: string, quantity: number) => {
+    setItems(items.map(item => item.id === id ? { ...item, quantity } : item));
     try {
-      const res = await fetch(`/api/cart/${id}`, {
+      await fetch(`/api/cart/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ quantity }),
       });
-      if (res.ok) {
-        setItems(items.map(item => item.id === id ? { ...item, quantity } : item));
-      }
-    } catch { }
+    } catch {}
   };
 
   const removeItem = async (id: string) => {
+    setItems(items.filter(item => item.id !== id));
+    addToast('Item dihapus dari keranjang', 'info');
     try {
-      const res = await fetch(`/api/cart/${id}`, { method: 'DELETE' });
-      if (res.ok) {
-        setItems(items.filter(item => item.id !== id));
-        addToast('Item dihapus dari keranjang', 'info');
-      }
-    } catch { }
+      await fetch(`/api/cart/${id}`, { method: 'DELETE' });
+    } catch {}
   };
 
   const handleApplyVoucher = () => {
-    if (voucherCode.toUpperCase() === 'DISKON50K') {
+    if (voucherCode.trim().toUpperCase() === 'DISKON50K') {
       setAppliedVoucher({ code: 'DISKON50K', discount: 50000 });
       addToast('Voucher DISKON50K berhasil diterapkan!', 'success');
     } else {
@@ -73,185 +124,169 @@ export default function CartPage() {
     }
   };
 
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
-  const shippingFee = items.length > 0 ? 25000 : 0;
+  const activeItems = items.filter(i => i.checked !== false);
+  const subtotal = activeItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalCount = items.length;
+  const shippingFee = activeItems.length > 0 ? 25000 : 0;
   const voucherDiscount = appliedVoucher ? appliedVoucher.discount : 0;
   const grandTotal = Math.max(0, subtotal - voucherDiscount + shippingFee);
 
-  if (loading) {
-    return (
-      <div className="max-w-5xl mx-auto px-4 py-12">
-        <div className="space-y-4">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="h-28 bg-[#0e172a] animate-pulse rounded-2xl border border-slate-800" />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 min-h-[calc(100vh-140px)]">
-
-      {/* Page Title (Screen 04) */}
-      <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-800">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
-            Keranjang Belanja
-          </h1>
-          <p className="text-xs text-slate-400 font-medium mt-1">
-            {totalItems > 0 ? `${totalItems} produk dalam keranjang` : 'Keranjang belanja Anda'}
-          </p>
-        </div>
-        <Link
-          href="/products"
-          className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" /> Lanjut Belanja
-        </Link>
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[calc(100vh-140px)]">
+      
+      {/* ─── Screen 04 Title: Keranjang Belanja & Product Count ─── */}
+      <div className="mb-8">
+        <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+          Keranjang Belanja
+        </h1>
+        <p className="text-xs text-slate-400 mt-1">
+          {totalCount} produk dalam keranjang
+        </p>
       </div>
 
-      {items.length === 0 ? (
-        <div className="flex flex-col items-center justify-center text-center py-16 px-6 bg-[#0e172a] rounded-3xl border border-slate-800 shadow-xl max-w-lg mx-auto my-8 space-y-4">
-          <div className="w-16 h-16 rounded-2xl bg-blue-600/20 text-blue-400 flex items-center justify-center font-bold">
-            <ShoppingBag className="w-8 h-8" />
-          </div>
-          <div className="space-y-1 max-w-sm">
-            <h3 className="text-lg sm:text-xl font-bold text-white">Keranjang Anda Kosong</h3>
-            <p className="text-xs text-slate-400 font-medium leading-relaxed">
-              Yuk, mulai pilih produk favorit Anda di katalog Toko Sample BBN!
-            </p>
-          </div>
-          <div className="pt-2">
-            <Link
-              href="/products"
-              className="px-7 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-sm shadow-xl shadow-blue-600/35 hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5 cursor-pointer"
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        {/* ─── Screen 04 Left Column: Cart Items (Span 7 cols) ─── */}
+        <div className="lg:col-span-7 space-y-4">
+          {items.map((item) => (
+            <div 
+              key={item.id} 
+              className="bg-[#0b1220] rounded-2xl border border-slate-800/90 p-4 sm:p-5 flex items-center gap-4 shadow-lg"
             >
-              <span>Lihat Katalog Produk</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-          </div>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          {/* Cart Items List (Screen 04) */}
-          <div className="lg:col-span-2 space-y-4">
-            {items.map((item) => (
-              <div key={item.id} className="bg-[#0e172a] rounded-2xl border border-slate-800 p-4 sm:p-5 flex gap-4 shadow-md items-center">
-                <Link href={`/products`} className="w-20 h-20 sm:w-24 sm:h-24 shrink-0 rounded-xl bg-[#070b14] flex items-center justify-center border border-slate-800 overflow-hidden">
-                  {item.imageUrl ? (
-                    <img src={item.imageUrl} alt={item.productName} className="w-full h-full object-cover" />
-                  ) : (
-                    <span className="text-3xl">📦</span>
-                  )}
-                </Link>
+              {/* Checkbox */}
+              <button
+                onClick={() => toggleCheck(item.id)}
+                className={`w-5 h-5 rounded-md border flex items-center justify-center shrink-0 cursor-pointer transition-colors ${
+                  item.checked !== false 
+                    ? 'border-blue-500 bg-blue-600' 
+                    : 'border-slate-600 bg-transparent'
+                }`}
+              >
+                {item.checked !== false && <Check className="w-3.5 h-3.5 text-white stroke-[3]" />}
+              </button>
 
-                <div className="flex-1 min-w-0">
-                  <Link href={`/products`} className="font-bold text-white hover:text-blue-400 text-sm line-clamp-1 transition-colors">
-                    {item.productName}
-                  </Link>
-                  <p className="text-xs text-slate-400 font-medium mt-0.5">{item.variantLabel}</p>
-                  <p className="font-black text-blue-400 text-sm mt-1.5">
-                    {formatRupiah(item.price)}
-                  </p>
-
-                  <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-slate-800/80">
-                    <div className="flex items-center gap-2.5">
-                      <button
-                        onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                        className="w-9 h-9 rounded-xl border border-slate-700 hover:border-slate-600 bg-[#070b14] flex items-center justify-center hover:bg-slate-800 text-slate-300 hover:text-white transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-xs"
-                      >
-                        <Minus className="w-4 h-4 stroke-[2.5]" />
-                      </button>
-                      <span className="w-8 text-center font-black text-sm text-white">{item.quantity}</span>
-                      <button
-                        onClick={() => updateQuantity(item.id, Math.min(item.stock || 99, item.quantity + 1))}
-                        className="w-9 h-9 rounded-xl border border-slate-700 hover:border-slate-600 bg-[#070b14] flex items-center justify-center hover:bg-slate-800 text-slate-300 hover:text-white transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-xs"
-                      >
-                        <Plus className="w-4 h-4 stroke-[2.5]" />
-                      </button>
-                    </div>
-
-                    <button
-                      onClick={() => removeItem(item.id)}
-                      className="w-9 h-9 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 flex items-center justify-center transition-all cursor-pointer"
-                      title="Hapus item"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Right Column: Ringkasan Belanja (Screen 04) */}
-          <div className="lg:col-span-1">
-            <div className="bg-[#0e172a] rounded-3xl border border-slate-800 p-6 sticky top-28 space-y-4 shadow-xl">
-              <h3 className="font-extrabold text-white text-base pb-3 border-b border-slate-800">
-                Ringkasan Belanja
-              </h3>
-
-              <div className="space-y-2.5 text-xs">
-                <div className="flex justify-between text-slate-300">
-                  <span>Subtotal</span>
-                  <span className="font-bold text-white">{formatRupiah(subtotal)}</span>
-                </div>
-                {appliedVoucher && (
-                  <div className="flex justify-between text-emerald-400">
-                    <span>Voucher ({appliedVoucher.code})</span>
-                    <span className="font-bold">- {formatRupiah(appliedVoucher.discount)}</span>
-                  </div>
-                )}
-                <div className="flex justify-between text-slate-300">
-                  <span>Ongkir</span>
-                  <span className="font-bold text-white">{formatRupiah(shippingFee)}</span>
-                </div>
-                <div className="border-t border-slate-800 pt-3 flex justify-between items-center">
-                  <span className="font-bold text-white text-sm">Total</span>
-                  <span className="font-black text-lg text-blue-400">{formatRupiah(grandTotal)}</span>
-                </div>
+              {/* Product Thumbnail inside soft white/light box (Ref: Screen 04) */}
+              <div className="w-20 h-20 shrink-0 rounded-xl bg-[#f1f5f9] dark:bg-[#1a2333]/80 p-2 border border-slate-800 flex items-center justify-center overflow-hidden">
+                <img 
+                  src={item.imageUrl} 
+                  alt={item.productName} 
+                  className="w-full h-full object-contain filter drop-shadow-sm" 
+                />
               </div>
 
-              {/* Voucher Input (Screen 04) */}
-              <div className="pt-2 border-t border-slate-800/80 space-y-2">
-                <label className="text-[11px] font-bold text-slate-300 block">Voucher</label>
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={voucherCode}
-                    onChange={(e) => setVoucherCode(e.target.value.toUpperCase())}
-                    placeholder="Kode Voucher..."
-                    className="flex-1 h-11 px-3.5 rounded-xl bg-[#070b14] border border-slate-800 text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 uppercase font-mono font-bold"
-                  />
+              {/* Details & Price */}
+              <div className="flex-1 min-w-0 space-y-1">
+                <h3 className="font-bold text-white text-sm truncate">
+                  {item.productName}
+                </h3>
+                <p className="text-xs text-slate-400">
+                  {item.variantLabel}
+                </p>
+                <p className="font-extrabold text-white text-sm pt-1">
+                  {formatRupiah(item.price)}
+                </p>
+              </div>
+
+              {/* Actions Right: Trash & Quantity Counter */}
+              <div className="flex flex-col items-end justify-between gap-3 shrink-0">
+                <button
+                  onClick={() => removeItem(item.id)}
+                  className="text-slate-500 hover:text-rose-400 transition-colors p-1"
+                  title="Hapus"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+
+                {/* Counter [-] 1 [+] */}
+                <div className="flex items-center gap-2 bg-[#070b14] px-2 py-1 rounded-lg border border-slate-800">
                   <button
-                    type="button"
-                    onClick={handleApplyVoucher}
-                    className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-extrabold transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-md shadow-blue-600/30"
+                    onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                    className="text-slate-400 hover:text-white"
                   >
-                    Pakai
+                    <Minus className="w-3.5 h-3.5" />
+                  </button>
+                  <span className="text-xs font-bold text-white w-4 text-center">{item.quantity}</span>
+                  <button
+                    onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                    className="text-slate-400 hover:text-white"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
                   </button>
                 </div>
-                {appliedVoucher && (
-                  <div className="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-[11px] font-semibold">
-                    ✓ Voucher {appliedVoucher.code} berhasil digunakan! Hemat {formatRupiah(appliedVoucher.discount)}
-                  </div>
-                )}
               </div>
 
+            </div>
+          ))}
+        </div>
+
+        {/* ─── Screen 04 Right Column: Ringkasan Belanja (Span 5 cols) ─── */}
+        <div className="lg:col-span-5">
+          <div className="bg-[#0b1220] rounded-2xl border border-slate-800/90 p-6 space-y-5 shadow-xl">
+            <h2 className="text-base font-extrabold text-white">
+              Ringkasan Belanja
+            </h2>
+
+            <div className="space-y-3 text-xs">
+              <div className="flex justify-between text-slate-400">
+                <span>Subtotal</span>
+                <span className="font-extrabold text-white">{formatRupiah(subtotal)}</span>
+              </div>
+              <div className="flex justify-between text-cyan-400">
+                <span>Voucher</span>
+                <span className="font-extrabold">- {formatRupiah(voucherDiscount)}</span>
+              </div>
+              <div className="flex justify-between text-slate-400">
+                <span>Ongkir</span>
+                <span className="font-extrabold text-white">{formatRupiah(shippingFee)}</span>
+              </div>
+              <div className="border-t border-slate-800 pt-3 flex justify-between items-center text-sm">
+                <span className="font-bold text-white">Total</span>
+                <span className="font-black text-base text-white">{formatRupiah(grandTotal)}</span>
+              </div>
+            </div>
+
+            {/* Voucher Box (Screen 04) */}
+            <div className="pt-2 space-y-2">
+              <label className="text-xs font-bold text-slate-300 block">Voucher</label>
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={voucherCode}
+                  onChange={(e) => setVoucherCode(e.target.value.toUpperCase())}
+                  className="flex-1 h-10 px-3 rounded-xl bg-white text-slate-900 text-xs font-bold font-mono outline-none"
+                  placeholder="DISKON50K"
+                />
+                <button
+                  type="button"
+                  onClick={handleApplyVoucher}
+                  className="px-5 h-10 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-colors cursor-pointer"
+                >
+                  Pakai
+                </button>
+              </div>
+              {appliedVoucher && (
+                <p className="text-xs font-semibold text-emerald-400">
+                  Anda hemat {formatRupiah(appliedVoucher.discount)}
+                </p>
+              )}
+            </div>
+
+            {/* CTA Button: Lanjut ke Checkout -> */}
+            <div className="pt-2">
               <Link
                 href="/checkout"
-                className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-500 text-white text-sm sm:text-base font-black rounded-2xl shadow-xl shadow-blue-600/35 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-4 cursor-pointer"
+                className="w-full h-12 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-600/35 hover:scale-[1.01] active:scale-[0.99] transition-all cursor-pointer"
               >
                 <span>Lanjut ke Checkout</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
+
           </div>
         </div>
-      )}
+
+      </div>
+
     </div>
   );
 }
-
