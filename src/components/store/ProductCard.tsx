@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Heart, Play, Star, MapPin, ShoppingBag, Check } from 'lucide-react';
+import { Heart, Star, MapPin, ShoppingBag, Check } from 'lucide-react';
 import { formatPrice, getDiscountPercentage } from '@/lib/utils';
 import { useToastStore } from '@/lib/store';
 
@@ -19,28 +19,21 @@ export default function ProductCard({
   const { addToast } = useToastStore();
   const router = useRouter();
 
-  const productName = product.name || product.title || 'Produk Pilihan';
+  const productName = product.name || product.title || 'Produk Muslimah';
   const hasDiscount = Boolean(product.compareAtPrice && product.compareAtPrice > product.price);
   const discount = hasDiscount 
     ? getDiscountPercentage(product.compareAtPrice, product.price) 
-    : (product.discount || 17);
+    : 0;
 
   const imageUrl = product.images?.[0]?.imageUrl || product.images?.[0]?.url || '/products/kaos-forge.jpg';
 
-  // Shopee cities list
-  const cities = ['KOTA SERANG', 'KOTA JAKARTA PUSAT', 'KAB. TANGERANG', 'KOTA BEKASI', 'KOTA JAKARTA BARAT', 'KOTA SEMARANG', 'KAB. WONOSOBO'];
+  // Single Store: HijrahStyle Official, Serang
+  const storeOrigin = 'Kota Serang';
+
+  // Rating & Terjual
   const hash = Math.abs(String(product.id || product.slug || 'prod').split('').reduce((acc, c) => acc + c.charCodeAt(0), 0));
-  const productCity = product.city || cities[hash % cities.length];
-
-  // Shopee Mall vs Star+ badge
-  const isMall = product.isMall ?? (hash % 2 === 0);
-
-  // Shopee total sold count & rating
-  const totalSold = product.totalSold || (product.reviews?.length ? product.reviews.length * 15 : (hash % 400) + 120);
+  const totalSold = product.totalSold || (product.reviews?.length ? product.reviews.length * 15 : (hash % 200) + 85);
   const rating = product.rating || (product.reviews?.length ? 4.9 : 4.8);
-
-  // Shopee video play icon indicator
-  const hasVideo = product.hasVideo ?? (hash % 3 === 0);
 
   const handleToggleWishlist = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -88,10 +81,10 @@ export default function ProductCard({
   };
 
   return (
-    <div className="group relative bg-[#0b1220] hover:bg-[#0e172a] rounded-xl border border-slate-800 hover:border-[#ee4d2d]/60 shadow-md hover:shadow-2xl transition-all duration-200 overflow-hidden flex flex-col justify-between hover:-translate-y-1">
+    <div className="group relative bg-[#0b1220] hover:bg-[#0e172a] rounded-xl border border-slate-800 hover:border-blue-500/50 shadow-md hover:shadow-2xl transition-all duration-200 overflow-hidden flex flex-col justify-between hover:-translate-y-1">
       
       <div>
-        {/* ─── Shopee Image Showcase Box ─── */}
+        {/* ─── Product Image Showcase ─── */}
         <Link 
           href={`/products/${product.slug}`} 
           className="block relative aspect-square w-full bg-[#111928] overflow-hidden flex items-center justify-center p-3"
@@ -103,63 +96,36 @@ export default function ProductCard({
             className="w-full h-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.35)] group-hover:scale-105 transition-transform duration-300"
           />
 
-          {/* Shopee Discount Tag on Top-Right Corner */}
-          <div className="absolute top-0 right-0 bg-yellow-400 text-rose-600 font-black text-[10px] sm:text-[11px] px-1.5 py-0.5 shadow-sm text-center z-10 leading-none">
-            <span>-{discount}%</span>
-          </div>
-
-          {/* Shopee Promo Xtra Badge on Bottom-Left Corner */}
-          <div className="absolute bottom-1.5 left-1.5 z-10 bg-yellow-300 text-slate-950 font-black text-[8px] sm:text-[9px] px-1.5 py-0.5 rounded-xs shadow-sm flex items-center gap-0.5 tracking-tight uppercase leading-none">
-            <span>PROMO</span>
-            <span className="text-rose-600 font-black">XTRA</span>
-          </div>
-
-          {/* Shopee Video Play Icon Indicator on Bottom-Right */}
-          {hasVideo && (
-            <div className="absolute bottom-1.5 right-1.5 z-10 w-5 h-5 rounded-full bg-black/60 backdrop-blur-xs flex items-center justify-center">
-              <Play className="w-2.5 h-2.5 fill-white text-white ml-0.5" />
+          {/* Discount Ribbon on Top-Right Corner (Only shown when there's an actual discount) */}
+          {hasDiscount && (
+            <div className="absolute top-0 right-0 bg-rose-600 text-white font-black text-[10px] sm:text-[11px] px-1.5 py-0.5 shadow-sm text-center z-10 leading-none">
+              <span>-{discount}%</span>
             </div>
           )}
 
-          {/* Subtle Wishlist Heart on Top-Left */}
+          {/* Wishlist Heart Button */}
           <button
             onClick={handleToggleWishlist}
-            className="absolute top-1.5 left-1.5 z-10 w-7 h-7 rounded-full bg-slate-900/60 backdrop-blur-xs text-slate-300 hover:text-rose-400 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+            className="absolute top-2 left-2 z-10 w-7 h-7 rounded-full bg-slate-900/60 backdrop-blur-xs text-slate-300 hover:text-rose-400 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer shadow-sm"
             title="Simpan ke Wishlist"
           >
             <Heart className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-rose-500 text-rose-500' : ''}`} />
           </button>
         </Link>
 
-        {/* ─── Shopee Card Content Body ─── */}
+        {/* ─── Product Details ─── */}
         <div className="p-2.5 sm:p-3 space-y-1.5">
           
-          {/* Badge + Title (2 Lines Clamped) */}
+          {/* Product Title (2 Lines Clamped, Clean without Mall/Star+ badges) */}
           <Link href={`/products/${product.slug}`} className="block">
-            <h3 className="line-clamp-2 leading-snug text-xs sm:text-[13px] text-white font-medium group-hover:text-orange-400 transition-colors">
-              {isMall ? (
-                <span className="bg-[#d0011b] text-white text-[9px] font-black px-1.5 py-0.5 rounded-xs mr-1.5 inline-block align-middle tracking-tight uppercase leading-none">
-                  Mall | ORI
-                </span>
-              ) : (
-                <span className="bg-[#ee4d2d] text-white text-[9px] font-black px-1.5 py-0.5 rounded-xs mr-1.5 inline-block align-middle tracking-tight uppercase leading-none">
-                  Star+
-                </span>
-              )}
-              <span>{productName}</span>
+            <h3 className="line-clamp-2 leading-snug text-xs sm:text-[13px] text-white font-semibold group-hover:text-blue-400 transition-colors">
+              {productName}
             </h3>
           </Link>
 
-          {/* Shopee Promo Outlined Tag */}
-          <div className="pt-0.5">
-            <span className="inline-block text-[9px] text-[#ee4d2d] border border-[#ee4d2d]/50 bg-[#ee4d2d]/10 px-1 py-0.5 rounded-xs font-semibold leading-none">
-              Garansi Harga Terbaik
-            </span>
-          </div>
-
-          {/* Price Row (Vibrant Shopee Orange/Red) */}
+          {/* Price Row */}
           <div className="pt-1 flex items-baseline gap-1.5 flex-wrap">
-            <span className="text-sm sm:text-base font-black text-[#ee4d2d] tracking-tight">
+            <span className="text-sm sm:text-base font-black text-blue-400 tracking-tight">
               {formatPrice(product.price)}
             </span>
             {hasDiscount && (
@@ -182,7 +148,7 @@ export default function ProductCard({
         </div>
       </div>
 
-      {/* ─── Shopee Bottom Location Tag ─── */}
+      {/* ─── Store Identity Footer (HijrahStyle Official • Kota Serang) ─── */}
       <div className="px-2.5 sm:px-3 pb-2.5 pt-0">
         {showAddToCart ? (
           <button
@@ -194,9 +160,12 @@ export default function ProductCard({
           </button>
         ) : null}
 
-        <div className="flex items-center justify-end text-[10px] text-slate-400 font-normal uppercase truncate pt-1 border-t border-slate-800/40">
-          <MapPin className="w-2.5 h-2.5 text-slate-500 mr-1 shrink-0" />
-          <span className="truncate">{productCity}</span>
+        <div className="flex items-center justify-between text-[10px] text-slate-400 font-normal pt-1.5 border-t border-slate-800/40">
+          <span className="text-slate-400 font-semibold truncate">HijrahStyle</span>
+          <span className="flex items-center gap-1 text-slate-500 shrink-0">
+            <MapPin className="w-2.5 h-2.5 text-slate-500" />
+            <span>{storeOrigin}</span>
+          </span>
         </div>
       </div>
 

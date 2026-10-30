@@ -112,7 +112,7 @@ export default function ProductDetailClient({
           user: { name: 'Riski Ardiansyah' },
           variant: `${selectedColor}, ${selectedSize}`,
           helpfulCount: 18,
-          sellerReply: 'Terima kasih atas kepercayaannya berbelanja di Toko Sample BBN Official! Ditunggu pesanan berikutnya kak 🙏'
+          sellerReply: 'Terima kasih atas kepercayaannya berbelanja di HijrahStyle Official! Ditunggu pesanan berikutnya kak 🙏'
         },
         {
           id: 'rv-2',
@@ -200,11 +200,6 @@ export default function ProductDetailClient({
                 alt={product.name}
                 className="relative w-full h-full object-contain filter drop-shadow-[0_20px_35px_rgba(0,0,0,0.5)] group-hover:scale-105 transition-transform duration-500"
               />
-
-              {/* Mall Tag */}
-              <span className="absolute top-4 left-4 bg-rose-600 text-white font-black text-[10px] px-2.5 py-1 rounded-md shadow-md tracking-wider uppercase">
-                Official Mall
-              </span>
 
               {/* Wishlist Heart */}
               <button
@@ -324,7 +319,7 @@ export default function ProductDetailClient({
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-bold">
                   <Truck className="w-3.5 h-3.5" />
-                  Gratis Ongkir Xtra
+                  Gratis Ongkir Seluruh Indonesia
                 </span>
               </div>
             </div>
@@ -490,17 +485,17 @@ export default function ProductDetailClient({
 
           <div className="py-2 flex items-center">
             <span className="w-40 text-slate-400 font-medium">Merek</span>
-            <span className="text-white font-bold">BBN Digital Forge</span>
+            <span className="text-white font-bold">HijrahStyle Official</span>
           </div>
 
           <div className="py-2 flex items-center">
             <span className="w-40 text-slate-400 font-medium">Bahan / Material</span>
-            <span className="text-white font-bold">{product.material || '100% Pure Cotton Combed 24s'}</span>
+            <span className="text-white font-bold">{product.material || 'Katun Rayon & Sutra Silk Premium'}</span>
           </div>
 
           <div className="py-2 flex items-center">
             <span className="w-40 text-slate-400 font-medium">Gaya / Style</span>
-            <span className="text-white font-bold">Streetwear Cyber Modern</span>
+            <span className="text-white font-bold">Busana Muslimah Modern &amp; Syar'i</span>
           </div>
 
           <div className="py-2 flex items-center">
@@ -625,7 +620,7 @@ export default function ProductDetailClient({
           <div className="p-5 rounded-2xl bg-[#070b14] border border-slate-800 space-y-2.5 mt-4">
             <h4 className="font-bold text-white text-xs sm:text-sm flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-              <span>Ketentuan Garansi &amp; Retur Toko Sample BBN:</span>
+              <span>Ketentuan Garansi &amp; Retur HijrahStyle Official:</span>
             </h4>
             <ul className="list-disc list-inside text-xs sm:text-sm text-slate-400 space-y-1.5 leading-relaxed pl-1">
               <li>Wajib menyertakan video unboxing paket tanpa jeda saat mengajukan komplain retur.</li>
