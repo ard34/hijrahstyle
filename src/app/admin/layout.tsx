@@ -60,13 +60,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <div className="w-8 h-8 rounded-lg bg-[#070b14] border border-blue-500/40 p-1 flex items-center justify-center shadow-md shadow-blue-500/20">
                 <img
                   src="/logo.png"
-                  alt="GBN Admin"
+                  alt="HijrahStyle Admin"
                   className="w-full h-full object-contain"
                 />
               </div>
               <div className="flex items-center gap-1.5">
-                <span className="font-black text-white text-base tracking-tight">GBN</span>
-                <span className="text-[11px] font-bold text-slate-400">Admin</span>
+                <span className="font-black text-white text-base tracking-tight">HIJRAH</span>
+                <span className="text-[10px] font-extrabold px-1.5 py-0.5 rounded-md bg-blue-600/30 text-blue-400 border border-blue-500/30">ADMIN</span>
               </div>
             </Link>
             <button 

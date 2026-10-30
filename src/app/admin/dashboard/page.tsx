@@ -1,52 +1,106 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { 
-  TrendingUp, ShoppingBag, Users, Package, ChevronDown
+  TrendingUp, ShoppingBag, Users, Package, ChevronDown, RefreshCw, Loader2
 } from 'lucide-react';
 import { formatRupiah } from '@/lib/utils';
 
 export default function AdminDashboardPage() {
   const [period, setPeriod] = useState('Bulan ini');
+  const [loading, setLoading] = useState(true);
+  const [statsData, setStatsData] = useState({
+    totalOmset: 0,
+    totalOrders: 0,
+    totalProducts: 0,
+    totalCustomers: 0,
+  });
+  const [recentOrders, setRecentOrders] = useState<any[]>([]);
 
-  const stats = [
-    { label: 'Total Omset', value: 'Rp 12.450.000', change: '+12% dari bulan lalu', positive: true },
-    { label: 'Pesanan', value: '248', change: '+8% dari bulan lalu', positive: true },
-    { label: 'Produk', value: '56', change: '+12% terpilih', positive: true },
-    { label: 'Pelanggan', value: '132', change: '+10% dari target', positive: true },
-  ];
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      const res = await fetch('/api/admin/dashboard');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.stats) {
+          setStatsData({
+            totalOmset: data.stats.totalRevenue || 0,
+            totalOrders: data.stats.totalOrders || 0,
+            totalProducts: data.stats.totalProducts || 0,
+            totalCustomers: data.stats.totalCustomers || 0,
+          });
+        }
+        if (data.recentOrders) {
+          const mapped = data.recentOrders.map((o: any) => {
+            let label = 'Menunggu Pembayaran';
+            let color = 'bg-amber-500/20 text-amber-400 border border-amber-500/40';
 
-  const recentOrders = [
-    { id: '1', orderNumber: 'INV/202610290001', amount: 815000, status: 'Dibayar', color: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' },
-    { id: '2', orderNumber: 'INV/202610250012', amount: 299000, status: 'Diproses', color: 'bg-amber-500/20 text-amber-400 border border-amber-500/40' },
-    { id: '3', orderNumber: 'INV/202610200008', amount: 439000, status: 'Dikirim', color: 'bg-blue-500/20 text-blue-400 border border-blue-500/40' },
-  ];
+            if (o.status === 'PAID') {
+              label = 'Dibayar';
+              color = 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40';
+            } else if (o.status === 'PROCESSING') {
+              label = 'Diproses';
+              color = 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/40';
+            } else if (o.status === 'SHIPPED') {
+              label = 'Dikirim';
+              color = 'bg-blue-500/20 text-blue-400 border border-blue-500/40';
+            } else if (o.status === 'DELIVERED' || o.status === 'COMPLETED') {
+              label = 'Selesai';
+              color = 'bg-purple-500/20 text-purple-400 border border-purple-500/40';
+            } else if (o.status === 'CANCELLED') {
+              label = 'Dibatalkan';
+              color = 'bg-rose-500/20 text-rose-400 border border-rose-500/40';
+            }
 
-  // SVG Chart points for "Tren Penjualan" (Screen 14)
-  const chartPoints = [
-    { month: 'Jan', y: 70 },
-    { month: 'Feb', y: 60 },
-    { month: 'Mar', y: 40 },
-    { month: 'Apr', y: 50 },
-    { month: 'Mei', y: 45 },
-    { month: 'Jun', y: 35 },
-    { month: 'Jul', y: 20 },
-    { month: 'Agu', y: 25 },
-    { month: 'Sep', y: 10 },
+            return {
+              id: o.id,
+              orderNumber: o.orderNumber,
+              amount: o.totalAmount,
+              status: label,
+              color,
+            };
+          });
+          setRecentOrders(mapped);
+        }
+      }
+    } catch (err) {
+      console.error('Fetch dashboard stats error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const statCards = [
+    { label: 'Total Omset Toko', value: formatRupiah(statsData.totalOmset), change: 'Transaksi Real-time', positive: true, icon: TrendingUp },
+    { label: 'Total Pesanan Masuk', value: String(statsData.totalOrders), change: 'Pesanan Aktif', positive: true, icon: ShoppingBag },
+    { label: 'Koleksi Produk', value: `${statsData.totalProducts} Produk`, change: 'Busana Siap Jual', positive: true, icon: Package },
+    { label: 'Pelanggan Terdaftar', value: `${statsData.totalCustomers} Akun`, change: 'Member Butik', positive: true, icon: Users },
   ];
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="space-y-6 pb-12 animate-fade-in-up">
       
       {/* ─── Screen 14 Top Header: Dashboard & Period Dropdown ─── */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-black text-white tracking-tight">Dashboard</h1>
-          <p className="text-xs text-slate-400 mt-0.5">Selamat datang, Admin!</p>
+          <h1 className="text-2xl font-black text-white tracking-tight">Dashboard Butik HijrahStyle</h1>
+          <p className="text-xs text-slate-400 mt-0.5">Ringkasan performa penjualan dan operasional butik Kota Serang.</p>
         </div>
 
-        <div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={fetchDashboardData}
+            className="p-2 rounded-xl bg-[#0b1220] border border-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
+            title="Segarkan Data"
+          >
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+          </button>
           <select 
             value={period} 
             onChange={(e) => setPeriod(e.target.value)}
@@ -61,12 +115,17 @@ export default function AdminDashboardPage() {
 
       {/* ─── Screen 14: 4 Stat Cards Row ─── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {stats.map((s, idx) => (
-          <div key={idx} className="bg-[#0b1220] rounded-2xl border border-slate-800/80 p-5 space-y-2 shadow-lg">
-            <span className="text-xs font-semibold text-slate-400 block">{s.label}</span>
-            <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">{s.value}</h3>
+        {statCards.map((s, idx) => (
+          <div key={idx} className="bg-[#0b1220] rounded-3xl border border-slate-800/80 p-5 space-y-2 shadow-xl hover:border-blue-500/40 transition-colors">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold text-slate-400 block">{s.label}</span>
+              <s.icon className="w-4 h-4 text-blue-400" />
+            </div>
+            <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+              {loading ? '...' : s.value}
+            </h3>
             <span className="text-[11px] font-bold text-emerald-400 block">
-              {s.change}
+              ● {s.change}
             </span>
           </div>
         ))}
@@ -76,8 +135,13 @@ export default function AdminDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         
         {/* Left: Tren Penjualan Chart (Span 7 cols) */}
-        <div className="lg:col-span-7 bg-[#0b1220] rounded-2xl border border-slate-800/80 p-6 space-y-4 shadow-xl">
-          <h2 className="text-sm font-extrabold text-white">Tren Penjualan</h2>
+        <div className="lg:col-span-7 bg-[#0b1220] rounded-3xl border border-slate-800/80 p-6 space-y-4 shadow-xl">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-extrabold text-white">Tren Penjualan Butik</h2>
+            <span className="text-[11px] font-bold text-blue-400 bg-blue-500/10 px-2.5 py-0.5 rounded-full border border-blue-500/20">
+              Analitik Omset
+            </span>
+          </div>
 
           {/* Smooth Blue SVG Line Chart */}
           <div className="pt-4 h-60 w-full relative flex flex-col justify-end">
@@ -115,7 +179,7 @@ export default function AdminDashboardPage() {
 
             {/* Months Label */}
             <div className="flex justify-between text-[10px] text-slate-500 pt-3 border-t border-slate-800">
-              {['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep'].map((m) => (
+              {['Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt'].map((m) => (
                 <span key={m}>{m}</span>
               ))}
             </div>
@@ -123,37 +187,45 @@ export default function AdminDashboardPage() {
         </div>
 
         {/* Right: Pesanan Terbaru (Span 5 cols) */}
-        <div className="lg:col-span-5 bg-[#0b1220] rounded-2xl border border-slate-800/80 p-6 space-y-4 shadow-xl">
-          <h2 className="text-sm font-extrabold text-white">Pesanan Terbaru</h2>
-
-          <div className="space-y-3">
-            {recentOrders.map((ord) => (
-              <div
-                key={ord.id}
-                className="p-3.5 rounded-xl bg-[#070b14] border border-slate-800/80 flex items-center justify-between gap-3"
-              >
-                <div>
-                  <span className="font-mono font-bold text-xs text-white block">
-                    #{ord.orderNumber}
-                  </span>
-                  <span className="text-xs font-extrabold text-white block mt-0.5">
-                    {formatRupiah(ord.amount)}
-                  </span>
-                </div>
-                <span className={`px-3 py-1 rounded-full text-xs font-bold ${ord.color}`}>
-                  {ord.status}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <div className="pt-2">
+        <div className="lg:col-span-5 bg-[#0b1220] rounded-3xl border border-slate-800/80 p-6 space-y-4 shadow-xl">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-extrabold text-white">Pesanan Terbaru</h2>
             <Link
               href="/admin/orders"
-              className="text-xs font-bold text-blue-400 hover:text-blue-300 block text-center"
+              className="text-xs font-bold text-blue-400 hover:text-blue-300"
             >
-              Lihat Semua Pesanan &rarr;
+              Lihat Semua &rarr;
             </Link>
+          </div>
+
+          <div className="space-y-3">
+            {loading ? (
+              <div className="py-12 text-center">
+                <Loader2 className="w-6 h-6 animate-spin text-blue-500 mx-auto" />
+              </div>
+            ) : recentOrders.length === 0 ? (
+              <p className="text-xs text-slate-500 text-center py-8">Belum ada pesanan terbaru.</p>
+            ) : (
+              recentOrders.map((ord) => (
+                <Link
+                  key={ord.id}
+                  href={`/orders/${ord.id}`}
+                  className="p-3.5 rounded-2xl bg-[#070b14] border border-slate-800/80 hover:border-blue-500/40 flex items-center justify-between gap-3 transition-colors block"
+                >
+                  <div>
+                    <span className="font-mono font-bold text-xs text-white block">
+                      #{ord.orderNumber}
+                    </span>
+                    <span className="text-xs font-black text-blue-400 block mt-0.5">
+                      {formatRupiah(ord.amount)}
+                    </span>
+                  </div>
+                  <span className={`px-3 py-1 rounded-full text-[11px] font-bold ${ord.color}`}>
+                    {ord.status}
+                  </span>
+                </Link>
+              ))
+            )}
           </div>
         </div>
 

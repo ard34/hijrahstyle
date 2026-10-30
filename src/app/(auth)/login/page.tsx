@@ -3,12 +3,12 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Sparkles, Mail, Lock, ShieldCheck, UserCheck } from 'lucide-react';
 import { useAuthStore, useToastStore } from '@/lib/store';
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('riski@example.com');
-  const [password, setPassword] = useState('password123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -17,8 +17,25 @@ export default function LoginPage() {
   const { setUser } = useAuthStore();
   const { addToast } = useToastStore();
 
+  const handleFillAdmin = () => {
+    setEmail('admin@hijrahstyle.id');
+    setPassword('admin123');
+    addToast('Akun Admin terpilih: admin@hijrahstyle.id', 'info');
+  };
+
+  const handleFillCustomer = () => {
+    setEmail('siti@gmail.com');
+    setPassword('password123');
+    addToast('Akun Pelanggan terpilih: siti@gmail.com', 'info');
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email || !password) {
+      addToast('Email dan password wajib diisi', 'warning');
+      return;
+    }
+
     setIsLoading(true);
     try {
       const res = await fetch('/api/auth/login', {
@@ -28,51 +45,86 @@ export default function LoginPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        addToast(data.error || 'Login gagal', 'error');
+        addToast(data.error || 'Login gagal, periksa email dan password', 'error');
         return;
       }
       setUser(data.user);
-      addToast('Login berhasil! Selamat datang 👋', 'success');
+      addToast(`Selamat datang kembali, ${data.user.name}! 👋`, 'success');
+      
       if (data.user.role === 'ADMIN') {
         router.push('/admin/dashboard');
       } else {
         router.push('/');
       }
+      router.refresh();
     } catch {
-      addToast('Terjadi kesalahan, coba lagi', 'error');
+      addToast('Terjadi kesalahan koneksi, coba lagi', 'error');
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#070b14] flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-[#0b1220] rounded-3xl border border-slate-800/90 p-8 shadow-2xl space-y-6">
+    <div className="min-h-screen bg-[#070b14] flex items-center justify-center p-4 py-12">
+      <div className="w-full max-w-md bg-[#0b1220] text-white rounded-3xl border border-slate-800/90 p-8 shadow-2xl space-y-6">
         
-        {/* Header (Ref: Screen 13 Right Panel) */}
-        <div className="space-y-1">
+        {/* Header */}
+        <div className="space-y-1.5 text-center">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-bold">
+            <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            <span>PORTAL LOGIN BUTIK</span>
+          </div>
           <h1 className="text-2xl font-black text-white tracking-tight">
-            Selamat Datang Kembali
+            Selamat Datang
           </h1>
           <p className="text-xs text-slate-400">
-            Login ke akun Anda
+            Masuk sebagai Admin Toko atau Pelanggan
           </p>
         </div>
 
+        {/* Quick Demo Access Buttons */}
+        <div className="space-y-2 pt-1">
+          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block text-center">
+            Akses Cepat Pengujian:
+          </span>
+          <div className="grid grid-cols-2 gap-2">
+            <button
+              type="button"
+              onClick={handleFillAdmin}
+              className="py-2 px-3 rounded-xl bg-purple-600/15 hover:bg-purple-600/25 border border-purple-500/30 text-purple-300 text-xs font-bold flex items-center justify-center gap-1.5 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
+              <span>👑 Akun Admin</span>
+            </button>
+            <button
+              type="button"
+              onClick={handleFillCustomer}
+              className="py-2 px-3 rounded-xl bg-blue-600/15 hover:bg-blue-600/25 border border-blue-500/30 text-blue-300 text-xs font-bold flex items-center justify-center gap-1.5 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+            >
+              <UserCheck className="w-3.5 h-3.5 text-blue-400" />
+              <span>🛍️ Pelanggan</span>
+            </button>
+          </div>
+        </div>
+
         {/* Login Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4 pt-1">
           <div>
             <label className="text-xs font-bold text-slate-300 block mb-1">
               Email
             </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full h-11 px-3.5 rounded-xl bg-[#070b14] border border-slate-800 focus:border-blue-500 text-xs text-white outline-none"
-              placeholder="riski@example.com"
-              required
-            />
+            <div className="relative">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                style={{ paddingLeft: '38px' }}
+                className="w-full h-11 px-3.5 rounded-xl bg-[#070b14] border border-slate-800 focus:border-blue-500 text-xs text-white outline-none placeholder:text-slate-500 font-medium"
+                placeholder="nama@email.com"
+                required
+              />
+              <Mail className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
           </div>
 
           <div>
@@ -84,82 +136,47 @@ export default function LoginPage() {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full h-11 px-3.5 pr-10 rounded-xl bg-[#070b14] border border-slate-800 focus:border-blue-500 text-xs text-white outline-none"
+                style={{ paddingLeft: '38px', paddingRight: '40px' }}
+                className="w-full h-11 px-3.5 rounded-xl bg-[#070b14] border border-slate-800 focus:border-blue-500 text-xs text-white outline-none placeholder:text-slate-500 font-medium"
                 placeholder="••••••••••"
                 required
               />
+              <Lock className="w-4 h-4 text-slate-500 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white"
+                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white cursor-pointer"
               >
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
           </div>
 
-          {/* Remember Me & Forgot Password */}
-          <div className="flex items-center justify-between text-xs">
+          {/* Remember Me */}
+          <div className="flex items-center justify-between text-xs pt-1">
             <label className="flex items-center gap-2 text-slate-300 cursor-pointer">
               <input
                 type="checkbox"
                 checked={rememberMe}
                 onChange={(e) => setRememberMe(e.target.checked)}
-                className="w-4 h-4 rounded accent-blue-600 bg-[#070b14] border-slate-700"
+                className="w-4 h-4 rounded accent-blue-600 bg-[#070b14] border-slate-700 cursor-pointer"
               />
               <span>Ingat saya</span>
             </label>
-            <a href="#" className="text-blue-400 hover:underline">
-              Lupa Password?
-            </a>
+            <span className="text-slate-500 text-[11px]">HijrahStyle Serang</span>
           </div>
 
           {/* Masuk CTA Button */}
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full h-11 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-sm flex items-center justify-center transition-all shadow-lg shadow-blue-600/30 cursor-pointer"
+            className="w-full h-12 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs sm:text-sm flex items-center justify-center transition-all shadow-lg shadow-blue-600/30 cursor-pointer hover:scale-[1.01] active:scale-[0.99]"
           >
-            {isLoading ? 'Memproses...' : 'Masuk'}
+            {isLoading ? 'Memproses Masuk...' : 'Masuk ke Akun'}
           </button>
         </form>
 
-        {/* Divider: atau */}
-        <div className="relative flex items-center justify-center">
-          <div className="w-full border-t border-slate-800" />
-          <span className="absolute bg-[#0b1220] px-3 text-xs text-slate-500">
-            atau
-          </span >
-        </div>
-
-        {/* Google Sign In Button */}
-        <button
-          type="button"
-          onClick={() => addToast('Google OAuth Sandbox aktif', 'info')}
-          className="w-full h-11 rounded-xl bg-white hover:bg-slate-100 text-slate-900 font-bold text-xs flex items-center justify-center gap-2.5 transition-colors cursor-pointer shadow-sm"
-        >
-          <svg className="w-4 h-4" viewBox="0 0 24 24">
-            <path
-              fill="#4285F4"
-              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-            />
-            <path
-              fill="#34A853"
-              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-            />
-            <path
-              fill="#FBBC05"
-              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-            />
-            <path
-              fill="#EA4335"
-              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-            />
-          </svg>
-          <span>Masuk dengan Google</span>
-        </button>
-
-        <p className="text-center text-xs text-slate-400">
+        <p className="text-center text-xs text-slate-400 pt-2 border-t border-slate-800/80">
           Belum punya akun?{' '}
           <Link href="/register" className="text-blue-400 font-bold hover:underline">
             Daftar Sekarang
