@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Heart, Star, MapPin, ShoppingBag, Check } from 'lucide-react';
+import { Heart, Star, MapPin, ShoppingBag, Check, Eye, ArrowRight } from 'lucide-react';
 import { formatPrice, getDiscountPercentage } from '@/lib/utils';
 import { useToastStore } from '@/lib/store';
 
@@ -81,42 +81,64 @@ export default function ProductCard({
   };
 
   return (
-    <div className="group relative bg-[#0b1220] hover:bg-[#0e172a] rounded-xl border border-slate-800 hover:border-blue-500/50 shadow-md hover:shadow-2xl transition-all duration-200 overflow-hidden flex flex-col justify-between hover:-translate-y-1">
+    <div className="group relative bg-[#0b1220] hover:bg-[#0e172a] rounded-2xl border border-slate-800/90 hover:border-blue-500/60 shadow-md hover:shadow-[0_12px_28px_rgba(37,99,235,0.22)] transition-all duration-300 ease-out overflow-hidden flex flex-col justify-between hover:-translate-y-1.5">
       
       <div>
-        {/* ─── Product Image Showcase ─── */}
-        <Link 
-          href={`/products/${product.slug}`} 
-          className="block relative aspect-square w-full bg-[#111928] overflow-hidden flex items-center justify-center p-3"
-        >
-          {/* Main Product Image */}
-          <img
-            src={imageUrl}
-            alt={productName}
-            className="w-full h-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.35)] group-hover:scale-105 transition-transform duration-300"
-          />
+        {/* ─── Product Image Showcase with Light Beam Sweep ─── */}
+        <div className="relative aspect-square w-full bg-[#111928] overflow-hidden flex items-center justify-center p-3 before:absolute before:inset-0 before:-translate-x-full group-hover:before:translate-x-full before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:transition-transform before:duration-700 before:z-20 pointer-events-none">
+          <Link 
+            href={`/products/${product.slug}`} 
+            className="w-full h-full flex items-center justify-center pointer-events-auto"
+          >
+            {/* Main Product Image with Gentle Scale on Hover */}
+            <img
+              src={imageUrl}
+              alt={productName}
+              className="w-full h-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.35)] group-hover:scale-108 transition-transform duration-500 ease-out"
+            />
+          </Link>
 
-          {/* Discount Ribbon on Top-Right Corner (Only shown when there's an actual discount) */}
+          {/* Discount Ribbon on Top-Right Corner */}
           {hasDiscount && (
-            <div className="absolute top-0 right-0 bg-rose-600 text-white font-black text-[10px] sm:text-[11px] px-1.5 py-0.5 shadow-sm text-center z-10 leading-none">
+            <div className="absolute top-0 right-0 bg-gradient-to-r from-rose-600 to-rose-500 text-white font-black text-[10px] sm:text-[11px] px-2 py-0.5 rounded-bl-xl shadow-md z-20 leading-none">
               <span>-{discount}%</span>
             </div>
           )}
 
-          {/* Wishlist Heart Button */}
+          {/* Wishlist Heart Button with Scale Animation */}
           <button
             onClick={handleToggleWishlist}
-            className="absolute top-2 left-2 z-10 w-7 h-7 rounded-full bg-slate-900/60 backdrop-blur-xs text-slate-300 hover:text-rose-400 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer shadow-sm"
+            className="absolute top-2.5 left-2.5 z-20 w-8 h-8 rounded-full bg-slate-900/70 hover:bg-slate-900 backdrop-blur-md text-slate-300 hover:text-rose-400 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 active:scale-90 cursor-pointer shadow-md pointer-events-auto"
             title="Simpan ke Wishlist"
           >
-            <Heart className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-rose-500 text-rose-500' : ''}`} />
+            <Heart className={`w-3.5 h-3.5 transition-transform ${isWishlisted ? 'fill-rose-500 text-rose-500 scale-110' : ''}`} />
           </button>
-        </Link>
+
+          {/* Floating Hover Action Pill (Slide-in on hover) */}
+          <div className="absolute inset-x-2.5 bottom-2.5 z-20 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out pointer-events-auto">
+            <Link
+              href={`/products/${product.slug}`}
+              className="flex-1 py-1.5 px-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold shadow-lg shadow-blue-600/40 flex items-center justify-center gap-1.5 transition-all hover:scale-[1.02] active:scale-[0.98]"
+            >
+              <Eye className="w-3 h-3" />
+              <span>Detail</span>
+            </Link>
+
+            <button
+              onClick={handleQuickAdd}
+              disabled={isAdding}
+              className="w-8 h-8 rounded-xl bg-slate-900/90 hover:bg-emerald-600 text-slate-200 hover:text-white backdrop-blur-md flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-md cursor-pointer shrink-0"
+              title="Beli Cepat / Masukkan Keranjang"
+            >
+              {isAdding ? <Check className="w-3.5 h-3.5 text-white" /> : <ShoppingBag className="w-3.5 h-3.5" />}
+            </button>
+          </div>
+        </div>
 
         {/* ─── Product Details ─── */}
-        <div className="p-2.5 sm:p-3 space-y-1.5">
+        <div className="p-3 sm:p-3.5 space-y-2">
           
-          {/* Product Title (2 Lines Clamped, Clean without Mall/Star+ badges) */}
+          {/* Product Title */}
           <Link href={`/products/${product.slug}`} className="block">
             <h3 className="line-clamp-2 leading-snug text-xs sm:text-[13px] text-white font-semibold group-hover:text-blue-400 transition-colors">
               {productName}
@@ -124,7 +146,7 @@ export default function ProductCard({
           </Link>
 
           {/* Price Row */}
-          <div className="pt-1 flex items-baseline gap-1.5 flex-wrap">
+          <div className="pt-0.5 flex items-baseline gap-1.5 flex-wrap">
             <span className="text-sm sm:text-base font-black text-blue-400 tracking-tight">
               {formatPrice(product.price)}
             </span>
@@ -149,19 +171,19 @@ export default function ProductCard({
       </div>
 
       {/* ─── Store Identity Footer (HijrahStyle Official • Kota Serang) ─── */}
-      <div className="px-2.5 sm:px-3 pb-2.5 pt-0">
+      <div className="px-3 sm:px-3.5 pb-3 pt-0">
         {showAddToCart ? (
           <button
             onClick={handleQuickAdd}
-            className="w-full py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm mb-1.5"
+            className="w-full py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm mb-2 hover:scale-[1.02] active:scale-[0.98]"
           >
             {isAdding ? <Check className="w-3 h-3 text-white" /> : <ShoppingBag className="w-3 h-3" />}
             <span>+ Keranjang</span>
           </button>
         ) : null}
 
-        <div className="flex items-center justify-between text-[10px] text-slate-400 font-normal pt-1.5 border-t border-slate-800/40">
-          <span className="text-slate-400 font-semibold truncate">HijrahStyle</span>
+        <div className="flex items-center justify-between text-[10px] text-slate-400 font-normal pt-2 border-t border-slate-800/60">
+          <span className="text-slate-400 font-semibold truncate hover:text-blue-400 transition-colors">HijrahStyle</span>
           <span className="flex items-center gap-1 text-slate-500 shrink-0">
             <MapPin className="w-2.5 h-2.5 text-slate-500" />
             <span>{storeOrigin}</span>

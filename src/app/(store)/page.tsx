@@ -166,14 +166,14 @@ export default async function HomePage() {
             </div>
           </div>
 
-          {/* Right Floating Sneaker Visual (Screen 01) */}
+          {/* Right Floating Visual with Smooth Float Animation */}
           <div className="relative z-10 w-full lg:w-1/2 flex items-center justify-center">
             <div className="relative w-72 sm:w-80 md:w-96 aspect-square flex items-center justify-center">
-              <div className="absolute inset-0 bg-blue-600/20 rounded-full blur-3xl animate-pulse" />
+              <div className="absolute inset-0 bg-blue-600/30 rounded-full blur-3xl animate-pulse-glow" />
               <img
                 src="/hero-sneaker.png"
-                alt="Sneakers Modern BBN"
-                className="relative z-10 w-full h-full object-contain filter drop-shadow-[0_25px_40px_rgba(0,102,255,0.7)] hover:scale-105 transition-transform duration-500 rotate-[-10deg]"
+                alt="Busana Modern HijrahStyle"
+                className="relative z-10 w-full h-full object-contain filter drop-shadow-[0_25px_40px_rgba(0,102,255,0.7)] animate-float"
               />
             </div>
           </div>
@@ -219,9 +219,9 @@ export default async function HomePage() {
             <Link
               key={cat.id}
               href={`/products?category=${cat.slug}`}
-              className="p-5 rounded-2xl bg-[#0b1220] border border-slate-800 hover:border-blue-500 hover:bg-[#0f172a] transition-all flex flex-col items-center justify-center gap-3 text-center group shadow-md hover:scale-105"
+              className="p-5 rounded-2xl bg-[#0b1220] border border-slate-800 hover:border-blue-500/60 hover:bg-[#0e172a] transition-all duration-300 flex flex-col items-center justify-center gap-3 text-center group shadow-md hover:shadow-[0_10px_25px_rgba(37,99,235,0.2)] hover:-translate-y-1.5"
             >
-              <div className="w-12 h-12 rounded-xl bg-[#070b14] border border-slate-800 group-hover:border-cyan-400/50 flex items-center justify-center transition-colors shadow-inner">
+              <div className="w-12 h-12 rounded-xl bg-[#070b14] border border-slate-800 group-hover:border-blue-500/50 group-hover:scale-110 flex items-center justify-center transition-all duration-300 shadow-inner">
                 {getCatIcon(cat.slug)}
               </div>
               <span className="text-xs font-bold text-slate-300 group-hover:text-blue-400 transition-colors">
@@ -233,31 +233,33 @@ export default async function HomePage() {
       </section>
 
       {/* ─── Shopee Signature REKOMENDASI Section (Ref: media_1793364552323_d120d1b8.jpg) ─── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-        {/* Shopee REKOMENDASI Tab Bar */}
-        <div className="bg-[#0b1220] rounded-2xl border border-slate-800/80 p-1 shadow-md">
-          <div className="border-b-4 border-[#ee4d2d] py-3 text-center">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5">
+        {/* Shopee REKOMENDASI Tab Bar with Glowing Accent */}
+        <div className="bg-[#0b1220] rounded-2xl border border-slate-800/80 p-1 shadow-lg">
+          <div className="border-b-4 border-[#ee4d2d] py-3.5 text-center flex items-center justify-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[#ee4d2d] animate-ping" />
             <h2 className="text-[#ee4d2d] font-black text-base sm:text-lg tracking-widest uppercase inline-block">
               REKOMENDASI
             </h2>
+            <span className="w-2 h-2 rounded-full bg-[#ee4d2d] animate-ping" />
           </div>
         </div>
 
         {/* 6-Column Grid matching Shopee */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5 sm:gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5 sm:gap-3.5">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
 
-        {/* Lihat Lebih Banyak CTA */}
+        {/* Lihat Lebih Banyak CTA with Hover Slide */}
         <div className="text-center pt-4">
           <Link
             href="/products"
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-[#0b1220] hover:bg-[#111c30] border border-slate-800 hover:border-[#ee4d2d] text-slate-200 text-xs sm:text-sm font-bold transition-all shadow-md cursor-pointer hover:scale-105"
+            className="group inline-flex items-center gap-2.5 px-8 py-3.5 rounded-2xl bg-[#0b1220] hover:bg-[#111c30] border border-slate-800 hover:border-[#ee4d2d]/60 text-slate-200 hover:text-white text-xs sm:text-sm font-bold transition-all duration-300 shadow-md hover:shadow-xl hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
           >
             <span>Lihat Lebih Banyak Produk</span>
-            <ArrowRight className="w-4 h-4 text-[#ee4d2d]" />
+            <ArrowRight className="w-4 h-4 text-[#ee4d2d] group-hover:translate-x-1.5 transition-transform duration-300" />
           </Link>
         </div>
       </section>
