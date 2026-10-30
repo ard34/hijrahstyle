@@ -33,7 +33,7 @@ export default function ProductCard({ product }: { product: any }) {
     e.preventDefault();
     e.stopPropagation();
 
-    // If product has multiple variants, navigate to detail page for selection
+    // Multi-variant products go to detail page
     if (product.variants && product.variants.length > 1) {
       router.push(`/products/${product.slug}`);
       return;
@@ -53,7 +53,7 @@ export default function ProductCard({ product }: { product: any }) {
         body: JSON.stringify({ productVariantId: variantId, quantity: 1 }),
       });
       if (res.ok) {
-        addToast(`${product.name} masuk ke keranjang!`, 'success');
+        addToast(`${product.name} berhasil ditambahkan!`, 'success');
         window.dispatchEvent(new Event('cart-updated'));
       } else {
         router.push(`/products/${product.slug}`);
@@ -76,16 +76,19 @@ export default function ProductCard({ product }: { product: any }) {
   };
 
   return (
-    <div className="group bg-[#0e172a] rounded-2xl border border-slate-800/80 hover:border-blue-500/50 hover:shadow-[0_0_25px_rgba(37,99,235,0.25)] hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col justify-between h-full p-3 sm:p-4 relative">
+    <div className="group bg-[#0e172a] rounded-2xl border border-slate-800/80 hover:border-blue-500/50 hover:shadow-[0_0_25px_rgba(37,99,235,0.25)] hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col justify-between h-full p-4 relative">
       <div>
         {/* Card Image Container */}
-        <Link href={`/products/${product.slug}`} className="block relative aspect-square bg-[#070b14] rounded-xl overflow-hidden mb-3.5 border border-slate-800/70 p-3 group">
-          <div className="absolute inset-0 bg-radial from-blue-600/5 via-transparent to-transparent opacity-80" />
+        <Link 
+          href={`/products/${product.slug}`} 
+          className="block relative h-48 sm:h-52 w-full bg-[#070b14] rounded-xl overflow-hidden mb-3.5 border border-slate-800/80 p-3 group"
+        >
+          <div className="absolute inset-0 bg-radial from-blue-600/10 via-transparent to-transparent opacity-60" />
 
           <img
             src={imageUrl}
             alt={product.name}
-            className="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.6)] group-hover:scale-105 transition-transform duration-500 ease-out"
+            className="w-full h-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.7)] group-hover:scale-105 transition-transform duration-500 ease-out"
           />
           
           {/* Discount Badge */}

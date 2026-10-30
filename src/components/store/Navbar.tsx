@@ -1,27 +1,31 @@
 'use client';
 
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
-  Search, ShoppingBag, Heart, User, Menu, X, 
-  LogOut, Package, Sparkles, Home, Grid, ShieldCheck, Flame, ChevronDown
+  ShoppingBag, Heart, User, Search, Menu, X, 
+  ExternalLink, LogOut, Package, Grid, Home, Sparkles 
 } from 'lucide-react';
 import { useCartStore, useAuthStore } from '@/lib/store';
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
+  const { totalItems } = useCartStore();
+  const { user, setUser } = useAuthStore();
+
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const { totalItems } = useCartStore();
-  const { user, setUser } = useAuthStore();
-  const router = useRouter();
 
+  // Hydrate auth status
   useEffect(() => {
     fetch('/api/auth/me')
-      .then((res) => res.ok ? res.json() : null)
-      .then((data) => { if (data?.user) setUser(data.user); })
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (data?.user) setUser(data.user);
+      })
       .catch(() => {});
   }, [setUser]);
 
@@ -29,7 +33,6 @@ export default function Navbar() {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery('');
     }
   };
 
@@ -44,35 +47,11 @@ export default function Navbar() {
 
   return (
     <>
-      {/* ─── 0. Top Announcement Utility Bar ─────────────────────────────── */}
-      <div className="bg-slate-950 text-slate-300 text-[11px] py-1.5 px-4 border-b border-slate-800/80">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2 truncate">
-            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">
-              OFFICIAL
-            </span>
-            <span className="truncate">
-              Selamat datang di <strong>Toko Sample BBN</strong> • Pembayaran otomatis terverifikasi via <strong>Duitku Sandbox</strong>
-            </span>
-          </div>
-
-          <div className="hidden md:flex items-center gap-4 text-slate-400 text-[11px] shrink-0 font-medium">
-            <span className="flex items-center gap-1 hover:text-white transition-colors cursor-pointer">
-              <ShieldCheck className="w-3.5 h-3.5 text-blue-400" /> 100% Produk Original
-            </span>
-            <span>•</span>
-            <Link href="/admin/dashboard" className="text-slate-400 hover:text-blue-400 transition-colors">
-              Admin Portal
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      {/* ─── 1. Main Sticky Header ────────────────────────────────────────── */}
-      <header className="sticky top-0 left-0 right-0 z-50 bg-[#070b14]/95 backdrop-blur-md border-b border-slate-800/80 shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+      {/* ─── Main Sticky Header (Screen 01) ─────────────────────────────────── */}
+      <header className="sticky top-0 left-0 right-0 z-50 bg-[#070b14]/95 backdrop-blur-md border-b border-slate-800/80 shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4 lg:gap-8">
           
-          {/* Brand Logo & Name */}
+          {/* 1. Brand Logo & Name */}
           <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
             <div className="relative">
               <img
@@ -83,17 +62,17 @@ export default function Navbar() {
               <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border border-slate-950 rounded-full" />
             </div>
             <div className="flex items-baseline gap-1.5">
-              <span className="text-xl font-extrabold text-white tracking-tight font-sans">
+              <span className="text-xl font-black text-white tracking-tight font-sans">
                 BBn
               </span>
-              <span className="text-[11px] font-semibold text-blue-400 tracking-wider hidden sm:inline">
+              <span className="text-[11px] font-bold text-blue-400 tracking-wider hidden sm:inline uppercase">
                 DIGITAL FORGE
               </span>
             </div>
           </Link>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden lg:flex items-center gap-1 text-xs font-semibold">
+          {/* 2. Desktop Nav Links (Screen 01) */}
+          <nav className="hidden lg:flex items-center gap-1.5 text-xs font-semibold shrink-0">
             {[
               { label: 'Beranda', href: '/' },
               { label: 'Produk', href: '/products' },
@@ -106,9 +85,9 @@ export default function Navbar() {
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5 ${
+                  className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 ${
                     isActive
-                      ? 'text-white bg-blue-600/20 border border-blue-500/40 font-bold'
+                      ? 'text-white bg-blue-600/20 border border-blue-500/40 font-bold shadow-xs'
                       : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
                   }`}
                 >
@@ -123,28 +102,23 @@ export default function Navbar() {
             })}
           </nav>
 
-          {/* Search Bar */}
+          {/* 3. Search Bar (Clean Pill without overlapping text) */}
           <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-xs xl:max-w-sm">
             <div className="relative w-full flex items-center">
               <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3.5 pointer-events-none" />
               <input
                 type="text"
-                placeholder="Cari produk..."
+                placeholder="Cari produk di toko..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full h-9 pl-9 pr-12 rounded-full bg-[#0b1120] border border-slate-800 focus:border-blue-500 focus:bg-[#0f172a] text-xs font-medium text-white placeholder:text-slate-500 outline-none transition-all shadow-inner"
+                style={{ paddingLeft: '38px', paddingRight: '16px' }}
+                className="w-full h-9 rounded-full bg-[#0b1120] border border-slate-800 focus:border-blue-500 focus:bg-[#0f172a] text-xs font-medium text-white placeholder:text-slate-500 outline-none transition-all shadow-inner"
               />
-              <button
-                type="submit"
-                className="absolute right-1.5 px-2.5 py-1 rounded-full bg-blue-600 hover:bg-blue-500 text-white text-[10px] font-bold transition-all cursor-pointer"
-              >
-                Cari
-              </button>
             </div>
           </form>
 
-          {/* Action Icons */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          {/* 4. Action Icons (Screen 01) */}
+          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
             {/* Wishlist */}
             <Link 
               href="/wishlist" 
@@ -157,123 +131,115 @@ export default function Navbar() {
             {/* Cart Button */}
             <Link 
               href="/cart" 
-              className="flex items-center gap-2 p-2 sm:px-3 sm:py-2 rounded-xl bg-blue-600/10 hover:bg-blue-600/20 text-white border border-blue-500/30 transition-all relative"
+              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-blue-600/10 hover:bg-blue-600/20 text-white border border-blue-500/30 transition-all relative group cursor-pointer"
               title="Keranjang Belanja"
             >
               <div className="relative">
-                <ShoppingBag className="w-5 h-5 stroke-[1.75] text-blue-400" />
+                <ShoppingBag className="w-5 h-5 text-blue-400 group-hover:scale-105 transition-transform stroke-[1.75]" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2.5 min-w-4 h-4 px-1 rounded-full bg-blue-600 text-white text-[10px] font-extrabold flex items-center justify-center shadow-xs animate-in zoom-in-50">
+                  <span className="absolute -top-2 -right-2.5 min-w-4 h-4 px-1 rounded-full bg-blue-600 text-white text-[10px] font-black flex items-center justify-center shadow-md animate-pulse">
                     {cartCount}
                   </span>
                 )}
               </div>
-              <span className="text-xs font-bold hidden sm:inline text-slate-200">Keranjang</span>
+              <span className="text-xs font-bold hidden sm:inline">Keranjang</span>
             </Link>
 
-            {/* User Account / Login */}
+            {/* User Profile / Login Button */}
             {user ? (
               <div className="relative">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center gap-2 p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-900/80 transition-all text-left cursor-pointer"
+                  className="flex items-center gap-2 p-1.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-900/80 transition-all cursor-pointer"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-                    {user.name.charAt(0).toUpperCase()}
+                  <div className="w-7 h-7 rounded-lg bg-blue-600 text-white font-extrabold text-xs flex items-center justify-center shadow-xs">
+                    {user.name?.charAt(0).toUpperCase() || 'U'}
                   </div>
-                  <div className="hidden lg:block leading-tight">
-                    <p className="text-xs font-bold text-white max-w-[90px] truncate">{user.name.split(' ')[0]}</p>
-                    <p className="text-[10px] text-slate-400">Akun Saya</p>
-                  </div>
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden sm:block" />
+                  <span className="text-xs font-bold text-white hidden md:inline max-w-[90px] truncate">
+                    {user.name.split(' ')[0]}
+                  </span>
                 </button>
 
+                {/* Dropdown Menu */}
                 {isUserMenuOpen && (
-                  <>
-                    <div className="fixed inset-0 z-40" onClick={() => setIsUserMenuOpen(false)} />
-                    <div className="absolute right-0 top-full mt-2 w-56 bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 py-2 z-50 text-xs animate-in fade-in slide-in-from-top-2 duration-150">
-                      <div className="px-4 py-2.5 border-b border-slate-800">
-                        <p className="font-bold text-white truncate">{user.name}</p>
-                        <p className="text-[11px] text-slate-400 truncate">{user.email}</p>
-                      </div>
-                      
-                      <div className="p-1 space-y-0.5">
-                        <Link 
-                          href="/profile" 
-                          onClick={() => setIsUserMenuOpen(false)} 
-                          className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 font-semibold transition-colors"
-                        >
-                          <User className="w-4 h-4 text-slate-400" /> Profil Saya
-                        </Link>
-                        <Link 
-                          href="/orders" 
-                          onClick={() => setIsUserMenuOpen(false)} 
-                          className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 font-semibold transition-colors"
-                        >
-                          <Package className="w-4 h-4 text-slate-400" /> Pesanan Saya
-                        </Link>
-                        <Link 
-                          href="/wishlist" 
-                          onClick={() => setIsUserMenuOpen(false)} 
-                          className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800 font-semibold transition-colors"
-                        >
-                          <Heart className="w-4 h-4 text-slate-400" /> Wishlist Saya
-                        </Link>
-                        {user.role === 'ADMIN' && (
-                          <Link 
-                            href="/admin/dashboard" 
-                            onClick={() => setIsUserMenuOpen(false)} 
-                            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-blue-400 bg-blue-500/10 font-bold hover:bg-blue-500/20 transition-colors"
-                          >
-                            <Sparkles className="w-4 h-4 text-blue-400" /> Admin Dashboard
-                          </Link>
-                        )}
-                      </div>
-
-                      <div className="border-t border-slate-800 mt-1 pt-1 px-1">
-                        <button 
-                          onClick={handleLogout} 
-                          className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-rose-400 hover:bg-rose-500/10 w-full text-left font-semibold transition-colors cursor-pointer"
-                        >
-                          <LogOut className="w-4 h-4" /> Keluar
-                        </button>
-                      </div>
+                  <div className="absolute right-0 mt-2 w-52 rounded-2xl bg-[#0e172a] border border-slate-800 p-2 shadow-2xl z-50 text-xs font-medium space-y-1">
+                    <div className="p-2 border-b border-slate-800/80 mb-1">
+                      <p className="font-bold text-white truncate">{user.name}</p>
+                      <p className="text-[10px] text-slate-400 truncate">{user.email}</p>
                     </div>
-                  </>
+
+                    <Link
+                      href="/profile"
+                      onClick={() => setIsUserMenuOpen(false)}
+                      className="flex items-center gap-2 p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
+                    >
+                      <User className="w-4 h-4 text-blue-400" />
+                      <span>Profil Saya</span>
+                    </Link>
+
+                    <Link
+                      href="/orders"
+                      onClick={() => setIsUserMenuOpen(false)}
+                      className="flex items-center gap-2 p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition-colors"
+                    >
+                      <Package className="w-4 h-4 text-blue-400" />
+                      <span>Pesanan Saya</span>
+                    </Link>
+
+                    {user.role === 'ADMIN' && (
+                      <Link
+                        href="/admin/dashboard"
+                        onClick={() => setIsUserMenuOpen(false)}
+                        className="flex items-center gap-2 p-2 rounded-xl text-amber-400 hover:bg-amber-500/10 transition-colors"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        <span>Panel Admin</span>
+                      </Link>
+                    )}
+
+                    <button
+                      onClick={handleLogout}
+                      className="w-full flex items-center gap-2 p-2 rounded-xl text-rose-400 hover:bg-rose-500/10 transition-colors text-left"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Keluar</span>
+                    </button>
+                  </div>
                 )}
               </div>
             ) : (
-              <Link 
-                href="/login" 
-                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-all shadow-md shadow-blue-600/30 flex items-center gap-1.5"
+              <Link
+                href="/login"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md shadow-blue-600/30"
               >
-                <User className="w-3.5 h-3.5" />
+                <User className="w-4 h-4" />
                 <span>Masuk</span>
               </Link>
             )}
 
-            {/* Mobile Menu Toggle */}
+            {/* Mobile Hamburger Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-slate-300 hover:bg-slate-800"
+              className="lg:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
 
-        {/* ─── Mobile Menu Drawer ────────────────────────────────────────────── */}
+        {/* Mobile Navigation Drawer */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden bg-slate-900 border-b border-slate-800 px-5 py-4 space-y-4 animate-in slide-in-from-top-4 duration-200">
+          <div className="lg:hidden bg-[#070b14] border-b border-slate-800/90 p-4 space-y-3">
             <form onSubmit={handleSearch}>
               <div className="relative flex items-center">
                 <Search className="w-4 h-4 text-slate-400 absolute left-3.5" />
                 <input
                   type="text"
-                  placeholder="Cari produk..."
+                  placeholder="Cari produk di toko..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full h-10 pl-10 pr-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500"
+                  style={{ paddingLeft: '38px', paddingRight: '16px' }}
+                  className="w-full h-10 rounded-xl bg-slate-950 border border-slate-800 text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500"
                 />
               </div>
             </form>
@@ -288,7 +254,7 @@ export default function Navbar() {
         )}
       </header>
 
-      {/* ─── 3. Mobile Fixed Bottom Navigation Bar (Screen 19) ────────────── */}
+      {/* ─── Mobile Fixed Bottom Navigation Bar (Screen 19) ────────────── */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#070b14]/95 backdrop-blur-md border-t border-slate-800/90 py-2.5 px-4 shadow-2xl flex items-center justify-around text-[10px] font-semibold text-slate-400">
         <Link 
           href="/" 
