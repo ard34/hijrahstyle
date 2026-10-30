@@ -11,55 +11,176 @@ import { formatPrice, getDiscountPercentage } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
 
-async function getHomeData() {
-  const [categories, products, promoProducts] = await Promise.all([
-    prisma.category.findMany({
-      where: { 
-        status: 'ACTIVE',
-        slug: { in: ['pakaian', 'sepatu', 'aksesoris', 'tas', 'elektronik', 'lainnya'] }
-      },
-      orderBy: { sortOrder: 'asc' },
-    }),
-    prisma.product.findMany({
-      where: { 
-        status: 'ACTIVE',
-        slug: { in: [
-          'sneakers-vortex',
-          'hoodie-bbn-premium',
-          'kaos-forge',
-          'jaket-windbreaker',
-          'tas-sling-bbn',
-          'topi-trucker',
-          'smartwatch-forge-x',
-          'backpack-cyber-bbn'
-        ]}
-      },
-      include: {
-        images: { orderBy: { sortOrder: 'asc' }, take: 1 },
-        category: true,
-        variants: { where: { status: 'ACTIVE' } },
-        reviews: true,
-      },
-      orderBy: { createdAt: 'desc' },
-      take: 8,
-    }),
-    prisma.product.findMany({
-      where: {
-        status: 'ACTIVE',
-        compareAtPrice: { not: null },
-        slug: { in: ['sneakers-vortex', 'hoodie-bbn-premium', 'jaket-windbreaker', 'tas-sling-bbn'] }
-      },
-      include: {
-        images: { orderBy: { sortOrder: 'asc' }, take: 1 },
-        category: true,
-        variants: { where: { status: 'ACTIVE' } },
-        reviews: true,
-      },
-      take: 4,
-    }),
-  ]);
+const fallbackCategories = [
+  { id: 'cat-1', name: 'Pakaian', slug: 'pakaian', sortOrder: 1 },
+  { id: 'cat-2', name: 'Sepatu', slug: 'sepatu', sortOrder: 2 },
+  { id: 'cat-3', name: 'Aksesoris', slug: 'aksesoris', sortOrder: 3 },
+  { id: 'cat-4', name: 'Tas', slug: 'tas', sortOrder: 4 },
+  { id: 'cat-5', name: 'Elektronik', slug: 'elektronik', sortOrder: 5 },
+  { id: 'cat-6', name: 'Lainnya', slug: 'lainnya', sortOrder: 6 },
+];
 
-  return { categories, products, promoProducts };
+const fallbackProducts = [
+  {
+    id: 'prod-1',
+    name: 'Sneakers Vortex BBN Edition',
+    title: 'Sneakers Vortex BBN Edition',
+    slug: 'sneakers-vortex',
+    price: 599000,
+    compareAtPrice: 699000,
+    images: [{ id: 'img-1', imageUrl: '/products/sneakers-vortex.png', sortOrder: 1 }],
+    category: { id: 'cat-2', name: 'Sepatu', slug: 'sepatu' },
+    variants: [{ id: 'v-1', stock: 45 }],
+    reviews: [{ id: 'r-1', rating: 5 }, { id: 'r-2', rating: 5 }],
+  },
+  {
+    id: 'prod-2',
+    name: 'Hoodie BBN Premium',
+    title: 'Hoodie BBN Premium',
+    slug: 'hoodie-bbn-premium',
+    price: 249000,
+    compareAtPrice: 299000,
+    images: [{ id: 'img-2', imageUrl: '/products/hoodie-bbn.jpg', sortOrder: 1 }],
+    category: { id: 'cat-1', name: 'Pakaian', slug: 'pakaian' },
+    variants: [{ id: 'v-2', stock: 60 }],
+    reviews: [{ id: 'r-3', rating: 4.9 }],
+  },
+  {
+    id: 'prod-3',
+    name: 'Kaos Forge Cyber Edition',
+    title: 'Kaos Forge Cyber Edition',
+    slug: 'kaos-forge',
+    price: 129000,
+    compareAtPrice: 159000,
+    images: [{ id: 'img-3', imageUrl: '/products/kaos-forge.jpg', sortOrder: 1 }],
+    category: { id: 'cat-1', name: 'Pakaian', slug: 'pakaian' },
+    variants: [{ id: 'v-3', stock: 80 }],
+    reviews: [{ id: 'r-4', rating: 4.9 }],
+  },
+  {
+    id: 'prod-4',
+    name: 'Jaket Windbreaker Tactical',
+    title: 'Jaket Windbreaker Tactical',
+    slug: 'jaket-windbreaker',
+    price: 299000,
+    compareAtPrice: 389000,
+    images: [{ id: 'img-4', imageUrl: '/products/jaket-windbreaker.jpg', sortOrder: 1 }],
+    category: { id: 'cat-1', name: 'Pakaian', slug: 'pakaian' },
+    variants: [{ id: 'v-4', stock: 35 }],
+    reviews: [{ id: 'r-5', rating: 4.9 }],
+  },
+  {
+    id: 'prod-5',
+    name: 'Tas Sling BBN Utility',
+    title: 'Tas Sling BBN Utility',
+    slug: 'tas-sling-bbn',
+    price: 189000,
+    compareAtPrice: 239000,
+    images: [{ id: 'img-5', imageUrl: '/products/tas-sling.jpg', sortOrder: 1 }],
+    category: { id: 'cat-4', name: 'Tas', slug: 'tas' },
+    variants: [{ id: 'v-5', stock: 50 }],
+    reviews: [{ id: 'r-6', rating: 4.8 }],
+  },
+  {
+    id: 'prod-6',
+    name: 'Topi Trucker Forge Cyber',
+    title: 'Topi Trucker Forge Cyber',
+    slug: 'topi-trucker',
+    price: 99000,
+    compareAtPrice: 129000,
+    images: [{ id: 'img-6', imageUrl: '/products/topi-trucker.jpg', sortOrder: 1 }],
+    category: { id: 'cat-3', name: 'Aksesoris', slug: 'aksesoris' },
+    variants: [{ id: 'v-6', stock: 40 }],
+    reviews: [{ id: 'r-7', rating: 4.7 }],
+  },
+  {
+    id: 'prod-7',
+    name: 'Smartwatch Forge X Futuristic',
+    title: 'Smartwatch Forge X Futuristic',
+    slug: 'smartwatch-forge-x',
+    price: 899000,
+    compareAtPrice: 1199000,
+    images: [{ id: 'img-7', imageUrl: '/products/smartwatch-forge-x.jpg', sortOrder: 1 }],
+    category: { id: 'cat-5', name: 'Elektronik', slug: 'elektronik' },
+    variants: [{ id: 'v-7', stock: 25 }],
+    reviews: [{ id: 'r-8', rating: 5.0 }],
+  },
+  {
+    id: 'prod-8',
+    name: 'Backpack Cyber BBN Waterproof',
+    title: 'Backpack Cyber BBN Waterproof',
+    slug: 'backpack-cyber-bbn',
+    price: 349000,
+    compareAtPrice: 429000,
+    images: [{ id: 'img-8', imageUrl: '/products/tas-sling.jpg', sortOrder: 1 }],
+    category: { id: 'cat-4', name: 'Tas', slug: 'tas' },
+    variants: [{ id: 'v-8', stock: 30 }],
+    reviews: [{ id: 'r-9', rating: 4.9 }],
+  },
+];
+
+async function getHomeData() {
+  try {
+    const [categories, products, promoProducts] = await Promise.all([
+      prisma.category.findMany({
+        where: { 
+          status: 'ACTIVE',
+          slug: { in: ['pakaian', 'sepatu', 'aksesoris', 'tas', 'elektronik', 'lainnya'] }
+        },
+        orderBy: { sortOrder: 'asc' },
+      }),
+      prisma.product.findMany({
+        where: { 
+          status: 'ACTIVE',
+          slug: { in: [
+            'sneakers-vortex',
+            'hoodie-bbn-premium',
+            'kaos-forge',
+            'jaket-windbreaker',
+            'tas-sling-bbn',
+            'topi-trucker',
+            'smartwatch-forge-x',
+            'backpack-cyber-bbn'
+          ]}
+        },
+        include: {
+          images: { orderBy: { sortOrder: 'asc' }, take: 1 },
+          category: true,
+          variants: { where: { status: 'ACTIVE' } },
+          reviews: true,
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 8,
+      }),
+      prisma.product.findMany({
+        where: {
+          status: 'ACTIVE',
+          compareAtPrice: { not: null },
+          slug: { in: ['sneakers-vortex', 'hoodie-bbn-premium', 'jaket-windbreaker', 'tas-sling-bbn'] }
+        },
+        include: {
+          images: { orderBy: { sortOrder: 'asc' }, take: 1 },
+          category: true,
+          variants: { where: { status: 'ACTIVE' } },
+          reviews: true,
+        },
+        take: 4,
+      }),
+    ]);
+
+    return { 
+      categories: categories.length > 0 ? categories : fallbackCategories, 
+      products: products.length > 0 ? products : fallbackProducts, 
+      promoProducts: promoProducts.length > 0 ? promoProducts : fallbackProducts.slice(0, 4) 
+    };
+  } catch (error) {
+    console.warn('Database offline or unreachable, using fallback Toko Sample BBN catalog data:', error);
+    return {
+      categories: fallbackCategories,
+      products: fallbackProducts,
+      promoProducts: fallbackProducts.slice(0, 4),
+    };
+  }
 }
 
 export default async function HomePage() {

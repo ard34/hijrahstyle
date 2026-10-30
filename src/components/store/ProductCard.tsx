@@ -23,11 +23,12 @@ export default function ProductCard({ product }: { product: any }) {
   const { addToast } = useToastStore();
   const router = useRouter();
 
+  const productName = product.name || product.title || 'Produk BBN';
   const avgRating = getAvgRating(product.reviews);
   const totalStock = getTotalStock(product.variants);
   const hasDiscount = Boolean(product.compareAtPrice && product.compareAtPrice > product.price);
   const discount = hasDiscount ? getDiscountPercentage(product.compareAtPrice, product.price) : 0;
-  const imageUrl = product.images?.[0]?.imageUrl || product.images?.[0]?.url || '/hero-sneaker.png';
+  const imageUrl = product.images?.[0]?.imageUrl || product.images?.[0]?.url || '/products/sneakers-vortex.png';
 
   const handleQuickAdd = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -53,7 +54,7 @@ export default function ProductCard({ product }: { product: any }) {
         body: JSON.stringify({ productVariantId: variantId, quantity: 1 }),
       });
       if (res.ok) {
-        addToast(`${product.name} berhasil ditambahkan!`, 'success');
+        addToast(`${productName} berhasil ditambahkan!`, 'success');
         window.dispatchEvent(new Event('cart-updated'));
       } else {
         router.push(`/products/${product.slug}`);
@@ -89,7 +90,7 @@ export default function ProductCard({ product }: { product: any }) {
           {/* Product Image */}
           <img
             src={imageUrl}
-            alt={product.name}
+            alt={productName}
             className="w-full h-full object-contain filter drop-shadow-[0_8px_20px_rgba(0,0,0,0.7)] group-hover:scale-105 transition-transform duration-500 ease-out"
           />
 
@@ -147,7 +148,7 @@ export default function ProductCard({ product }: { product: any }) {
           {/* Title (2-Lines Clamp ala Shopee) */}
           <Link href={`/products/${product.slug}`} className="block">
             <h3 className="font-semibold text-white text-xs sm:text-sm line-clamp-2 leading-snug group-hover:text-blue-400 transition-colors h-9">
-              {product.name}
+              {productName}
             </h3>
           </Link>
 
