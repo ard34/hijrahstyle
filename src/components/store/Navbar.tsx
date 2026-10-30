@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { 
   ShoppingBag, Heart, User, Search, Menu, X, 
-  ExternalLink, LogOut, Package, Grid, Home, Sparkles 
+  ExternalLink, LogOut, Package, Grid, Home, Sparkles,
+  Bell, HelpCircle, Globe, ShieldCheck, ChevronDown
 } from 'lucide-react';
 import { useCartStore, useAuthStore } from '@/lib/store';
 
@@ -45,84 +46,152 @@ export default function Navbar() {
 
   const cartCount = totalItems();
 
+  const trendingKeywords = [
+    'Sneakers Vortex',
+    'Hoodie BBN',
+    'Kaos Forge',
+    'Jaket Windbreaker',
+    'Tas Sling',
+    'Topi Trucker',
+    'Smartwatch',
+  ];
+
   return (
     <>
-      {/* ─── Main Sticky Header (Screen 01) ─────────────────────────────────── */}
-      <header className="sticky top-0 left-0 right-0 z-50 bg-[#070b14]/95 backdrop-blur-md border-b border-slate-800/80 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4 lg:gap-8">
+      {/* ─── 01. Shopee-Style Top Utility Bar (Micro Header) ────────────────── */}
+      <div className="bg-[#04070f] border-b border-slate-800/80 text-[11px] text-slate-400 py-1.5 px-4 sm:px-6 lg:px-8 hidden md:block">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          {/* Left: Store Portal & Mall Guarantee */}
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1.5 text-blue-400 font-bold">
+              <ShieldCheck className="w-3.5 h-3.5 text-blue-400" />
+              <span>BBN Mall Official Store</span>
+            </span>
+            <span className="text-slate-700">|</span>
+            <Link href="/products" className="hover:text-slate-200 transition-colors">
+              Katalog Lengkap
+            </Link>
+            <span className="text-slate-700">|</span>
+            <Link href="/promo" className="hover:text-slate-200 transition-colors flex items-center gap-1">
+              <span className="text-rose-400 font-bold">Promo Spesial</span>
+              <span className="px-1 py-0.2 rounded text-[9px] bg-rose-500/20 text-rose-400 font-black">HOT</span>
+            </Link>
+          </div>
+
+          {/* Right: Quick Links ala Shopee (Notifikasi, Bantuan, Bahasa, Akun) */}
+          <div className="flex items-center gap-4">
+            <Link href="/orders" className="hover:text-slate-200 transition-colors flex items-center gap-1">
+              <Bell className="w-3.5 h-3.5" />
+              <span>Pesanan Saya</span>
+            </Link>
+            <span className="text-slate-700">|</span>
+            <Link href="/categories" className="hover:text-slate-200 transition-colors flex items-center gap-1">
+              <HelpCircle className="w-3.5 h-3.5" />
+              <span>Bantuan</span>
+            </Link>
+            <span className="text-slate-700">|</span>
+            <span className="flex items-center gap-1 text-slate-400">
+              <Globe className="w-3.5 h-3.5" />
+              <span>Bahasa Indonesia</span>
+            </span>
+
+            {user ? (
+              <>
+                <span className="text-slate-700">|</span>
+                <span className="font-bold text-white flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                  <span>{user.name.split(' ')[0]}</span>
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="text-slate-700">|</span>
+                <Link href="/register" className="font-bold text-white hover:text-blue-400 transition-colors">
+                  Daftar
+                </Link>
+                <span className="text-slate-700">/</span>
+                <Link href="/login" className="font-bold text-blue-400 hover:text-blue-300 transition-colors">
+                  Masuk
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* ─── 02. Shopee-Style Main Header ───────────────────────────────────── */}
+      <header className="sticky top-0 left-0 right-0 z-50 bg-[#070b14]/95 backdrop-blur-md border-b border-slate-800/80 shadow-xl">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-3.5 flex items-center justify-between gap-4 lg:gap-8">
           
-          {/* 1. Brand Logo & Name */}
-          <Link href="/" className="flex items-center gap-2.5 shrink-0 group">
+          {/* 1. Brand Logo with Shopee "Mall" Tag */}
+          <Link href="/" className="flex items-center gap-3 shrink-0 group">
             <div className="relative">
               <img
                 src="/logo.png"
                 alt="BBn Digital Forge"
-                className="w-9 h-9 rounded-xl object-contain bg-slate-950 p-1 border border-blue-500/40 shadow-[0_0_15px_rgba(37,99,235,0.3)] group-hover:scale-105 transition-transform"
+                className="w-10 h-10 rounded-2xl object-contain bg-slate-950 p-1 border border-blue-500/40 shadow-[0_0_20px_rgba(37,99,235,0.3)] group-hover:scale-105 transition-transform"
               />
-              <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border border-slate-950 rounded-full" />
-            </div>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-xl font-black text-white tracking-tight font-sans">
-                BBn
+              <span className="absolute -bottom-1 -right-1 bg-rose-600 text-white text-[8px] font-black px-1 py-0.2 rounded uppercase tracking-wider shadow-xs">
+                Mall
               </span>
-              <span className="text-[11px] font-bold text-blue-400 tracking-wider hidden sm:inline uppercase">
+            </div>
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xl sm:text-2xl font-black text-white tracking-tight font-sans">
+                  BBn
+                </span>
+                <span className="text-[10px] font-black text-blue-400 tracking-widest uppercase bg-blue-500/15 border border-blue-500/30 px-1.5 py-0.5 rounded">
+                  OFFICIAL
+                </span>
+              </div>
+              <span className="text-[10px] font-bold text-slate-400 tracking-wider hidden sm:inline uppercase">
                 DIGITAL FORGE
               </span>
             </div>
           </Link>
 
-          {/* 2. Desktop Nav Links (Screen 01) */}
-          <nav className="hidden lg:flex items-center gap-1.5 text-xs font-semibold shrink-0">
-            {[
-              { label: 'Beranda', href: '/' },
-              { label: 'Produk', href: '/products' },
-              { label: 'Kategori', href: '/categories' },
-              { label: 'Promo', href: '/promo', badge: 'Hot' },
-              { label: 'Wishlist', href: '/wishlist' },
-            ].map((item) => {
-              const isActive = pathname === item.href;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`px-3 py-1.5 rounded-xl transition-all flex items-center gap-1.5 ${
-                    isActive
-                      ? 'text-white bg-blue-600/20 border border-blue-500/40 font-bold shadow-xs'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800/60'
-                  }`}
-                >
-                  <span>{item.label}</span>
-                  {item.badge && (
-                    <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/30 font-bold">
-                      {item.badge}
-                    </span>
-                  )}
-                </Link>
-              );
-            })}
-          </nav>
-
-          {/* 3. Search Bar (Clean Pill without overlapping text) */}
-          <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-xs xl:max-w-sm">
-            <div className="relative w-full flex items-center">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none" />
+          {/* 2. Shopee-Style Prominent Search Bar in Center */}
+          <div className="flex-1 max-w-2xl hidden md:block">
+            <form onSubmit={handleSearch} className="relative flex items-center">
               <input
                 type="text"
-                placeholder="Cari produk di toko..."
+                placeholder="Daftar & dapatkan voucher diskon s/d 70% | Cari produk di toko..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ paddingLeft: '40px', paddingRight: '16px' }}
-                className="w-full h-10 rounded-full bg-[#0b1120] border border-slate-800 focus:border-blue-500 focus:bg-[#0f172a] text-xs sm:text-sm font-medium text-white placeholder:text-slate-500 outline-none transition-all shadow-inner"
+                style={{ paddingLeft: '44px', paddingRight: '100px' }}
+                className="w-full h-11 rounded-2xl bg-[#0b1220] border border-slate-700/80 focus:border-blue-500 focus:bg-[#0f172a] text-xs sm:text-sm font-medium text-white placeholder:text-slate-400 outline-none transition-all shadow-inner"
               />
-            </div>
-          </form>
+              <Search className="w-4 h-4 text-slate-400 absolute left-4 pointer-events-none" />
 
-          {/* 4. Action Icons (Screen 01) */}
-          <div className="flex items-center gap-2.5 shrink-0">
+              <button
+                type="submit"
+                className="absolute right-1.5 h-8 px-4 bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs rounded-xl transition-all flex items-center gap-1.5 shadow-md shadow-blue-600/30 hover:scale-105 active:scale-95 cursor-pointer"
+              >
+                <Search className="w-3.5 h-3.5" />
+                <span>Cari</span>
+              </button>
+            </form>
+
+            {/* Shopee Keyword Suggestions under Search Bar */}
+            <div className="flex items-center gap-3 pt-1.5 text-[11px] text-slate-400 overflow-hidden whitespace-nowrap">
+              {trendingKeywords.map((kw) => (
+                <Link
+                  key={kw}
+                  href={`/products?search=${encodeURIComponent(kw)}`}
+                  className="hover:text-blue-400 transition-colors"
+                >
+                  {kw}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* 3. Shopee Action Icons: Wishlist, Shopping Cart & User Profile */}
+          <div className="flex items-center gap-3 shrink-0">
             {/* Wishlist */}
             <Link 
               href="/wishlist" 
-              className={`w-10 h-10 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95 relative cursor-pointer ${
+              className={`w-11 h-11 rounded-2xl bg-[#0e172a] border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95 relative cursor-pointer ${
                 pathname === '/wishlist' ? 'text-blue-400 border-blue-500/40 bg-slate-800' : ''
               }`}
               title="Wishlist Favorit"
@@ -130,17 +199,17 @@ export default function Navbar() {
               <Heart className="w-5 h-5 stroke-[1.8]" />
             </Link>
 
-            {/* Cart Button (Clean matching icon with badge counter) */}
+            {/* Shopee Iconic Big Cart Icon with Badge */}
             <Link 
               href="/cart" 
-              className={`w-10 h-10 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95 relative cursor-pointer ${
-                pathname === '/cart' ? 'text-blue-400 border-blue-500/40 bg-slate-800' : ''
+              className={`w-11 h-11 rounded-2xl bg-blue-600/10 border border-blue-500/30 hover:border-blue-500 hover:bg-blue-600/20 text-blue-400 hover:text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95 relative cursor-pointer ${
+                pathname === '/cart' ? 'bg-blue-600 text-white border-blue-400 shadow-lg shadow-blue-600/40' : ''
               }`}
-              title="Keranjang Belanja"
+              title="Keranjang Belanja Shopee"
             >
-              <ShoppingBag className="w-5 h-5 stroke-[1.8]" />
+              <ShoppingBag className="w-5 h-5 stroke-[2]" />
               {cartCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] px-1 rounded-full bg-blue-600 text-white text-[10px] font-black flex items-center justify-center shadow-lg shadow-blue-600/50 border border-[#070b14] animate-pulse">
+                <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] px-1 rounded-full bg-rose-600 text-white text-[10px] font-black flex items-center justify-center shadow-lg shadow-rose-600/50 border border-[#070b14] animate-pulse">
                   {cartCount}
                 </span>
               )}
@@ -151,14 +220,15 @@ export default function Navbar() {
               <div className="relative">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center gap-2 h-10 px-2.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-900/80 transition-all cursor-pointer"
+                  className="flex items-center gap-2 h-11 px-3 rounded-2xl border border-slate-800 hover:border-slate-700 bg-[#0e172a] transition-all cursor-pointer"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-blue-600 text-white font-extrabold text-xs flex items-center justify-center shadow-xs">
+                  <div className="w-7 h-7 rounded-xl bg-blue-600 text-white font-extrabold text-xs flex items-center justify-center shadow-xs">
                     {user.name?.charAt(0).toUpperCase() || 'U'}
                   </div>
                   <span className="text-xs font-bold text-white hidden md:inline max-w-[90px] truncate">
                     {user.name.split(' ')[0]}
                   </span>
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
                 </button>
 
                 {/* Dropdown Menu */}
@@ -211,7 +281,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="flex items-center gap-2 h-10 px-4 sm:px-5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-extrabold transition-all shadow-md shadow-blue-600/35 hover:scale-105 active:scale-95 cursor-pointer shrink-0"
+                className="flex items-center gap-2 h-11 px-5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-extrabold transition-all shadow-md shadow-blue-600/35 hover:scale-105 active:scale-95 cursor-pointer shrink-0"
               >
                 <User className="w-4 h-4 stroke-[2]" />
                 <span>Masuk</span>
@@ -221,7 +291,7 @@ export default function Navbar() {
             {/* Mobile Hamburger Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              className="md:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -230,7 +300,7 @@ export default function Navbar() {
 
         {/* Mobile Navigation Drawer */}
         {isMobileMenuOpen && (
-          <div className="lg:hidden bg-[#070b14] border-b border-slate-800/90 p-4 space-y-3">
+          <div className="md:hidden bg-[#070b14] border-b border-slate-800/90 p-4 space-y-3">
             <form onSubmit={handleSearch}>
               <div className="relative flex items-center">
                 <Search className="w-4 h-4 text-slate-400 absolute left-3.5" />
@@ -255,7 +325,7 @@ export default function Navbar() {
         )}
       </header>
 
-      {/* ─── Mobile Fixed Bottom Navigation Bar (Screen 19) ────────────── */}
+      {/* ─── Mobile Fixed Bottom Navigation Bar (Shopee Style) ──────────────── */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#070b14]/95 backdrop-blur-md border-t border-slate-800/90 py-2.5 px-4 shadow-2xl flex items-center justify-around text-[10px] font-semibold text-slate-400">
         <Link 
           href="/" 
@@ -269,35 +339,33 @@ export default function Navbar() {
           className={`flex flex-col items-center gap-1 ${pathname === '/products' ? 'text-blue-400 font-bold' : 'hover:text-blue-400'}`}
         >
           <Grid className="w-5 h-5 stroke-[1.75]" />
-          <span>Katalog</span>
+          <span>Produk</span>
         </Link>
         <Link 
-          href="/categories" 
-          className={`flex flex-col items-center gap-1 ${pathname === '/categories' ? 'text-blue-400 font-bold' : 'hover:text-blue-400'}`}
+          href="/promo" 
+          className={`flex flex-col items-center gap-1 ${pathname === '/promo' ? 'text-rose-400 font-bold' : 'hover:text-rose-400'}`}
         >
           <Sparkles className="w-5 h-5 stroke-[1.75]" />
-          <span>Kategori</span>
+          <span>Promo</span>
         </Link>
         <Link 
           href="/cart" 
           className={`flex flex-col items-center gap-1 relative ${pathname === '/cart' ? 'text-blue-400 font-bold' : 'hover:text-blue-400'}`}
         >
-          <div className="relative">
-            <ShoppingBag className="w-5 h-5 stroke-[1.75]" />
-            {cartCount > 0 && (
-              <span className="absolute -top-1.5 -right-2.5 min-w-3.5 h-3.5 px-1 rounded-full bg-blue-600 text-white text-[9px] font-extrabold flex items-center justify-center">
-                {cartCount}
-              </span>
-            )}
-          </div>
+          <ShoppingBag className="w-5 h-5 stroke-[1.75]" />
+          {cartCount > 0 && (
+            <span className="absolute -top-1 -right-2 min-w-4 h-4 px-1 rounded-full bg-rose-600 text-white text-[9px] font-black flex items-center justify-center">
+              {cartCount}
+            </span>
+          )}
           <span>Keranjang</span>
         </Link>
         <Link 
-          href={user ? "/profile" : "/login"} 
+          href={user ? '/profile' : '/login'} 
           className={`flex flex-col items-center gap-1 ${pathname === '/profile' || pathname === '/login' ? 'text-blue-400 font-bold' : 'hover:text-blue-400'}`}
         >
           <User className="w-5 h-5 stroke-[1.75]" />
-          <span>{user ? 'Akun' : 'Masuk'}</span>
+          <span>{user ? 'Saya' : 'Masuk'}</span>
         </Link>
       </div>
     </>
