@@ -136,11 +136,11 @@ export default async function HomePage() {
               {/* Ethereal Glow Ring */}
               <div className="absolute w-60 sm:w-72 h-60 sm:h-72 rounded-full border border-blue-500/25 border-dashed animate-[spin_25s_linear_infinite]" />
 
-              {/* Sneaker with mix-blend-screen to remove black rectangular background */}
+              {/* Sneaker with transparent background */}
               <img
                 src="/hero-sneaker.png"
                 alt="Sneakers Vortex BBN Edition"
-                className="relative z-10 w-full h-full object-contain filter drop-shadow-[0_20px_40px_rgba(37,99,235,0.7)] hover:scale-105 transition-transform duration-500 mix-blend-screen rotate-[-6deg]"
+                className="relative z-10 w-full h-full object-contain filter drop-shadow-[0_20px_40px_rgba(37,99,235,0.7)] hover:scale-105 transition-transform duration-500 rotate-[-6deg]"
               />
 
               {/* Floating Pill Badge */}
@@ -156,26 +156,23 @@ export default async function HomePage() {
 
       {/* ─── 02. Trust Badges Row (Screen 01) ──────────────────────────────── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-5">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {[
-            { icon: ShieldCheck, title: '100% Original', desc: 'Garansi Keaslian Resmi' },
-            { icon: Truck, title: 'Pengiriman Cepat', desc: 'Resi Otomatis JNE/SiCepat' },
-            { icon: CreditCard, title: 'Pembayaran Aman', desc: 'Sandbox Duitku Terverifikasi' },
-            { icon: RotateCcw, title: 'Garansi Retur', desc: '7 Hari Tukar Ukuran' },
+            { icon: ShieldCheck, title: '100% Original' },
+            { icon: Truck, title: 'Pengiriman Cepat' },
+            { icon: CreditCard, title: 'Pembayaran Aman Duitku' },
+            { icon: RotateCcw, title: 'Garansi Retur' },
           ].map((item, idx) => (
             <div 
               key={idx} 
-              className="p-4 sm:p-5 rounded-2xl bg-[#0b1220] border border-slate-800/80 shadow-md flex items-center gap-3.5 hover:border-blue-500/40 hover:bg-[#0e1628] transition-all group"
+              className="py-3.5 px-4 rounded-2xl bg-[#0e172a] border border-slate-800/80 shadow-sm flex items-center justify-center gap-2.5 hover:border-blue-500/40 hover:bg-[#111c33] transition-all group"
             >
-              <div className="w-10 h-10 rounded-xl bg-blue-600/15 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0 group-hover:scale-105 transition-transform">
-                <item.icon className="w-5 h-5" />
+              <div className="w-8 h-8 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0 group-hover:scale-110 transition-transform">
+                <item.icon className="w-4 h-4" />
               </div>
-              <div className="min-w-0">
-                <p className="text-xs sm:text-sm font-bold text-white group-hover:text-blue-400 transition-colors truncate">
-                  {item.title}
-                </p>
-                <p className="text-[10px] sm:text-xs text-slate-400 truncate mt-0.5">{item.desc}</p>
-              </div>
+              <span className="text-xs sm:text-sm font-bold text-white group-hover:text-blue-400 transition-colors whitespace-nowrap">
+                {item.title}
+              </span>
             </div>
           ))}
         </div>
