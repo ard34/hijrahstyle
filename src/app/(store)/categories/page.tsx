@@ -56,7 +56,7 @@ const categoriesData = [
 
 export default function CategoriesPage() {
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-10 min-h-[calc(100vh-140px)] animate-fade-in-up">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-16 space-y-10 min-h-[calc(100vh-140px)] animate-fade-in-up">
       
       {/* ─── Vibrant Header Banner with Multi-Tone Mesh ─── */}
       <div className="relative rounded-[28px] bg-gradient-to-r from-[#070d1c] via-[#0d162d] to-[#091124] p-8 sm:p-12 border border-blue-500/30 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden">

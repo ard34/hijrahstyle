@@ -77,7 +77,7 @@ export default async function OrderDetailPage({
   ];
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full min-h-[calc(100vh-140px)] space-y-6">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-16 w-full min-h-[calc(100vh-140px)] space-y-6 animate-fade-in-up">
       
       {/* ─── Screen 08 Breadcrumb: Pesanan > Detail Pesanan ─── */}
       <nav className="flex items-center gap-2 text-xs text-slate-400 font-medium">

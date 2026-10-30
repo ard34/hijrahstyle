@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { 
   Star, Heart, Minus, Plus, Truck, ShieldCheck, RotateCcw, 
   ChevronRight, Check, ShoppingBag, ThumbsUp, MessageSquare, 
-  Package, MapPin, Tag, Sparkles, CheckCircle2, ArrowRight
+  Package, MapPin, Tag, Sparkles, CheckCircle2, ArrowRight, Home
 } from 'lucide-react';
 import { formatPrice, getDiscountPercentage } from '@/lib/utils';
 import { useToastStore } from '@/lib/store';
@@ -174,18 +174,26 @@ export default function ProductDetailClient({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-24 space-y-12 animate-fade-in-up">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 space-y-10 sm:space-y-12 animate-fade-in-up">
       
-      {/* ─── Breadcrumbs with Generous Margin ─── */}
-      <nav className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-slate-400 pb-2">
-        <Link href="/" className="hover:text-blue-400 transition-colors">Beranda</Link>
-        <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
-        <Link href={`/products?category=${product.category?.slug || 'pakaian'}`} className="hover:text-blue-400 transition-colors capitalize">
-          {product.category?.name || 'Pakaian'}
-        </Link>
-        <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
-        <span className="text-white font-bold truncate max-w-sm">{product.name}</span>
-      </nav>
+      {/* ─── Breadcrumbs: Floating Glassmorphic Pill with Generous Top Margin ─── */}
+      <div className="pt-8 sm:pt-12 pb-1">
+        <nav className="inline-flex items-center gap-2.5 px-4 sm:px-5 py-2.5 rounded-full bg-[#0b1220]/90 border border-slate-800/90 text-xs sm:text-sm font-semibold text-slate-300 shadow-xl shadow-black/30 backdrop-blur-md hover:border-blue-500/40 transition-all duration-300 group flex-wrap">
+          <Link href="/" prefetch={true} className="hover:text-blue-400 transition-colors flex items-center gap-1.5">
+            <Home className="w-3.5 h-3.5 text-blue-400 group-hover:scale-110 transition-transform" />
+            <span>Beranda</span>
+          </Link>
+          <ChevronRight className="w-3.5 h-3.5 text-slate-600 shrink-0" />
+          <Link href={`/products?category=${product.category?.slug || 'pakaian'}`} prefetch={true} className="hover:text-blue-400 transition-colors capitalize">
+            {product.category?.name || 'Pakaian'}
+          </Link>
+          <ChevronRight className="w-3.5 h-3.5 text-slate-600 shrink-0" />
+          <span className="text-white font-bold bg-blue-500/15 px-3 py-1 rounded-full border border-blue-500/30 text-blue-300 shadow-xs flex items-center gap-1.5 truncate max-w-xs sm:max-w-sm">
+            <Sparkles className="w-3 h-3 text-amber-300 animate-spin shrink-0" style={{ animationDuration: '6s' }} />
+            <span className="truncate">{product.name}</span>
+          </span>
+        </nav>
+      </div>
 
       {/* ─── Main Product Showcase Card with Luxurious Spacing ─── */}
       <div className="bg-[#0b1220] rounded-3xl border border-slate-800/90 p-8 sm:p-10 lg:p-12 shadow-2xl">

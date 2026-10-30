@@ -79,7 +79,7 @@ function OrdersContent() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[calc(100vh-140px)] space-y-8">
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-16 min-h-[calc(100vh-140px)] space-y-8 animate-fade-in-up">
       
       {/* ─── Screen 07 Header: Riwayat Pesanan ─── */}
       <div>

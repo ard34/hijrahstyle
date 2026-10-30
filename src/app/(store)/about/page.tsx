@@ -14,7 +14,8 @@ import {
   CheckCircle2,
   ShieldCheck,
   PackageCheck,
-  Truck
+  Truck,
+  Home
 } from 'lucide-react';
 
 export const metadata = {
@@ -24,33 +25,41 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 space-y-20 animate-fade-in-up">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 space-y-16 sm:space-y-24 animate-fade-in-up">
       
-      {/* ─── 1. Breadcrumb Navigasi ─── */}
-      <nav className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-400">
-        <Link href="/" className="hover:text-blue-400 transition-colors">Beranda</Link>
-        <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
-        <span className="text-white font-bold">Tentang Kami</span>
-      </nav>
+      {/* ─── 1. Breadcrumb Navigasi: Floating Glassmorphic Pill dengan Jarak Lega & Animasi ─── */}
+      <div className="pt-8 sm:pt-12 pb-2">
+        <nav className="inline-flex items-center gap-2.5 px-4 sm:px-5 py-2.5 rounded-full bg-[#0b1220]/90 border border-slate-800/90 text-xs sm:text-sm font-semibold text-slate-300 shadow-xl shadow-black/30 backdrop-blur-md hover:border-blue-500/40 transition-all duration-300 group">
+          <Link href="/" prefetch={true} className="hover:text-blue-400 transition-colors flex items-center gap-1.5">
+            <Home className="w-3.5 h-3.5 text-blue-400 group-hover:scale-110 transition-transform" />
+            <span>Beranda</span>
+          </Link>
+          <ChevronRight className="w-3.5 h-3.5 text-slate-600 shrink-0" />
+          <span className="text-white font-bold bg-blue-500/15 px-3 py-1 rounded-full border border-blue-500/30 text-blue-300 shadow-xs flex items-center gap-1.5">
+            <Sparkles className="w-3 h-3 text-amber-300 animate-spin" style={{ animationDuration: '6s' }} />
+            <span>Tentang Kami</span>
+          </span>
+        </nav>
+      </div>
 
-      {/* ─── 2. Hero Section: Simetris, Elegan & Seimbang ─── */}
-      <section className="relative rounded-[28px] bg-gradient-to-br from-[#0c1322] via-[#0f192d] to-[#080d18] border border-slate-800/80 p-8 sm:p-12 lg:p-16 overflow-hidden shadow-2xl">
+      {/* ─── 2. Hero Section: Simetris, Elegan & Seimbang dengan Spacing Mantap ─── */}
+      <section className="relative rounded-[32px] bg-gradient-to-br from-[#0c1322] via-[#0f192d] to-[#080d18] border border-slate-800/80 p-8 sm:p-12 lg:p-16 overflow-hidden shadow-2xl mt-2">
         {/* Glow Ambient Lights */}
         <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-600/15 rounded-full blur-[130px] pointer-events-none" />
-        <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-indigo-500/10 rounded-full blur-[110px] pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-80 h-80 bg-rose-500/10 rounded-full blur-[110px] pointer-events-none" />
 
         <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           
           {/* Kolom Kiri: Teks & Filosofi */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-bold tracking-wide">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-blue-500/15 to-rose-500/15 border border-white/10 text-white text-xs font-bold tracking-wide backdrop-blur-md">
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
               <span>BUTIK BUSANA MUSLIMAH • KOTA SERANG</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.15]">
               Keanggunan Syar'i <br />
-              <span className="bg-gradient-to-r from-blue-400 via-indigo-300 to-sky-300 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-400 via-rose-300 to-amber-300 bg-clip-text text-transparent">
                 dengan Kualitas Butik Terbaik
               </span>
             </h1>
@@ -82,13 +91,15 @@ export default function AboutPage() {
             <div className="pt-2 flex items-center gap-3 sm:gap-4 flex-wrap">
               <Link
                 href="/products"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                prefetch={true}
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
               >
                 <ShoppingBag className="w-4 h-4" />
                 <span>Lihat Koleksi Busana</span>
               </Link>
               <Link
                 href="/#footer"
+                prefetch={true}
                 className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-[#0b1220] hover:bg-[#131d33] border border-slate-700/80 text-slate-300 hover:text-white text-xs sm:text-sm font-semibold transition-all cursor-pointer"
               >
                 <span>Hubungi Seller</span>
@@ -96,21 +107,21 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* Kolom Kanan: Visual Card Showcase */}
+          {/* Kolom Kanan: Visual Card Showcase dengan Animasi Mengambang */}
           <div className="lg:col-span-5 relative">
-            <div className="relative mx-auto max-w-sm rounded-2xl bg-[#070b14] border border-slate-800 p-4 shadow-2xl space-y-4">
-              <div className="relative aspect-square w-full rounded-xl overflow-hidden bg-[#10192e] flex items-center justify-center p-6">
+            <div className="relative mx-auto max-w-sm rounded-3xl bg-[#070b14] border border-slate-800 p-4 shadow-2xl space-y-4">
+              <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-[#10192e] flex items-center justify-center p-6">
                 <img
                   src="/products/hoodie-bbn.jpg"
                   alt="Koleksi HijrahStyle"
-                  className="w-full h-full object-contain filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.5)]"
+                  className="w-full h-full object-contain filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.5)] animate-float"
                 />
-                <div className="absolute top-3 right-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold text-[10px] px-2.5 py-1 rounded-md shadow-md">
+                <div className="absolute top-3.5 right-3.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-extrabold text-[10px] px-3 py-1 rounded-md shadow-md animate-pulse">
                   Official Store
                 </div>
               </div>
 
-              <div className="p-3 bg-[#0c1424] rounded-xl border border-slate-800/80 space-y-2">
+              <div className="p-3.5 bg-[#0c1424] rounded-2xl border border-slate-800/80 space-y-2">
                 <div className="flex items-center justify-between text-xs font-bold text-white">
                   <span>Butik Pribadi HijrahStyle</span>
                   <span className="text-emerald-400 flex items-center gap-1 text-[11px]">
@@ -128,7 +139,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ─── 3. Nilai & Standar Kualitas (Bukan Duplikasi Footer) ─── */}
+      {/* ─── 3. Nilai & Standar Kualitas ─── */}
       <section className="space-y-8">
         <div className="text-center max-w-2xl mx-auto space-y-2.5">
           <div className="inline-flex items-center gap-1.5 text-blue-400 text-xs font-bold uppercase tracking-wider">
@@ -161,7 +172,7 @@ export default function AboutPage() {
           </div>
 
           {/* Card 2: Jahitan */}
-          <div className="bg-[#0b1220] border border-slate-800/80 hover:border-blue-500/40 rounded-2xl p-6 sm:p-7 space-y-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-md group">
+          <div className="bg-[#0b1220] border border-slate-800/80 hover:border-amber-500/40 rounded-2xl p-6 sm:p-7 space-y-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-md group">
             <div className="w-12 h-12 rounded-xl bg-amber-600/15 border border-amber-500/30 text-amber-400 flex items-center justify-center group-hover:bg-amber-600 group-hover:text-white transition-all shadow-sm">
               <Scissors className="w-6 h-6 stroke-[2]" />
             </div>
@@ -176,7 +187,7 @@ export default function AboutPage() {
           </div>
 
           {/* Card 3: Pelayanan */}
-          <div className="bg-[#0b1220] border border-slate-800/80 hover:border-blue-500/40 rounded-2xl p-6 sm:p-7 space-y-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-md group">
+          <div className="bg-[#0b1220] border border-slate-800/80 hover:border-emerald-500/40 rounded-2xl p-6 sm:p-7 space-y-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl shadow-md group">
             <div className="w-12 h-12 rounded-xl bg-emerald-600/15 border border-emerald-500/30 text-emerald-400 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition-all shadow-sm">
               <Heart className="w-6 h-6 stroke-[2]" />
             </div>
@@ -194,7 +205,7 @@ export default function AboutPage() {
       </section>
 
       {/* ─── 4. Informasi Operasional & Kontak Workshop ─── */}
-      <section className="bg-[#0b1220] border border-slate-800/90 rounded-[24px] p-7 sm:p-10 shadow-xl space-y-6">
+      <section className="bg-[#0b1220] border border-slate-800/90 rounded-[28px] p-7 sm:p-10 shadow-xl space-y-6">
         <div className="border-b border-slate-800/80 pb-4 flex items-center justify-between flex-wrap gap-3">
           <div>
             <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
@@ -312,6 +323,7 @@ export default function AboutPage() {
         <div className="pt-2">
           <Link
             href="/products"
+            prefetch={true}
             className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs sm:text-sm shadow-xl shadow-blue-600/30 transition-all hover:scale-105 active:scale-95 cursor-pointer"
           >
             <ShoppingBag className="w-4 h-4" />

@@ -302,7 +302,7 @@ function ProductsContent() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[calc(100vh-140px)] animate-fade-in-up">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-16 min-h-[calc(100vh-140px)] animate-fade-in-up">
       
       {/* ─── Screen 02 Grid Layout: Desktop Sidebar + Main Product Showcase Card ─── */}
       <div className="flex flex-col lg:flex-row gap-8 items-start">

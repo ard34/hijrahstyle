@@ -222,8 +222,8 @@ export default function Navbar() {
             </div>
           </div>
 
-          {/* 4. Sub-Navigation Links Row (Ref: Screen 01: Beranda | Produk | Kategori | Promo | Tentang | Kontak) */}
-          <nav className="hidden md:flex items-center gap-8 pt-3 mt-2 border-t border-slate-800/60 text-xs font-semibold">
+          {/* 4. Sub-Navigation Links Row: Spacing Lega, Pill Modern & Animasi Aktif */}
+          <nav className="hidden md:flex items-center gap-2.5 pt-3.5 pb-1.5 mt-2.5 border-t border-slate-800/70 text-xs font-semibold">
             {navLinks.map((link) => {
               const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
               return (
@@ -231,13 +231,16 @@ export default function Navbar() {
                   key={link.label}
                   href={link.href}
                   prefetch={true}
-                  className={`transition-all hover:text-blue-400 relative py-1 ${
+                  className={`px-3.5 py-1.5 rounded-xl transition-all duration-300 flex items-center gap-1.5 ${
                     isActive
-                      ? 'text-blue-400 font-bold shadow-[0_1px_0_0_#3b82f6]'
-                      : 'text-slate-400'
+                      ? 'bg-blue-600/15 text-blue-400 font-bold border border-blue-500/35 shadow-[0_0_15px_rgba(59,130,246,0.25)] scale-[1.02]'
+                      : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
                   }`}
                 >
-                  {link.label}
+                  <span>{link.label}</span>
+                  {isActive && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                  )}
                 </Link>
               );
             })}
@@ -261,17 +264,25 @@ export default function Navbar() {
               </div>
             </form>
             <div className="flex flex-col gap-1 text-xs font-semibold text-slate-300">
-              {navLinks.map((link) => (
-                <Link 
-                  key={link.label} 
-                  href={link.href} 
-                  prefetch={true}
-                  onClick={() => setIsMobileMenuOpen(false)} 
-                  className="py-2.5 px-3 rounded-lg hover:bg-slate-800 hover:text-white"
-                >
-                  {link.label}
-                </Link>
-              ))}
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
+                return (
+                  <Link 
+                    key={link.label} 
+                    href={link.href} 
+                    prefetch={true}
+                    onClick={() => setIsMobileMenuOpen(false)} 
+                    className={`py-2.5 px-3.5 rounded-xl flex items-center justify-between transition-all ${
+                      isActive
+                        ? 'bg-blue-600/15 text-blue-400 font-bold border border-blue-500/30 shadow-xs'
+                        : 'hover:bg-slate-800 hover:text-white'
+                    }`}
+                  >
+                    <span>{link.label}</span>
+                    {isActive && <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />}
+                  </Link>
+                );
+              })}
               <Link 
                 href="/wishlist" 
                 prefetch={true}

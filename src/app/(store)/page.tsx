@@ -167,7 +167,7 @@ export default async function HomePage() {
     <div className="min-h-screen pb-16 space-y-12 sm:space-y-16 animate-fade-in-up">
 
       {/* ─── Hero Section Multi-Tone Vibrant Aurora ─── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12">
         <div className="relative rounded-[32px] bg-gradient-to-br from-[#080e1e] via-[#0d172e] to-[#0a1122] text-white p-8 sm:p-12 lg:p-16 overflow-hidden border border-blue-500/30 shadow-[0_0_50px_rgba(37,99,235,0.22)] flex flex-col lg:flex-row items-center justify-between gap-10">
 
           {/* Vibrant Aurora Orbs */}

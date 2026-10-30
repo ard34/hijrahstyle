@@ -71,7 +71,7 @@ export default function WishlistPage() {
   const [products] = useState(wishlistData);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6 min-h-[calc(100vh-140px)]">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-16 space-y-6 min-h-[calc(100vh-140px)] animate-fade-in-up">
       
       {/* ─── Screen 12 Header: Wishlist Saya ─── */}
       <div className="pb-2 border-b border-slate-800">

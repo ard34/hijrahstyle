@@ -132,7 +132,7 @@ export default function CartPage() {
   const grandTotal = Math.max(0, subtotal - voucherDiscount + shippingFee);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[calc(100vh-140px)]">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-16 min-h-[calc(100vh-140px)] animate-fade-in-up">
       
       {/* ─── Screen 04 Title: Keranjang Belanja & Product Count ─── */}
       <div className="mb-8">

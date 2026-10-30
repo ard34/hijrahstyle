@@ -103,7 +103,7 @@ export async function createDuitkuTransaction({
     merchantCode,
     paymentAmount: roundedAmount,
     merchantOrderId: orderNumber,
-    productDetails: `Pesanan Toko Sample BBN #${orderNumber}`,
+    productDetails: `Pesanan HijrahStyle #${orderNumber}`,
     email: customer.email,
     phoneNumber: customer.phone || '081234567890',
     customerVaName: customer.name.substring(0, 30),
