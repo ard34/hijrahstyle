@@ -267,7 +267,7 @@ export default function ProductDetailClient({
               </h1>
 
               {/* Shopee Rating, Reviews Count, and Sold Count Triad */}
-              <div className="flex items-center gap-5 text-xs sm:text-sm mt-3 flex-wrap divide-x divide-slate-800">
+              <div className="flex items-center gap-6 text-xs sm:text-sm mt-3 flex-wrap">
                 {/* Rating */}
                 <button 
                   onClick={scrollToReviews}
@@ -284,14 +284,14 @@ export default function ProductDetailClient({
                 {/* Jumlah Penilaian / Ulasan */}
                 <button 
                   onClick={scrollToReviews}
-                  className="pl-5 text-slate-300 hover:text-blue-400 cursor-pointer flex items-center gap-1.5 group"
+                  className="text-slate-300 hover:text-blue-400 cursor-pointer flex items-center gap-1.5 group"
                 >
                   <span className="text-white font-black underline text-sm sm:text-base group-hover:text-blue-400">{totalReviewsCount}</span>
                   <span className="text-slate-400 text-xs sm:text-sm font-medium">Penilaian</span>
                 </button>
 
                 {/* Jumlah Terjual */}
-                <div className="pl-5 text-slate-300 flex items-center gap-1.5">
+                <div className="text-slate-300 flex items-center gap-1.5">
                   <span className="text-white font-black text-sm sm:text-base">{totalSold}</span>
                   <span className="text-slate-400 text-xs sm:text-sm font-medium">Terjual</span>
                 </div>
@@ -329,11 +329,11 @@ export default function ProductDetailClient({
               </div>
             </div>
 
-            {/* Attributes System with Spacious Rows and Distinct Sections */}
-            <div className="border-t border-slate-800/80 divide-y divide-slate-800/80">
+            {/* Attributes System with Spacious Spacing (Tanpa garis-garis mepet) */}
+            <div className="space-y-6 sm:space-y-7">
               
               {/* Row 1: Pengiriman */}
-              <div className="py-5 sm:py-6 sm:flex sm:items-start sm:gap-8">
+              <div className="sm:flex sm:items-start sm:gap-8">
                 <span className="w-36 shrink-0 text-slate-400 font-bold text-xs sm:text-sm uppercase tracking-wider block sm:pt-1 mb-2 sm:mb-0">
                   Pengiriman
                 </span>
@@ -349,7 +349,7 @@ export default function ProductDetailClient({
               </div>
 
               {/* Row 2: Warna */}
-              <div className="py-5 sm:py-6 sm:flex sm:items-center sm:gap-8">
+              <div className="sm:flex sm:items-center sm:gap-8">
                 <span className="w-36 shrink-0 text-slate-400 font-bold text-xs sm:text-sm uppercase tracking-wider block mb-3 sm:mb-0">
                   Warna
                 </span>
@@ -378,7 +378,7 @@ export default function ProductDetailClient({
               </div>
 
               {/* Row 3: Ukuran Pakaian */}
-              <div className="py-5 sm:py-6 sm:flex sm:items-start sm:gap-8">
+              <div className="sm:flex sm:items-start sm:gap-8">
                 <div className="w-36 shrink-0 mb-3 sm:mb-0">
                   <span className="text-slate-400 font-bold text-xs sm:text-sm uppercase tracking-wider block sm:pt-2">
                     {isApparel ? 'Ukuran Pakaian' : 'Pilihan Ukuran'}
@@ -415,7 +415,7 @@ export default function ProductDetailClient({
               </div>
 
               {/* Row 4: Kuantitas */}
-              <div className="py-5 sm:py-6 sm:flex sm:items-center sm:gap-8">
+              <div className="sm:flex sm:items-center sm:gap-8">
                 <span className="w-36 shrink-0 text-slate-400 font-bold text-xs sm:text-sm uppercase tracking-wider block mb-3 sm:mb-0">
                   Kuantitas
                 </span>
@@ -481,44 +481,44 @@ export default function ProductDetailClient({
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-12 text-xs sm:text-sm">
-          <div className="py-2.5 border-b border-slate-800/50 flex items-center">
+          <div className="py-2 flex items-center">
             <span className="w-40 text-slate-400 font-medium">Kategori</span>
             <span className="text-blue-400 font-bold capitalize">
               {product.category?.name || 'Pakaian'} &gt; {product.name.split(' ')[0]}
             </span>
           </div>
 
-          <div className="py-2.5 border-b border-slate-800/50 flex items-center">
+          <div className="py-2 flex items-center">
             <span className="w-40 text-slate-400 font-medium">Merek</span>
             <span className="text-white font-bold">BBN Digital Forge</span>
           </div>
 
-          <div className="py-2.5 border-b border-slate-800/50 flex items-center">
+          <div className="py-2 flex items-center">
             <span className="w-40 text-slate-400 font-medium">Bahan / Material</span>
             <span className="text-white font-bold">{product.material || '100% Pure Cotton Combed 24s'}</span>
           </div>
 
-          <div className="py-2.5 border-b border-slate-800/50 flex items-center">
+          <div className="py-2 flex items-center">
             <span className="w-40 text-slate-400 font-medium">Gaya / Style</span>
             <span className="text-white font-bold">Streetwear Cyber Modern</span>
           </div>
 
-          <div className="py-2.5 border-b border-slate-800/50 flex items-center">
+          <div className="py-2 flex items-center">
             <span className="w-40 text-slate-400 font-medium">Negara Asal</span>
             <span className="text-white font-bold">Indonesia (Official Local Brand)</span>
           </div>
 
-          <div className="py-2.5 border-b border-slate-800/50 flex items-center">
+          <div className="py-2 flex items-center">
             <span className="w-40 text-slate-400 font-medium">Dikirim Dari</span>
             <span className="text-white font-bold">Kota Serang, Banten</span>
           </div>
 
-          <div className="py-2.5 border-b border-slate-800/50 flex items-center">
+          <div className="py-2 flex items-center">
             <span className="w-40 text-slate-400 font-medium">Total Stok Produk</span>
             <span className="text-emerald-400 font-black">{totalStock} buah</span>
           </div>
 
-          <div className="py-2.5 border-b border-slate-800/50 flex items-center">
+          <div className="py-2 flex items-center">
             <span className="w-40 text-slate-400 font-medium">Masa Garansi</span>
             <span className="text-white font-bold">7 Hari Tukar Baru / Pengembalian</span>
           </div>
