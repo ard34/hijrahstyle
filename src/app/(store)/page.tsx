@@ -232,25 +232,33 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ─── Screen 01 / 02 Product Catalog Grid ─── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-            Katalog Pilihan
-          </h2>
-          <Link
-            href="/products"
-            className="text-xs sm:text-sm font-bold text-blue-400 hover:text-blue-300 transition-colors flex items-center gap-1"
-          >
-            <span>Lihat Semua Produk</span>
-            <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+      {/* ─── Shopee Signature REKOMENDASI Section (Ref: media_1793364552323_d120d1b8.jpg) ─── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+        {/* Shopee REKOMENDASI Tab Bar */}
+        <div className="bg-[#0b1220] rounded-2xl border border-slate-800/80 p-1 shadow-md">
+          <div className="border-b-4 border-[#ee4d2d] py-3 text-center">
+            <h2 className="text-[#ee4d2d] font-black text-base sm:text-lg tracking-widest uppercase inline-block">
+              REKOMENDASI
+            </h2>
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-6">
+        {/* 6-Column Grid matching Shopee */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2.5 sm:gap-3">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
+        </div>
+
+        {/* Lihat Lebih Banyak CTA */}
+        <div className="text-center pt-4">
+          <Link
+            href="/products"
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-xl bg-[#0b1220] hover:bg-[#111c30] border border-slate-800 hover:border-[#ee4d2d] text-slate-200 text-xs sm:text-sm font-bold transition-all shadow-md cursor-pointer hover:scale-105"
+          >
+            <span>Lihat Lebih Banyak Produk</span>
+            <ArrowRight className="w-4 h-4 text-[#ee4d2d]" />
+          </Link>
         </div>
       </section>
 

@@ -387,7 +387,7 @@ function ProductsContent() {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 pt-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-2.5 sm:gap-3.5 pt-2">
               {products.map((p) => (
                 <ProductCard key={p.id} product={p} />
               ))}
