@@ -35,7 +35,7 @@ export default function CartPage() {
         const data = await res.json();
         setItems(data.items || []);
       }
-    } catch {}
+    } catch { }
     setLoading(false);
   };
 
@@ -51,7 +51,7 @@ export default function CartPage() {
       if (res.ok) {
         setItems(items.map(item => item.id === id ? { ...item, quantity } : item));
       }
-    } catch {}
+    } catch { }
   };
 
   const removeItem = async (id: string) => {
@@ -61,7 +61,7 @@ export default function CartPage() {
         setItems(items.filter(item => item.id !== id));
         addToast('Item dihapus dari keranjang', 'info');
       }
-    } catch {}
+    } catch { }
   };
 
   const handleApplyVoucher = () => {
@@ -93,7 +93,7 @@ export default function CartPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 min-h-[calc(100vh-140px)]">
-      
+
       {/* Page Title (Screen 04) */}
       <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-800">
         <div>
@@ -104,8 +104,8 @@ export default function CartPage() {
             {totalItems > 0 ? `${totalItems} produk dalam keranjang` : 'Keranjang belanja Anda'}
           </p>
         </div>
-        <Link 
-          href="/products" 
+        <Link
+          href="/products"
           className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" /> Lanjut Belanja
@@ -124,8 +124,8 @@ export default function CartPage() {
             </p>
           </div>
           <div className="pt-2">
-            <Link 
-              href="/products" 
+            <Link
+              href="/products"
               className="px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition-all flex items-center gap-2"
             >
               <span>Lihat Katalog Produk</span>
@@ -240,8 +240,8 @@ export default function CartPage() {
                 )}
               </div>
 
-              <Link 
-                href="/checkout" 
+              <Link
+                href="/checkout"
                 className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2 mt-4 cursor-pointer"
               >
                 <span>Lanjut ke Checkout</span>

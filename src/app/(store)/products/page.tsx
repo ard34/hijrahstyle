@@ -45,7 +45,7 @@ function ProductsContent() {
     fetch('/api/categories')
       .then(r => r.json())
       .then(d => setCategories(d.categories || []))
-      .catch(() => {});
+      .catch(() => { });
   }, []);
 
   const fetchProducts = useCallback(async () => {
@@ -98,7 +98,7 @@ function ProductsContent() {
 
   return (
     <div className="max-w-7xl mx-auto px-6 sm:px-10 lg:px-12 xl:px-16 py-4 pb-12 min-h-[calc(100vh-110px)]">
-      
+
       {/* 1. Breadcrumbs */}
       <nav className="flex items-center gap-2 text-xs text-slate-400 mb-6 font-medium">
         <Link href="/" className="hover:text-blue-400">Beranda</Link>
@@ -113,10 +113,10 @@ function ProductsContent() {
       </nav>
 
       <div className="flex gap-8 items-start">
-        
+
         {/* 2. Left Sidebar Filter (Screen 02) */}
         <aside className="hidden lg:block w-64 shrink-0 space-y-6 p-5 rounded-2xl bg-[#0e172a] border border-slate-800/80 shadow-md">
-          
+
           {/* Header Title */}
           <div className="flex items-center justify-between pb-3 border-b border-slate-800">
             <span className="font-bold text-white text-sm flex items-center gap-2">
@@ -138,9 +138,8 @@ function ProductsContent() {
             <div className="space-y-1 text-xs">
               <button
                 onClick={() => setFilters(prev => ({ ...prev, category: '', page: 1 }))}
-                className={`w-full text-left px-3 py-2 rounded-xl font-medium transition-colors cursor-pointer flex items-center justify-between ${
-                  !filters.category ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-300 hover:bg-slate-800/60'
-                }`}
+                className={`w-full text-left px-3 py-2 rounded-xl font-medium transition-colors cursor-pointer flex items-center justify-between ${!filters.category ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-300 hover:bg-slate-800/60'
+                  }`}
               >
                 <span>Semua Kategori</span>
               </button>
@@ -149,9 +148,8 @@ function ProductsContent() {
                 <button
                   key={cat.id || cat.slug}
                   onClick={() => setFilters(prev => ({ ...prev, category: cat.slug, page: 1 }))}
-                  className={`w-full text-left px-3 py-2 rounded-xl font-medium transition-colors cursor-pointer flex items-center justify-between ${
-                    filters.category.toLowerCase() === cat.slug.toLowerCase() ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-300 hover:bg-slate-800/60'
-                  }`}
+                  className={`w-full text-left px-3 py-2 rounded-xl font-medium transition-colors cursor-pointer flex items-center justify-between ${filters.category.toLowerCase() === cat.slug.toLowerCase() ? 'bg-blue-600 text-white font-bold shadow-xs' : 'text-slate-300 hover:bg-slate-800/60'
+                    }`}
                 >
                   <span>{cat.name}</span>
                 </button>
@@ -207,9 +205,8 @@ function ProductsContent() {
                   onClick={() => setFilters(prev => ({ ...prev, color: filters.color === c.name ? '' : c.name }))}
                   style={{ backgroundColor: c.hex }}
                   title={c.name}
-                  className={`w-6 h-6 rounded-full border-2 transition-all cursor-pointer ${
-                    filters.color === c.name ? 'border-blue-400 scale-125 shadow-md' : 'border-slate-700 hover:scale-110'
-                  }`}
+                  className={`w-6 h-6 rounded-full border-2 transition-all cursor-pointer ${filters.color === c.name ? 'border-blue-400 scale-125 shadow-md' : 'border-slate-700 hover:scale-110'
+                    }`}
                 />
               ))}
             </div>
@@ -218,7 +215,7 @@ function ProductsContent() {
 
         {/* 3. Main Product Grid Area */}
         <div className="flex-1 min-w-0">
-          
+
           {/* Section Header with Sort Dropdown */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
             <div>

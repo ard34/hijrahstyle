@@ -4,8 +4,8 @@ import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import Script from 'next/script';
-import { 
-  Package, Clock, CheckCircle2, Truck, AlertCircle, 
+import {
+  Package, Clock, CheckCircle2, Truck, AlertCircle,
   ChevronRight, Loader2, Copy, Check, CreditCard, Sparkles
 } from 'lucide-react';
 import { formatRupiah, formatDate } from '@/lib/utils';
@@ -289,11 +289,10 @@ function OrdersContent() {
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-4 py-2 rounded-xl transition-all shrink-0 cursor-pointer ${
-              activeTab === tab.id
+            className={`px-4 py-2 rounded-xl transition-all shrink-0 cursor-pointer ${activeTab === tab.id
                 ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30'
                 : 'bg-[#0e172a] text-slate-400 hover:text-white border border-slate-800'
-            }`}
+              }`}
           >
             {tab.label}
           </button>
@@ -391,84 +390,85 @@ function OrdersContent() {
 
       {/* Duitku Sandbox Simulation Modal */}
       {mockDuitkuModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-blue-100 space-y-6 text-center">
-            <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mx-auto shadow-inner">
-              <CreditCard className="w-8 h-8" />
-            </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4 animate-in fade-in duration-200">
+      <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-blue-100 space-y-6 text-center">
+        <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mx-auto shadow-inner">
+          <CreditCard className="w-8 h-8" />
+        </div>
 
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
-                <Sparkles className="w-3.5 h-3.5 text-amber-600" /> Mode Duitku Sandbox (Testing)
-              </div>
-              <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">
-                Bayar Pesanan via Duitku
-              </h3>
-              <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                Nomor Pesanan: <strong className="text-slate-800 font-mono">#{mockDuitkuModal.orderNumber}</strong>
-              </p>
-            </div>
+        <div className="space-y-2">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
+            <Sparkles className="w-3.5 h-3.5 text-amber-600" /> Mode Duitku Sandbox (Testing)
+          </div>
+          <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">
+            Bayar Pesanan via Duitku
+          </h3>
+          <p className="text-xs text-slate-500 font-medium leading-relaxed">
+            Nomor Pesanan: <strong className="text-slate-800 font-mono">#{mockDuitkuModal.orderNumber}</strong>
+          </p>
+        </div>
 
-            <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-left space-y-2 text-xs">
-              <div className="flex justify-between items-center text-slate-600">
-                <span>Total Tagihan:</span>
-                <span className="font-extrabold text-blue-600 text-sm">
-                  {formatRupiah(mockDuitkuModal.totalAmount)}
-                </span>
-              </div>
-              <div className="flex justify-between items-center text-slate-600">
-                <span>Status:</span>
-                <span className="font-bold text-amber-600">Menunggu Pembayaran</span>
-              </div>
-            </div>
-
-            <div className="space-y-2.5 pt-2">
-              {mockDuitkuModal.paymentUrl && (
-                <a
-                  href={mockDuitkuModal.paymentUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-3 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer border border-blue-200"
-                >
-                  Buka Halaman Pembayaran Duitku Sandbox &rarr;
-                </a>
-              )}
-
-              <button
-                type="button"
-                onClick={handleSimulatePaymentSuccess}
-                disabled={isSimulatingPayment}
-                className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-              >
-                {isSimulatingPayment ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" /> Memproses Webhook...
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle2 className="w-4 h-4" /> Simulasikan Bayar Lunas (Tes Webhook Duitku)
-                  </>
-                )}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setMockDuitkuModal(null)}
-                className="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all cursor-pointer"
-              >
-                Tutup
-              </button>
-            </div>
+        <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-left space-y-2 text-xs">
+          <div className="flex justify-between items-center text-slate-600">
+            <span>Total Tagihan:</span>
+            <span className="font-extrabold text-blue-600 text-sm">
+              {formatRupiah(mockDuitkuModal.totalAmount)}
+            </span>
+          </div>
+          <div className="flex justify-between items-center text-slate-600">
+            <span>Status:</span>
+            <span className="font-bold text-amber-600">Menunggu Pembayaran</span>
           </div>
         </div>
-      )}
 
-      {/* Duitku Pop JS Sandbox Script */}
-      <Script
-        src="https://app-sandbox.duitku.com/lib/js/duitku.js"
-        strategy="afterInteractive"
-      />
-    </main>
+        <div className="space-y-2.5 pt-2">
+          {mockDuitkuModal.paymentUrl && (
+            <a
+              href={mockDuitkuModal.paymentUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-3 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer border border-blue-200"
+            >
+              Buka Halaman Pembayaran Duitku Sandbox &rarr;
+            </a>
+          )}
+
+          <button
+            type="button"
+            onClick={handleSimulatePaymentSuccess}
+            disabled={isSimulatingPayment}
+            className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+          >
+            {isSimulatingPayment ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" /> Memproses Webhook...
+              </>
+            ) : (
+              <>
+                <CheckCircle2 className="w-4 h-4" /> Simulasikan Bayar Lunas (Tes Webhook Duitku)
+              </>
+            )}
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setMockDuitkuModal(null)}
+            className="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all cursor-pointer"
+          >
+            Tutup
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+{/* Duitku Pop JS Sandbox Script */ }
+<Script
+  src="https://app-sandbox.duitku.com/lib/js/duitku.js"
+  strategy="afterInteractive"
+/>
+    </main >
   );
 }
 
