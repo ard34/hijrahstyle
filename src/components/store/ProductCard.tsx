@@ -152,13 +152,13 @@ export default function ProductCard({ product }: { product: any }) {
       </div>
 
       {/* Price & Action Row (Screen 01 & 02) */}
-      <div className="pt-3.5 mt-3 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-        <div>
-          <div className="text-sm sm:text-base font-black text-white">
+      <div className="pt-3 mt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+        <div className="min-w-0">
+          <div className="text-sm sm:text-base font-black text-white tracking-tight">
             {formatPrice(product.price)}
           </div>
           {hasDiscount && (
-            <div className="text-[11px] text-slate-500 line-through font-normal">
+            <div className="text-[11px] text-slate-500 line-through font-medium">
               {formatPrice(product.compareAtPrice)}
             </div>
           )}
@@ -167,13 +167,13 @@ export default function ProductCard({ product }: { product: any }) {
         <button
           onClick={handleQuickAdd}
           disabled={totalStock === 0}
-          className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-600/35 hover:shadow-blue-500/50 hover:scale-[1.03] active:scale-[0.97] disabled:opacity-40 cursor-pointer whitespace-nowrap"
+          className="h-9 px-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-md shadow-blue-600/30 hover:shadow-blue-500/50 hover:scale-105 active:scale-95 disabled:opacity-40 cursor-pointer shrink-0 whitespace-nowrap"
           title="Tambah ke Keranjang"
         >
           {isAdding ? (
-            <Check className="w-4 h-4 text-emerald-300 stroke-[2.5]" />
+            <Check className="w-3.5 h-3.5 text-emerald-300 stroke-[2.5]" />
           ) : (
-            <ShoppingBag className="w-4 h-4 stroke-[2]" />
+            <ShoppingBag className="w-3.5 h-3.5 stroke-[2]" />
           )}
           <span>+ Keranjang</span>
         </button>

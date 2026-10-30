@@ -117,7 +117,7 @@ export default function WishlistPage() {
                 <div className="pt-3 mt-3 border-t border-slate-800/80">
                   <button
                     onClick={() => handleAddToCart(p)}
-                    className="w-full py-2.5 px-4 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-600/35 hover:scale-105 active:scale-95 cursor-pointer"
+                    className="w-full h-10 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all shadow-md shadow-blue-600/30 hover:scale-105 active:scale-95 cursor-pointer"
                   >
                     <ShoppingCart className="w-4 h-4" />
                     <span>+ Keranjang</span>

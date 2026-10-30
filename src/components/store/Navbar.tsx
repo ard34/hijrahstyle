@@ -118,31 +118,32 @@ export default function Navbar() {
           </form>
 
           {/* 4. Action Icons (Screen 01) */}
-          <div className="flex items-center gap-2.5 sm:gap-3.5 shrink-0">
+          <div className="flex items-center gap-2.5 shrink-0">
             {/* Wishlist */}
             <Link 
               href="/wishlist" 
-              className={`w-10 h-10 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95 relative ${pathname === '/wishlist' ? 'text-blue-400 border-blue-500/40 bg-slate-800' : ''}`}
+              className={`w-10 h-10 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95 relative cursor-pointer ${
+                pathname === '/wishlist' ? 'text-blue-400 border-blue-500/40 bg-slate-800' : ''
+              }`}
               title="Wishlist Favorit"
             >
               <Heart className="w-5 h-5 stroke-[1.8]" />
             </Link>
 
-            {/* Cart Button */}
+            {/* Cart Button (Clean matching icon with badge counter) */}
             <Link 
               href="/cart" 
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600/15 hover:bg-blue-600/25 text-white border border-blue-500/40 transition-all text-xs sm:text-sm font-extrabold relative group hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
+              className={`w-10 h-10 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95 relative cursor-pointer ${
+                pathname === '/cart' ? 'text-blue-400 border-blue-500/40 bg-slate-800' : ''
+              }`}
               title="Keranjang Belanja"
             >
-              <div className="relative">
-                <ShoppingBag className="w-5 h-5 text-blue-400 group-hover:scale-105 transition-transform stroke-[1.8]" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2.5 min-w-4 h-4 px-1 rounded-full bg-blue-600 text-white text-[10px] font-black flex items-center justify-center shadow-md animate-pulse">
-                    {cartCount}
-                  </span>
-                )}
-              </div>
-              <span className="hidden sm:inline">Keranjang</span>
+              <ShoppingBag className="w-5 h-5 stroke-[1.8]" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 min-w-[20px] h-[20px] px-1 rounded-full bg-blue-600 text-white text-[10px] font-black flex items-center justify-center shadow-lg shadow-blue-600/50 border border-[#070b14] animate-pulse">
+                  {cartCount}
+                </span>
+              )}
             </Link>
 
             {/* User Profile / Login Button */}
@@ -150,7 +151,7 @@ export default function Navbar() {
               <div className="relative">
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                  className="flex items-center gap-2 p-1.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-900/80 transition-all cursor-pointer"
+                  className="flex items-center gap-2 h-10 px-2.5 rounded-xl border border-slate-800 hover:border-slate-700 bg-slate-900/80 transition-all cursor-pointer"
                 >
                   <div className="w-7 h-7 rounded-lg bg-blue-600 text-white font-extrabold text-xs flex items-center justify-center shadow-xs">
                     {user.name?.charAt(0).toUpperCase() || 'U'}
@@ -210,9 +211,9 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-extrabold transition-all shadow-md shadow-blue-600/35 hover:scale-105 active:scale-95 cursor-pointer"
+                className="flex items-center gap-2 h-10 px-4 sm:px-5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-extrabold transition-all shadow-md shadow-blue-600/35 hover:scale-105 active:scale-95 cursor-pointer shrink-0"
               >
-                <User className="w-4 h-4" />
+                <User className="w-4 h-4 stroke-[2]" />
                 <span>Masuk</span>
               </Link>
             )}
