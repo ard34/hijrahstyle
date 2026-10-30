@@ -105,44 +105,44 @@ export default function Navbar() {
           {/* 3. Search Bar (Clean Pill without overlapping text) */}
           <form onSubmit={handleSearch} className="hidden md:flex flex-1 max-w-xs xl:max-w-sm">
             <div className="relative w-full flex items-center">
-              <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3.5 pointer-events-none" />
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none" />
               <input
                 type="text"
                 placeholder="Cari produk di toko..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                style={{ paddingLeft: '38px', paddingRight: '16px' }}
-                className="w-full h-9 rounded-full bg-[#0b1120] border border-slate-800 focus:border-blue-500 focus:bg-[#0f172a] text-xs font-medium text-white placeholder:text-slate-500 outline-none transition-all shadow-inner"
+                style={{ paddingLeft: '40px', paddingRight: '16px' }}
+                className="w-full h-10 rounded-full bg-[#0b1120] border border-slate-800 focus:border-blue-500 focus:bg-[#0f172a] text-xs sm:text-sm font-medium text-white placeholder:text-slate-500 outline-none transition-all shadow-inner"
               />
             </div>
           </form>
 
           {/* 4. Action Icons (Screen 01) */}
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <div className="flex items-center gap-2.5 sm:gap-3.5 shrink-0">
             {/* Wishlist */}
             <Link 
               href="/wishlist" 
-              className={`p-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-800/60 transition-all relative ${pathname === '/wishlist' ? 'text-blue-400 bg-slate-800/60' : ''}`}
+              className={`w-10 h-10 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95 relative ${pathname === '/wishlist' ? 'text-blue-400 border-blue-500/40 bg-slate-800' : ''}`}
               title="Wishlist Favorit"
             >
-              <Heart className="w-5 h-5 stroke-[1.75]" />
+              <Heart className="w-5 h-5 stroke-[1.8]" />
             </Link>
 
             {/* Cart Button */}
             <Link 
               href="/cart" 
-              className="flex items-center gap-2 px-3 py-2 rounded-xl bg-blue-600/10 hover:bg-blue-600/20 text-white border border-blue-500/30 transition-all relative group cursor-pointer"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600/15 hover:bg-blue-600/25 text-white border border-blue-500/40 transition-all text-xs sm:text-sm font-extrabold relative group hover:scale-105 active:scale-95 shadow-sm cursor-pointer"
               title="Keranjang Belanja"
             >
               <div className="relative">
-                <ShoppingBag className="w-5 h-5 text-blue-400 group-hover:scale-105 transition-transform stroke-[1.75]" />
+                <ShoppingBag className="w-5 h-5 text-blue-400 group-hover:scale-105 transition-transform stroke-[1.8]" />
                 {cartCount > 0 && (
                   <span className="absolute -top-2 -right-2.5 min-w-4 h-4 px-1 rounded-full bg-blue-600 text-white text-[10px] font-black flex items-center justify-center shadow-md animate-pulse">
                     {cartCount}
                   </span>
                 )}
               </div>
-              <span className="text-xs font-bold hidden sm:inline">Keranjang</span>
+              <span className="hidden sm:inline">Keranjang</span>
             </Link>
 
             {/* User Profile / Login Button */}
@@ -210,7 +210,7 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all shadow-md shadow-blue-600/30"
+                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-extrabold transition-all shadow-md shadow-blue-600/35 hover:scale-105 active:scale-95 cursor-pointer"
               >
                 <User className="w-4 h-4" />
                 <span>Masuk</span>

@@ -126,7 +126,7 @@ export default function CartPage() {
           <div className="pt-2">
             <Link
               href="/products"
-              className="px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition-all flex items-center gap-2"
+              className="px-7 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-sm shadow-xl shadow-blue-600/35 hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5 cursor-pointer"
             >
               <span>Lihat Katalog Produk</span>
               <ArrowRight className="w-4 h-4" />
@@ -157,25 +157,25 @@ export default function CartPage() {
                   </p>
 
                   <div className="flex items-center justify-between mt-3 pt-2.5 border-t border-slate-800/80">
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2.5">
                       <button
                         onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
-                        className="w-7 h-7 rounded-lg border border-slate-700 bg-[#070b14] flex items-center justify-center hover:border-blue-500 text-slate-300 hover:text-white transition-colors cursor-pointer"
+                        className="w-9 h-9 rounded-xl border border-slate-700 hover:border-slate-600 bg-[#070b14] flex items-center justify-center hover:bg-slate-800 text-slate-300 hover:text-white transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-xs"
                       >
-                        <Minus className="w-3 h-3" />
+                        <Minus className="w-4 h-4 stroke-[2.5]" />
                       </button>
-                      <span className="w-8 text-center font-bold text-xs text-white">{item.quantity}</span>
+                      <span className="w-8 text-center font-black text-sm text-white">{item.quantity}</span>
                       <button
                         onClick={() => updateQuantity(item.id, Math.min(item.stock || 99, item.quantity + 1))}
-                        className="w-7 h-7 rounded-lg border border-slate-700 bg-[#070b14] flex items-center justify-center hover:border-blue-500 text-slate-300 hover:text-white transition-colors cursor-pointer"
+                        className="w-9 h-9 rounded-xl border border-slate-700 hover:border-slate-600 bg-[#070b14] flex items-center justify-center hover:bg-slate-800 text-slate-300 hover:text-white transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-xs"
                       >
-                        <Plus className="w-3 h-3" />
+                        <Plus className="w-4 h-4 stroke-[2.5]" />
                       </button>
                     </div>
 
                     <button
                       onClick={() => removeItem(item.id)}
-                      className="p-1.5 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                      className="w-9 h-9 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 flex items-center justify-center transition-all cursor-pointer"
                       title="Hapus item"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -223,12 +223,12 @@ export default function CartPage() {
                     value={voucherCode}
                     onChange={(e) => setVoucherCode(e.target.value.toUpperCase())}
                     placeholder="Kode Voucher..."
-                    className="flex-1 h-9 px-3 rounded-xl bg-[#070b14] border border-slate-800 text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 uppercase font-mono font-bold"
+                    className="flex-1 h-11 px-3.5 rounded-xl bg-[#070b14] border border-slate-800 text-xs text-white placeholder-slate-500 outline-none focus:border-blue-500 uppercase font-mono font-bold"
                   />
                   <button
                     type="button"
                     onClick={handleApplyVoucher}
-                    className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold transition-all cursor-pointer shadow-xs"
+                    className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-extrabold transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-md shadow-blue-600/30"
                   >
                     Pakai
                   </button>
@@ -242,7 +242,7 @@ export default function CartPage() {
 
               <Link
                 href="/checkout"
-                className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2 mt-4 cursor-pointer"
+                className="w-full py-4 px-6 bg-blue-600 hover:bg-blue-500 text-white text-sm sm:text-base font-black rounded-2xl shadow-xl shadow-blue-600/35 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 mt-4 cursor-pointer"
               >
                 <span>Lanjut ke Checkout</span>
                 <ArrowRight className="w-4 h-4" />

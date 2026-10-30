@@ -107,15 +107,15 @@ export default function ProductCard({ product }: { product: any }) {
 
           {/* Wishlist Heart Button */}
           <button
-            className={`absolute top-2.5 right-2.5 w-7 h-7 rounded-full backdrop-blur-md flex items-center justify-center transition-all border cursor-pointer ${
+            className={`absolute top-3 right-3 w-9 h-9 rounded-xl backdrop-blur-md flex items-center justify-center transition-all border cursor-pointer ${
               isWishlisted
-                ? 'bg-rose-500 text-white border-rose-400 shadow-md shadow-rose-500/30'
-                : 'bg-slate-900/80 text-slate-300 hover:text-rose-400 border-slate-800'
+                ? 'bg-rose-500 text-white border-rose-400 shadow-md shadow-rose-500/40 scale-105'
+                : 'bg-slate-900/85 text-slate-300 hover:text-rose-400 hover:bg-slate-900 border-slate-700/80 hover:scale-105'
             }`}
             onClick={handleToggleWishlist}
             title="Tambah ke Wishlist"
           >
-            <Heart className={`w-3.5 h-3.5 ${isWishlisted ? 'fill-white stroke-white' : 'stroke-[2]'}`} />
+            <Heart className={`w-4 h-4 ${isWishlisted ? 'fill-white stroke-white' : 'stroke-[2]'}`} />
           </button>
 
           {/* Out of Stock Overlay */}
@@ -152,13 +152,13 @@ export default function ProductCard({ product }: { product: any }) {
       </div>
 
       {/* Price & Action Row (Screen 01 & 02) */}
-      <div className="pt-3 mt-3 border-t border-slate-800/80 flex items-center justify-between gap-2">
+      <div className="pt-3.5 mt-3 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
         <div>
-          <div className="text-xs sm:text-sm font-black text-white">
+          <div className="text-sm sm:text-base font-black text-white">
             {formatPrice(product.price)}
           </div>
           {hasDiscount && (
-            <div className="text-[10px] text-slate-500 line-through font-normal">
+            <div className="text-[11px] text-slate-500 line-through font-normal">
               {formatPrice(product.compareAtPrice)}
             </div>
           )}
@@ -167,15 +167,15 @@ export default function ProductCard({ product }: { product: any }) {
         <button
           onClick={handleQuickAdd}
           disabled={totalStock === 0}
-          className="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs flex items-center gap-1.5 transition-all shadow-md shadow-blue-600/30 disabled:opacity-40 cursor-pointer"
+          className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shadow-lg shadow-blue-600/35 hover:shadow-blue-500/50 hover:scale-[1.03] active:scale-[0.97] disabled:opacity-40 cursor-pointer whitespace-nowrap"
           title="Tambah ke Keranjang"
         >
           {isAdding ? (
-            <Check className="w-3.5 h-3.5 text-emerald-300" />
+            <Check className="w-4 h-4 text-emerald-300 stroke-[2.5]" />
           ) : (
-            <ShoppingBag className="w-3.5 h-3.5" />
+            <ShoppingBag className="w-4 h-4 stroke-[2]" />
           )}
-          <span className="hidden sm:inline">+ Keranjang</span>
+          <span>+ Keranjang</span>
         </button>
       </div>
     </div>

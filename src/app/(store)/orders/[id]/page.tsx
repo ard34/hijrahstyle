@@ -92,9 +92,9 @@ export default async function OrderDetailPage({
 
           <Link
             href="/orders"
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-slate-300 hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs sm:text-sm font-extrabold text-slate-200 hover:text-white transition-all border border-slate-700 hover:border-slate-600 shadow-sm cursor-pointer"
           >
-            <ArrowLeft className="w-3.5 h-3.5" /> Kembali
+            <ArrowLeft className="w-4 h-4" /> Kembali
           </Link>
         </div>
 

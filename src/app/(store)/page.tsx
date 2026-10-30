@@ -108,10 +108,10 @@ export default async function HomePage() {
               Produk berkualitas, harga terbaik, dan pengiriman cepat ke seluruh Indonesia. Transaksi otomatis &amp; instan via Sandbox Duitku.
             </p>
 
-            <div className="pt-2 flex flex-wrap items-center gap-3.5">
+            <div className="pt-2 flex flex-wrap items-center gap-4">
               <Link
                 href="/products"
-                className="px-7 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-black shadow-xl shadow-blue-600/40 hover:shadow-blue-500/60 hover:-translate-y-0.5 transition-all flex items-center gap-2 cursor-pointer"
+                className="px-8 py-4 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white text-sm sm:text-base font-black shadow-xl shadow-blue-600/40 hover:shadow-blue-500/60 hover:scale-105 active:scale-95 transition-all flex items-center gap-2.5 cursor-pointer"
               >
                 <span>Belanja Sekarang</span>
                 <ArrowRight className="w-4 h-4" />
@@ -119,7 +119,7 @@ export default async function HomePage() {
               
               <Link
                 href="/promo"
-                className="px-6 py-3.5 rounded-2xl bg-[#0b1220]/90 hover:bg-slate-800 text-slate-200 hover:text-white text-xs sm:text-sm font-bold border border-slate-700/80 transition-all flex items-center gap-2 shadow-sm"
+                className="px-7 py-4 rounded-2xl bg-[#0e172a] hover:bg-slate-800 text-slate-100 hover:text-white text-sm sm:text-base font-bold border border-slate-700/80 hover:border-slate-600 transition-all flex items-center gap-2.5 shadow-md hover:scale-105 active:scale-95 cursor-pointer"
               >
                 <Flame className="w-4 h-4 text-amber-400" />
                 <span>Lihat Promo</span>
@@ -187,7 +187,10 @@ export default async function HomePage() {
             </h2>
             <p className="text-xs text-slate-400 mt-1">Pilih kategori produk favorit Anda</p>
           </div>
-          <Link href="/categories" className="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1 group">
+          <Link 
+            href="/categories" 
+            className="px-4 py-2 rounded-xl bg-[#0e172a] hover:bg-blue-600 text-blue-400 hover:text-white border border-slate-800 hover:border-blue-500 text-xs sm:text-sm font-bold transition-all shadow-xs flex items-center gap-1.5 group cursor-pointer"
+          >
             <span>Lihat Semua</span>
             <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </Link>
@@ -237,7 +240,7 @@ export default async function HomePage() {
                 <FlashSaleTimer />
                 <Link
                   href="/promo"
-                  className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-all shadow-md shadow-blue-600/30 whitespace-nowrap"
+                  className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs sm:text-sm transition-all shadow-lg shadow-blue-600/35 hover:scale-105 active:scale-95 whitespace-nowrap cursor-pointer"
                 >
                   Lihat Semua Promo &rarr;
                 </Link>
@@ -262,7 +265,10 @@ export default async function HomePage() {
             </h2>
             <p className="text-xs text-slate-400 mt-1">Temukan koleksi pakaian, sepatu, dan aksesoris terbaik</p>
           </div>
-          <Link href="/products" className="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1 group">
+          <Link 
+            href="/products" 
+            className="px-5 py-2.5 rounded-xl bg-[#0e172a] hover:bg-blue-600 text-blue-400 hover:text-white border border-slate-800 hover:border-blue-500 text-xs sm:text-sm font-extrabold transition-all shadow-xs flex items-center gap-1.5 group cursor-pointer"
+          >
             <span>Lihat Semua Produk</span>
             <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </Link>

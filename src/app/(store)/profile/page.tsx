@@ -163,7 +163,7 @@ export default function ProfilePage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-600/30 transition-all cursor-pointer disabled:opacity-50"
+                className="px-8 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-sm sm:text-base shadow-xl shadow-blue-600/35 hover:scale-105 active:scale-95 transition-all cursor-pointer disabled:opacity-50"
               >
                 {saving ? 'Menyimpan...' : 'Simpan Perubahan'}
               </button>

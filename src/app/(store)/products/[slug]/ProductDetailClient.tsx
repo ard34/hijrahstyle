@@ -205,14 +205,14 @@ export default function ProductDetailClient({ product, relatedProducts, avgRatin
               <label className="text-xs font-bold text-slate-300 block">
                 Ukuran: <span className="text-blue-400 font-extrabold">{selectedSize}</span>
               </label>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-2.5">
                 {sizes.map((size) => (
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold border transition-all min-w-[3.2rem] cursor-pointer ${
+                    className={`px-5 py-2.5 rounded-xl text-sm font-bold border transition-all min-w-[3.6rem] cursor-pointer hover:scale-105 active:scale-95 ${
                       selectedSize === size
-                        ? 'border-blue-500 bg-blue-600 text-white shadow-md shadow-blue-600/30'
+                        ? 'border-blue-500 bg-blue-600 text-white shadow-lg shadow-blue-600/35'
                         : 'border-slate-800 text-slate-300 hover:border-slate-700 bg-[#070b14]'
                     }`}
                   >
@@ -237,32 +237,32 @@ export default function ProductDetailClient({ product, relatedProducts, avgRatin
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                className="w-10 h-10 rounded-xl border border-slate-800 bg-[#070b14] flex items-center justify-center hover:bg-slate-800 text-white font-bold transition-colors cursor-pointer"
+                className="w-12 h-12 rounded-xl border border-slate-800 bg-[#070b14] flex items-center justify-center hover:bg-slate-800 text-white font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
               >
-                <Minus className="w-3.5 h-3.5" />
+                <Minus className="w-4 h-4 stroke-[2.5]" />
               </button>
-              <span className="text-sm font-black w-10 text-center text-white">{quantity}</span>
+              <span className="text-base font-black w-10 text-center text-white">{quantity}</span>
               <button
                 onClick={() => setQuantity(Math.min(stock || 99, quantity + 1))}
-                className="w-10 h-10 rounded-xl border border-slate-800 bg-[#070b14] flex items-center justify-center hover:bg-slate-800 text-white font-bold transition-colors cursor-pointer"
+                className="w-12 h-12 rounded-xl border border-slate-800 bg-[#070b14] flex items-center justify-center hover:bg-slate-800 text-white font-bold transition-all hover:scale-105 active:scale-95 cursor-pointer shadow-sm"
               >
-                <Plus className="w-3.5 h-3.5" />
+                <Plus className="w-4 h-4 stroke-[2.5]" />
               </button>
             </div>
           </div>
 
           {/* Screen 03 CTA Buttons */}
-          <div className="flex items-center gap-3 pt-3">
+          <div className="flex items-center gap-3.5 pt-3">
             <button
               onClick={handleAddToCart}
               disabled={stock === 0 || isAddingToCart}
-              className="flex-1 py-4 px-6 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs sm:text-sm shadow-xl shadow-blue-600/30 transition-all flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+              className="flex-1 py-4 px-8 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-black text-sm sm:text-base shadow-xl shadow-blue-600/35 hover:shadow-blue-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 disabled:opacity-50 cursor-pointer"
             >
               {isAddingToCart ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
                 <>
-                  <ShoppingCart className="w-4 h-4" />
+                  <ShoppingCart className="w-5 h-5 stroke-[2]" />
                   <span>+ Tambah ke Keranjang</span>
                 </>
               )}
@@ -270,10 +270,10 @@ export default function ProductDetailClient({ product, relatedProducts, avgRatin
 
             <button 
               onClick={() => addToast('Produk ditambahkan ke Wishlist!', 'success')}
-              className="w-14 h-14 rounded-2xl border border-slate-800 bg-[#070b14] hover:border-rose-500/50 hover:bg-rose-500/10 flex items-center justify-center text-slate-400 hover:text-rose-400 transition-all shrink-0 cursor-pointer"
+              className="w-14 h-14 rounded-2xl border border-slate-800 bg-[#070b14] hover:border-rose-500/50 hover:bg-rose-500/10 flex items-center justify-center text-slate-400 hover:text-rose-400 hover:scale-105 active:scale-95 transition-all shrink-0 cursor-pointer shadow-sm"
               title="Simpan ke Wishlist"
             >
-              <Heart className="w-5 h-5" />
+              <Heart className="w-6 h-6 stroke-[2]" />
             </button>
           </div>
         </div>

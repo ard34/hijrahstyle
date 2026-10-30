@@ -345,9 +345,9 @@ export default function CheckoutPage() {
                 </div>
                 <button
                   onClick={() => setShowAddressModal(true)}
-                  className="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1 bg-blue-600/10 px-3 py-1.5 rounded-xl border border-blue-500/30 transition-colors cursor-pointer"
+                  className="text-xs sm:text-sm font-bold text-blue-400 hover:text-white flex items-center gap-1.5 bg-blue-600/15 hover:bg-blue-600 px-4 py-2 rounded-xl border border-blue-500/30 transition-all cursor-pointer shadow-xs"
                 >
-                  <Plus className="w-3.5 h-3.5" /> Tambah Alamat
+                  <Plus className="w-4 h-4" /> Tambah Alamat
                 </button>
               </div>
 
@@ -523,7 +523,7 @@ export default function CheckoutPage() {
                   <button
                     type="button"
                     onClick={handleApplyVoucher}
-                    className="px-4 h-10 bg-blue-600 text-white text-xs font-semibold rounded-xl hover:bg-blue-500 transition-colors shrink-0 cursor-pointer"
+                    className="px-5 h-10 bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-extrabold rounded-xl transition-all shadow-md shadow-blue-600/30 hover:scale-105 active:scale-95 shrink-0 cursor-pointer"
                   >
                     Pakai
                   </button>
@@ -562,15 +562,15 @@ export default function CheckoutPage() {
               <button
                 onClick={handlePlaceOrder}
                 disabled={submitting || !selectedAddressId}
-                className="w-full mt-6 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow-lg shadow-blue-600/30 transition-all disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full mt-6 py-4 px-6 bg-blue-600 hover:bg-blue-500 text-white font-black text-sm sm:text-base rounded-2xl shadow-xl shadow-blue-600/35 hover:shadow-blue-500/50 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 flex items-center justify-center gap-2.5 cursor-pointer"
               >
                 {submitting ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" /> Memproses Pesanan...
+                    <Loader2 className="w-5 h-5 animate-spin" /> Memproses Pesanan...
                   </>
                 ) : (
                   <>
-                    <ShieldCheck className="w-4 h-4" /> Bayar Sekarang (Duitku)
+                    <ShieldCheck className="w-5 h-5" /> Bayar Sekarang (Duitku)
                   </>
                 )}
               </button>

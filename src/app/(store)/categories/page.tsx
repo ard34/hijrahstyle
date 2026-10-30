@@ -83,9 +83,9 @@ export default async function CategoriesPage() {
               </p>
             </div>
 
-            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-400 group-hover:translate-x-1 transition-transform pt-1">
+            <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600/15 group-hover:bg-blue-600 group-hover:text-white text-blue-400 border border-blue-500/30 text-xs sm:text-sm font-bold transition-all shadow-xs">
               <span>Buka Katalog</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </span>
           </Link>
         ))}
