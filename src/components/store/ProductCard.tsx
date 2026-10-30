@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Heart, Star, MapPin, ShoppingBag, Check, Eye, ArrowRight } from 'lucide-react';
+import { Heart, Star, MapPin, ShoppingBag, Check, Eye } from 'lucide-react';
 import { formatPrice, getDiscountPercentage } from '@/lib/utils';
 import { useToastStore } from '@/lib/store';
 
@@ -83,9 +83,10 @@ export default function ProductCard({
   return (
     <div className="group relative bg-[#0b1220] hover:bg-[#0e172a] rounded-2xl border border-slate-800/90 hover:border-blue-500/60 shadow-md hover:shadow-[0_12px_28px_rgba(37,99,235,0.22)] transition-all duration-300 ease-out overflow-hidden flex flex-col justify-between hover:-translate-y-1.5">
       
-      <div>
-        {/* ─── Product Image Showcase with Light Beam Sweep ─── */}
-        <div className="relative aspect-square w-full bg-[#111928] overflow-hidden flex items-center justify-center p-3 before:absolute before:inset-0 before:-translate-x-full group-hover:before:translate-x-full before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:transition-transform before:duration-700 before:z-20 pointer-events-none">
+      {/* ─── Top Container: Image & Details ─── */}
+      <div className="flex flex-col">
+        {/* ─── Product Image Showcase ─── */}
+        <div className="relative aspect-square w-full bg-[#111928] overflow-hidden flex items-center justify-center p-3.5 before:absolute before:inset-0 before:-translate-x-full group-hover:before:translate-x-full before:bg-gradient-to-r before:from-transparent before:via-white/10 before:to-transparent before:transition-transform before:duration-700 before:z-20 pointer-events-none">
           <Link 
             href={`/products/${product.slug}`} 
             className="w-full h-full flex items-center justify-center pointer-events-auto"
@@ -98,9 +99,9 @@ export default function ProductCard({
             />
           </Link>
 
-          {/* Discount Ribbon on Top-Right Corner */}
+          {/* Discount Badge (Inset with safe margins, NEVER clipped by outer border) */}
           {hasDiscount && (
-            <div className="absolute top-0 right-0 bg-gradient-to-r from-rose-600 to-rose-500 text-white font-black text-[10px] sm:text-[11px] px-2 py-0.5 rounded-bl-xl shadow-md z-20 leading-none">
+            <div className="absolute top-2.5 right-2.5 bg-gradient-to-r from-rose-600 to-rose-500 text-white font-black text-[10px] sm:text-[11px] px-2 py-0.5 rounded-lg shadow-lg z-20 leading-tight">
               <span>-{discount}%</span>
             </div>
           )}
@@ -108,14 +109,14 @@ export default function ProductCard({
           {/* Wishlist Heart Button with Scale Animation */}
           <button
             onClick={handleToggleWishlist}
-            className="absolute top-2.5 left-2.5 z-20 w-8 h-8 rounded-full bg-slate-900/70 hover:bg-slate-900 backdrop-blur-md text-slate-300 hover:text-rose-400 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 active:scale-90 cursor-pointer shadow-md pointer-events-auto"
+            className="absolute top-2.5 left-2.5 z-20 w-8 h-8 rounded-full bg-slate-900/75 hover:bg-slate-900 backdrop-blur-md text-slate-300 hover:text-rose-400 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 active:scale-90 cursor-pointer shadow-md pointer-events-auto"
             title="Simpan ke Wishlist"
           >
             <Heart className={`w-3.5 h-3.5 transition-transform ${isWishlisted ? 'fill-rose-500 text-rose-500 scale-110' : ''}`} />
           </button>
 
           {/* Floating Hover Action Pill (Slide-in on hover) */}
-          <div className="absolute inset-x-2.5 bottom-2.5 z-20 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out pointer-events-auto">
+          <div className="absolute inset-x-3 bottom-3 z-20 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out pointer-events-auto">
             <Link
               href={`/products/${product.slug}`}
               className="flex-1 py-1.5 px-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold shadow-lg shadow-blue-600/40 flex items-center justify-center gap-1.5 transition-all hover:scale-[1.02] active:scale-[0.98]"
@@ -135,8 +136,8 @@ export default function ProductCard({
           </div>
         </div>
 
-        {/* ─── Product Details ─── */}
-        <div className="p-3 sm:p-3.5 space-y-2">
+        {/* ─── Product Details (Spacious and cushioned from card edges) ─── */}
+        <div className="px-4 py-3 sm:px-4.5 sm:py-3.5 space-y-2">
           
           {/* Product Title */}
           <Link href={`/products/${product.slug}`} className="block">
@@ -170,19 +171,19 @@ export default function ProductCard({
         </div>
       </div>
 
-      {/* ─── Store Identity Footer (HijrahStyle Official • Kota Serang) ─── */}
-      <div className="px-3 sm:px-3.5 pb-3 pt-0">
+      {/* ─── Store Identity Footer (Cushioned with ample bottom margin, NEVER clipped) ─── */}
+      <div className="px-4 pb-4 sm:px-4.5 sm:pb-4 pt-0">
         {showAddToCart ? (
           <button
             onClick={handleQuickAdd}
-            className="w-full py-1.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm mb-2 hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold transition-all flex items-center justify-center gap-1.5 cursor-pointer shadow-sm mb-2.5 hover:scale-[1.02] active:scale-[0.98]"
           >
-            {isAdding ? <Check className="w-3 h-3 text-white" /> : <ShoppingBag className="w-3 h-3" />}
+            {isAdding ? <Check className="w-3.5 h-3.5 text-white" /> : <ShoppingBag className="w-3.5 h-3.5" />}
             <span>+ Keranjang</span>
           </button>
         ) : null}
 
-        <div className="flex items-center justify-between text-[10px] text-slate-400 font-normal pt-2 border-t border-slate-800/60">
+        <div className="flex items-center justify-between text-[11px] text-slate-400 font-normal pt-2.5 border-t border-slate-800/80 leading-normal">
           <span className="text-slate-400 font-semibold truncate hover:text-blue-400 transition-colors">HijrahStyle</span>
           <span className="flex items-center gap-1 text-slate-500 shrink-0">
             <MapPin className="w-2.5 h-2.5 text-slate-500" />
