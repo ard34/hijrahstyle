@@ -302,7 +302,7 @@ function ProductsContent() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[calc(100vh-140px)]">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 min-h-[calc(100vh-140px)] animate-fade-in-up">
       
       {/* ─── Screen 02 Grid Layout: Desktop Sidebar + Main Product Showcase Card ─── */}
       <div className="flex flex-col lg:flex-row gap-8 items-start">
@@ -318,8 +318,10 @@ function ProductsContent() {
           {/* Header Row: Title, Subtitle & Sort Dropdown */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-2">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">Katalog Produk</h1>
-              <p className="text-xs sm:text-sm text-blue-400 font-medium mt-1">Temukan produk terbaik pilihan kami.</p>
+              <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                Katalog <span className="bg-gradient-to-r from-blue-400 via-rose-300 to-amber-300 bg-clip-text text-transparent">Produk</span>
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-400 font-medium mt-1">Temukan busana muslimah dan apparel pilihan terbaik.</p>
             </div>
 
             <div className="flex items-center gap-3 w-full sm:w-auto">

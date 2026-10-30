@@ -59,7 +59,7 @@ export default function ProfilePage() {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20 min-h-[calc(100vh-140px)] space-y-6">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20 min-h-[calc(100vh-140px)] space-y-6 animate-fade-in-up">
       
       {/* ─── Breadcrumb ─── */}
       <nav className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-slate-400">

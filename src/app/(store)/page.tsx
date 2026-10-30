@@ -2,7 +2,7 @@ import Link from 'next/link';
 import prisma from '@/lib/prisma';
 import { 
   ArrowRight, Truck, ShieldCheck, Lock, RotateCcw,
-  Shirt, Footprints, Glasses, Briefcase, Watch, LayoutGrid
+  Shirt, Footprints, Glasses, Briefcase, Watch, LayoutGrid, Sparkles
 } from 'lucide-react';
 import ProductCard from '@/components/store/ProductCard';
 
@@ -121,59 +121,107 @@ async function getHomeData() {
 export default async function HomePage() {
   const { categories, products } = await getHomeData();
 
-  const getCatIcon = (slug: string) => {
+  // Multi-Tone Vibrant Category Palette
+  const getCatStyle = (slug: string) => {
     switch (slug.toLowerCase()) {
-      case 'pakaian': return <Shirt className="w-6 h-6 text-cyan-400" />;
-      case 'sepatu': return <Footprints className="w-6 h-6 text-cyan-400" />;
-      case 'aksesoris': return <Glasses className="w-6 h-6 text-cyan-400" />;
-      case 'tas': return <Briefcase className="w-6 h-6 text-cyan-400" />;
-      case 'elektronik': return <Watch className="w-6 h-6 text-cyan-400" />;
-      default: return <LayoutGrid className="w-6 h-6 text-cyan-400" />;
+      case 'pakaian': 
+        return {
+          icon: <Shirt className="w-6 h-6 text-rose-400 group-hover:scale-110 transition-transform" />,
+          badge: 'border-rose-500/30 bg-rose-500/10 text-rose-400',
+          hoverBorder: 'hover:border-rose-500/60 hover:shadow-rose-500/20'
+        };
+      case 'sepatu': 
+        return {
+          icon: <Footprints className="w-6 h-6 text-sky-400 group-hover:scale-110 transition-transform" />,
+          badge: 'border-sky-500/30 bg-sky-500/10 text-sky-400',
+          hoverBorder: 'hover:border-sky-500/60 hover:shadow-sky-500/20'
+        };
+      case 'aksesoris': 
+        return {
+          icon: <Glasses className="w-6 h-6 text-amber-400 group-hover:scale-110 transition-transform" />,
+          badge: 'border-amber-500/30 bg-amber-500/10 text-amber-400',
+          hoverBorder: 'hover:border-amber-500/60 hover:shadow-amber-500/20'
+        };
+      case 'tas': 
+        return {
+          icon: <Briefcase className="w-6 h-6 text-emerald-400 group-hover:scale-110 transition-transform" />,
+          badge: 'border-emerald-500/30 bg-emerald-500/10 text-emerald-400',
+          hoverBorder: 'hover:border-emerald-500/60 hover:shadow-emerald-500/20'
+        };
+      case 'elektronik': 
+        return {
+          icon: <Watch className="w-6 h-6 text-purple-400 group-hover:scale-110 transition-transform" />,
+          badge: 'border-purple-500/30 bg-purple-500/10 text-purple-400',
+          hoverBorder: 'hover:border-purple-500/60 hover:shadow-purple-500/20'
+        };
+      default: 
+        return {
+          icon: <LayoutGrid className="w-6 h-6 text-indigo-400 group-hover:scale-110 transition-transform" />,
+          badge: 'border-indigo-500/30 bg-indigo-500/10 text-indigo-400',
+          hoverBorder: 'hover:border-indigo-500/60 hover:shadow-indigo-500/20'
+        };
     }
   };
 
   return (
-    <div className="min-h-screen pb-16 space-y-12 sm:space-y-16">
+    <div className="min-h-screen pb-16 space-y-12 sm:space-y-16 animate-fade-in-up">
 
-      {/* ─── Screen 01 Hero Section: Style Modern Untuk Setiap Aktivitas ─── */}
+      {/* ─── Hero Section Multi-Tone Vibrant Aurora ─── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8">
-        <div className="relative rounded-3xl bg-gradient-to-r from-[#060c1a] via-[#091329] to-[#040814] text-white p-8 sm:p-12 lg:p-16 overflow-hidden border border-blue-500/30 shadow-[0_0_50px_rgba(37,99,235,0.25)] flex flex-col lg:flex-row items-center justify-between gap-10">
+        <div className="relative rounded-[32px] bg-gradient-to-br from-[#080e1e] via-[#0d172e] to-[#0a1122] text-white p-8 sm:p-12 lg:p-16 overflow-hidden border border-blue-500/30 shadow-[0_0_50px_rgba(37,99,235,0.22)] flex flex-col lg:flex-row items-center justify-between gap-10">
 
-          {/* Cyber Neon Glow Portals */}
-          <div className="absolute right-10 top-1/2 -translate-y-1/2 w-96 h-96 bg-blue-600/30 rounded-full blur-[110px] pointer-events-none" />
-          <div className="absolute right-1/4 top-1/4 w-60 h-60 border-2 border-blue-500/20 rounded-3xl rotate-12 pointer-events-none" />
-          <div className="absolute right-16 bottom-10 w-44 h-44 border border-cyan-400/20 rounded-3xl -rotate-6 pointer-events-none" />
+          {/* Vibrant Aurora Orbs */}
+          <div className="absolute -top-20 -left-20 w-80 h-80 bg-blue-600/25 rounded-full blur-[100px] pointer-events-none" />
+          <div className="absolute top-1/2 -right-20 -translate-y-1/2 w-96 h-96 bg-rose-500/18 rounded-full blur-[120px] pointer-events-none" />
+          <div className="absolute -bottom-16 left-1/3 w-72 h-72 bg-emerald-500/15 rounded-full blur-[110px] pointer-events-none" />
 
-          {/* Left Headline Content (Screen 01) */}
-          <div className="relative z-10 max-w-xl space-y-5 text-left">
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
-              Style Modern <br />
-              <span className="text-white">Untuk Setiap Aktivitas</span>
+          {/* Left Headline Content */}
+          <div className="relative z-10 max-w-xl space-y-6 text-left">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-gradient-to-r from-blue-500/20 via-rose-500/20 to-amber-500/20 border border-white/15 text-white text-xs font-bold tracking-wide backdrop-blur-md shadow-xs">
+              <Sparkles className="w-3.5 h-3.5 text-amber-300 animate-spin" style={{ animationDuration: '6s' }} />
+              <span className="bg-gradient-to-r from-blue-300 via-rose-200 to-amber-200 bg-clip-text text-transparent">
+                Koleksi Spesial Busana Muslimah &amp; Apparel
+              </span>
+            </div>
+
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.12]">
+              Tampil Anggun <br />
+              <span className="bg-gradient-to-r from-blue-400 via-rose-300 to-amber-300 bg-clip-text text-transparent">
+                dalam Balutan Kesantunan
+              </span>
             </h1>
 
             <p className="text-sm sm:text-base text-slate-300 leading-relaxed font-normal max-w-lg">
-              Produk berkualitas, harga terbaik, dan pengiriman cepat ke seluruh Indonesia.
+              Koleksi mukena eksklusif, gamis elegan, dan busana modern dengan kualitas butik pilihan, harga bersahabat, dan pengiriman kilat dari Kota Serang.
             </p>
 
-            <div className="pt-2">
+            <div className="pt-2 flex items-center gap-4 flex-wrap">
               <Link
                 href="/products"
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white text-sm sm:text-base font-black shadow-lg shadow-blue-600/40 hover:shadow-blue-500/60 hover:scale-105 active:scale-95 transition-all cursor-pointer"
+                prefetch={true}
+                className="inline-flex items-center gap-2.5 px-8 py-4 rounded-2xl bg-gradient-to-r from-blue-600 via-indigo-600 to-rose-600 hover:from-blue-500 hover:via-indigo-500 hover:to-rose-500 text-white text-sm sm:text-base font-black shadow-[0_6px_25px_rgba(37,99,235,0.45)] hover:shadow-[0_8px_30px_rgba(244,63,94,0.45)] hover:scale-105 active:scale-95 transition-all cursor-pointer"
               >
                 <span>Belanja Sekarang</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
+              <Link
+                href="/promo"
+                prefetch={true}
+                className="inline-flex items-center gap-2 px-6 py-4 rounded-2xl bg-[#0e172a] hover:bg-[#131f38] border border-rose-500/30 text-rose-300 hover:text-white text-sm font-bold transition-all hover:scale-105 cursor-pointer shadow-sm"
+              >
+                <span>🔥 Promo Spesial</span>
+              </Link>
             </div>
           </div>
 
-          {/* Right Floating Visual with Smooth Float Animation */}
+          {/* Right Floating Visual with Animated Glow & Floating Motion */}
           <div className="relative z-10 w-full lg:w-1/2 flex items-center justify-center">
             <div className="relative w-72 sm:w-80 md:w-96 aspect-square flex items-center justify-center">
-              <div className="absolute inset-0 bg-blue-600/30 rounded-full blur-3xl animate-pulse-glow" />
+              <div className="absolute inset-0 bg-gradient-to-tr from-blue-600/30 via-rose-500/20 to-amber-400/20 rounded-full blur-3xl animate-pulse-glow" />
               <img
                 src="/hero-sneaker.png"
                 alt="Busana Modern HijrahStyle"
-                className="relative z-10 w-full h-full object-contain filter drop-shadow-[0_25px_40px_rgba(0,102,255,0.7)] animate-float"
+                className="relative z-10 w-full h-full object-contain filter drop-shadow-[0_25px_40px_rgba(0,102,255,0.6)] animate-float"
               />
             </div>
           </div>
@@ -181,85 +229,135 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ─── Screen 01 Value Proposition Bar: 4 Highlight Points ─── */}
+      {/* ─── Multi-Color Vibrant 4 Value Highlight Cards ─── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
           {[
-            { icon: ShieldCheck, title: '100% Original' },
-            { icon: Truck, title: 'Pengiriman Cepat' },
-            { icon: Lock, title: 'Pembayaran Aman Duitku' },
-            { icon: RotateCcw, title: 'Garansi Retur' },
+            { 
+              icon: ShieldCheck, 
+              title: '100% Original', 
+              desc: 'Kualitas butik terjamin',
+              color: 'text-sky-400',
+              bgColor: 'bg-sky-500/10 border-sky-500/30',
+              glow: 'hover:border-sky-500/50 hover:shadow-sky-500/15'
+            },
+            { 
+              icon: Truck, 
+              title: 'Pengiriman Kilat', 
+              desc: 'Langsung dari Kota Serang',
+              color: 'text-emerald-400',
+              bgColor: 'bg-emerald-500/10 border-emerald-500/30',
+              glow: 'hover:border-emerald-500/50 hover:shadow-emerald-500/15'
+            },
+            { 
+              icon: Lock, 
+              title: 'Pembayaran Aman', 
+              desc: 'Transfer Bank & QRIS',
+              color: 'text-amber-400',
+              bgColor: 'bg-amber-500/10 border-amber-500/30',
+              glow: 'hover:border-amber-500/50 hover:shadow-amber-500/15'
+            },
+            { 
+              icon: RotateCcw, 
+              title: 'Garansi Kepuasan', 
+              desc: 'Layanan retur transparan',
+              color: 'text-rose-400',
+              bgColor: 'bg-rose-500/10 border-rose-500/30',
+              glow: 'hover:border-rose-500/50 hover:shadow-rose-500/15'
+            },
           ].map((item, idx) => {
             const Icon = item.icon;
             return (
               <div
                 key={idx}
-                className="p-4 sm:p-5 rounded-2xl bg-[#0b1220] border border-slate-800/80 flex flex-col items-center text-center gap-2.5 shadow-md hover:border-blue-500/40 transition-colors"
+                className={`p-4 sm:p-5 rounded-2xl bg-[#0b1220] border border-slate-800/80 flex flex-col items-center text-center gap-2.5 shadow-md ${item.glow} transition-all duration-300 hover:-translate-y-1 group`}
               >
-                <div className="w-10 h-10 rounded-xl bg-blue-600/10 border border-blue-500/20 flex items-center justify-center text-cyan-400">
+                <div className={`w-11 h-11 rounded-xl ${item.bgColor} border flex items-center justify-center ${item.color} group-hover:scale-110 transition-transform shadow-xs`}>
                   <Icon className="w-5 h-5 stroke-[2]" />
                 </div>
-                <span className="text-xs sm:text-sm font-bold text-slate-200">
-                  {item.title}
-                </span>
+                <div>
+                  <span className="text-xs sm:text-sm font-bold text-white block">
+                    {item.title}
+                  </span>
+                  <span className="text-[11px] text-slate-400 mt-0.5 block">
+                    {item.desc}
+                  </span>
+                </div>
               </div>
             );
           })}
         </div>
       </section>
 
-      {/* ─── Screen 01 Section: Kategori Populer ─── */}
+      {/* ─── Kategori Populer dengan Warna Warni Hidup ─── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-          Kategori Populer
-        </h2>
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">
+              Kategori Pilihan
+            </h2>
+            <p className="text-xs text-slate-400 font-medium">Temukan koleksi favorit sesuai kebutuhan gaya Anda</p>
+          </div>
+          <Link 
+            href="/categories" 
+            prefetch={true}
+            className="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1 transition-colors"
+          >
+            <span>Semua Kategori</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
 
         <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 sm:gap-4">
-          {categories.map((cat) => (
-            <Link
-              key={cat.id}
-              href={`/products?category=${cat.slug}`}
-              className="p-5 rounded-2xl bg-[#0b1220] border border-slate-800 hover:border-blue-500/60 hover:bg-[#0e172a] transition-all duration-300 flex flex-col items-center justify-center gap-3 text-center group shadow-md hover:shadow-[0_10px_25px_rgba(37,99,235,0.2)] hover:-translate-y-1.5"
-            >
-              <div className="w-12 h-12 rounded-xl bg-[#070b14] border border-slate-800 group-hover:border-blue-500/50 group-hover:scale-110 flex items-center justify-center transition-all duration-300 shadow-inner">
-                {getCatIcon(cat.slug)}
-              </div>
-              <span className="text-xs font-bold text-slate-300 group-hover:text-blue-400 transition-colors">
-                {cat.name}
-              </span>
-            </Link>
-          ))}
+          {categories.map((cat) => {
+            const style = getCatStyle(cat.slug);
+            return (
+              <Link
+                key={cat.id}
+                href={`/products?category=${cat.slug}`}
+                prefetch={true}
+                className={`p-4 sm:p-5 rounded-2xl bg-[#0b1220] border border-slate-800 ${style.hoverBorder} hover:bg-[#0e172a] transition-all duration-300 flex flex-col items-center justify-center gap-3 text-center group shadow-md hover:-translate-y-1.5`}
+              >
+                <div className={`w-12 h-12 rounded-xl border flex items-center justify-center shadow-inner transition-all duration-300 ${style.badge}`}>
+                  {style.icon}
+                </div>
+                <span className="text-xs font-bold text-slate-300 group-hover:text-white transition-colors">
+                  {cat.name}
+                </span>
+              </Link>
+            );
+          })}
         </div>
       </section>
 
-      {/* ─── Shopee Signature REKOMENDASI Section (Ref: media_1793364552323_d120d1b8.jpg) ─── */}
+      {/* ─── Shopee Signature REKOMENDASI Section ─── */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-5">
-        {/* Shopee REKOMENDASI Tab Bar with Glowing Accent */}
-        <div className="bg-[#0b1220] rounded-2xl border border-slate-800/80 p-1 shadow-lg">
-          <div className="border-b-4 border-[#ee4d2d] py-3.5 text-center flex items-center justify-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#ee4d2d] animate-ping" />
-            <h2 className="text-[#ee4d2d] font-black text-base sm:text-lg tracking-widest uppercase inline-block">
-              REKOMENDASI
+        <div className="bg-gradient-to-r from-[#0b1220] via-[#101b33] to-[#0b1220] rounded-2xl border border-slate-800/80 p-1 shadow-lg">
+          <div className="border-b-4 border-rose-500 py-3.5 text-center flex items-center justify-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping" />
+            <h2 className="bg-gradient-to-r from-rose-500 via-amber-400 to-rose-500 bg-clip-text text-transparent font-black text-base sm:text-lg tracking-widest uppercase inline-block">
+              REKOMENDASI UNTUK ANDA
             </h2>
-            <span className="w-2 h-2 rounded-full bg-[#ee4d2d] animate-ping" />
+            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping" />
           </div>
         </div>
 
-        {/* Spacious Grid with Luxurious Gap */}
+        {/* Spacious Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3.5 sm:gap-4 lg:gap-4.5">
           {products.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
 
-        {/* Lihat Lebih Banyak CTA with Hover Slide */}
+        {/* Lihat Lebih Banyak CTA */}
         <div className="text-center pt-4">
           <Link
             href="/products"
-            className="group inline-flex items-center gap-2.5 px-8 py-3.5 rounded-2xl bg-[#0b1220] hover:bg-[#111c30] border border-slate-800 hover:border-[#ee4d2d]/60 text-slate-200 hover:text-white text-xs sm:text-sm font-bold transition-all duration-300 shadow-md hover:shadow-xl hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
+            prefetch={true}
+            className="group inline-flex items-center gap-2.5 px-8 py-3.5 rounded-2xl bg-[#0b1220] hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 border border-slate-800 hover:border-transparent text-slate-200 hover:text-white text-xs sm:text-sm font-bold transition-all duration-300 shadow-md hover:shadow-xl hover:scale-[1.03] active:scale-[0.98] cursor-pointer"
           >
-            <span>Lihat Lebih Banyak Produk</span>
-            <ArrowRight className="w-4 h-4 text-[#ee4d2d] group-hover:translate-x-1.5 transition-transform duration-300" />
+            <span>Lihat Semua Produk di Katalog</span>
+            <ArrowRight className="w-4 h-4 text-rose-400 group-hover:text-white group-hover:translate-x-1.5 transition-all duration-300" />
           </Link>
         </div>
       </section>

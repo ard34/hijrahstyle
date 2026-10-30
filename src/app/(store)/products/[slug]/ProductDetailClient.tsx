@@ -174,7 +174,7 @@ export default function ProductDetailClient({
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-24 space-y-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-24 space-y-12 animate-fade-in-up">
       
       {/* ─── Breadcrumbs with Generous Margin ─── */}
       <nav className="flex items-center gap-2.5 text-xs sm:text-sm font-semibold text-slate-400 pb-2">
@@ -235,17 +235,17 @@ export default function ProductDetailClient({
               ))}
             </div>
 
-            {/* 3 Jaminan Resmi Toko */}
+            {/* 3 Jaminan Resmi Toko Multi-Tone */}
             <div className="pt-2 grid grid-cols-3 gap-3 text-center text-xs text-slate-300 font-semibold">
-              <div className="p-3.5 rounded-2xl bg-[#070b14] border border-slate-800/80 flex flex-col items-center gap-1.5 shadow-xs">
-                <ShieldCheck className="w-5 h-5 text-blue-400" />
+              <div className="p-3.5 rounded-2xl bg-[#0b1220] border border-sky-500/30 flex flex-col items-center gap-1.5 shadow-xs hover:scale-105 transition-transform">
+                <ShieldCheck className="w-5 h-5 text-sky-400" />
                 <span className="text-[11px] font-bold text-slate-200">100% Original</span>
               </div>
-              <div className="p-3.5 rounded-2xl bg-[#070b14] border border-slate-800/80 flex flex-col items-center gap-1.5 shadow-xs">
-                <RotateCcw className="w-5 h-5 text-blue-400" />
+              <div className="p-3.5 rounded-2xl bg-[#0b1220] border border-amber-500/30 flex flex-col items-center gap-1.5 shadow-xs hover:scale-105 transition-transform">
+                <RotateCcw className="w-5 h-5 text-amber-400" />
                 <span className="text-[11px] font-bold text-slate-200">Garansi 7 Hari</span>
               </div>
-              <div className="p-3.5 rounded-2xl bg-[#070b14] border border-slate-800/80 flex flex-col items-center gap-1.5 shadow-xs">
+              <div className="p-3.5 rounded-2xl bg-[#0b1220] border border-emerald-500/30 flex flex-col items-center gap-1.5 shadow-xs hover:scale-105 transition-transform">
                 <Truck className="w-5 h-5 text-emerald-400" />
                 <span className="text-[11px] font-bold text-slate-200">Bebas Ongkir</span>
               </div>

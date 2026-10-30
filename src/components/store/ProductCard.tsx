@@ -101,9 +101,9 @@ export default function ProductCard({
             />
           </Link>
 
-          {/* Badge Diskon Konsisten di Pojok Kanan Atas */}
+          {/* Badge Diskon Konsisten di Pojok Kanan Atas dengan Gradient Semarak */}
           {hasDiscount && (
-            <div className="absolute top-3.5 right-3.5 bg-rose-600 text-white font-black text-[11px] sm:text-xs px-2.5 py-0.5 rounded-lg shadow-md z-20 tracking-tight leading-tight pointer-events-none">
+            <div className="absolute top-3.5 right-3.5 bg-gradient-to-r from-rose-600 via-pink-600 to-rose-500 text-white font-black text-[11px] sm:text-xs px-2.5 py-0.5 rounded-lg shadow-md shadow-rose-600/30 z-20 tracking-tight leading-tight pointer-events-none">
               <span>-{discount}%</span>
             </div>
           )}
@@ -170,7 +170,7 @@ export default function ProductCard({
               <span className="ml-1 font-bold text-white text-xs sm:text-[13px]">{rating.toFixed(1)}</span>
             </div>
             <span className="text-slate-600">•</span>
-            <span className="text-slate-400 text-xs sm:text-[13px]">{totalSold} Terjual</span>
+            <span className="text-emerald-400/90 text-xs sm:text-[13px] font-medium">{totalSold} Terjual</span>
           </div>
 
         </div>

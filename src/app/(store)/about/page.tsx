@@ -24,7 +24,7 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 space-y-20">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 space-y-20 animate-fade-in-up">
       
       {/* ─── 1. Breadcrumb Navigasi ─── */}
       <nav className="flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-400">
