@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 300; // Edge cached for instant response
 
 const categoriesData = [
   {

@@ -114,8 +114,8 @@ const colorOptions = [
 
 function ProductsContent() {
   const searchParams = useSearchParams();
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState<Product[]>(fallbackCatalogProducts);
+  const [loading, setLoading] = useState(false);
   const [showMobileFilter, setShowMobileFilter] = useState(false);
 
   const [category, setCategory] = useState(searchParams.get('category') || '');

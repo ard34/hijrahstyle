@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import ProductCard from '@/components/store/ProductCard';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60; // Cache on edge for 60 seconds (Instant navigation)
 
 const fallbackCategories = [
   { id: 'cat-1', name: 'Pakaian', slug: 'pakaian', sortOrder: 1 },

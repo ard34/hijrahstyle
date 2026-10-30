@@ -63,7 +63,7 @@ export default function Navbar() {
           <div className="flex items-center justify-between gap-4 lg:gap-8">
             
             {/* 1. Brand Logo */}
-            <Link href="/" className="flex items-center gap-3 shrink-0 group">
+            <Link href="/" prefetch={true} className="flex items-center gap-3 shrink-0 group">
               <div className="relative flex items-center justify-center">
                 <div className="w-10 h-10 rounded-xl bg-[#0b1220] border border-blue-500/40 p-1.5 flex items-center justify-center shadow-[0_0_15px_rgba(37,99,235,0.35)] group-hover:scale-105 transition-transform">
                   <img
@@ -113,6 +113,7 @@ export default function Navbar() {
               {/* Wishlist */}
               <Link 
                 href="/wishlist" 
+                prefetch={true}
                 className={`w-10 h-10 rounded-full bg-[#0e172a] border border-slate-800 hover:border-blue-500/50 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95 relative cursor-pointer ${
                   pathname === '/wishlist' ? 'text-blue-400 border-blue-500/50 bg-slate-800' : ''
                 }`}
@@ -124,6 +125,7 @@ export default function Navbar() {
               {/* Shopping Bag (Cart with counter badge) */}
               <Link 
                 href="/cart" 
+                prefetch={true}
                 className={`w-10 h-10 rounded-full bg-[#0e172a] border border-slate-800 hover:border-blue-500/50 text-slate-300 hover:text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95 relative cursor-pointer ${
                   pathname === '/cart' ? 'bg-blue-600 text-white border-blue-400 shadow-lg shadow-blue-600/40' : ''
                 }`}
@@ -228,6 +230,7 @@ export default function Navbar() {
                 <Link
                   key={link.label}
                   href={link.href}
+                  prefetch={true}
                   className={`transition-all hover:text-blue-400 relative py-1 ${
                     isActive
                       ? 'text-blue-400 font-bold shadow-[0_1px_0_0_#3b82f6]'
@@ -262,6 +265,7 @@ export default function Navbar() {
                 <Link 
                   key={link.label} 
                   href={link.href} 
+                  prefetch={true}
                   onClick={() => setIsMobileMenuOpen(false)} 
                   className="py-2.5 px-3 rounded-lg hover:bg-slate-800 hover:text-white"
                 >
@@ -270,6 +274,7 @@ export default function Navbar() {
               ))}
               <Link 
                 href="/wishlist" 
+                prefetch={true}
                 onClick={() => setIsMobileMenuOpen(false)} 
                 className="py-2.5 px-3 rounded-lg hover:bg-slate-800 hover:text-white"
               >
@@ -284,6 +289,7 @@ export default function Navbar() {
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#070b14]/95 backdrop-blur-md border-t border-slate-800/90 py-2.5 px-4 shadow-2xl flex items-center justify-around text-[10px] font-semibold text-slate-400">
         <Link 
           href="/" 
+          prefetch={true}
           className={`flex flex-col items-center gap-1 ${pathname === '/' ? 'text-blue-400 font-bold' : 'hover:text-blue-400'}`}
         >
           <Home className="w-5 h-5 stroke-[1.75]" />
@@ -291,6 +297,7 @@ export default function Navbar() {
         </Link>
         <Link 
           href="/products" 
+          prefetch={true}
           className={`flex flex-col items-center gap-1 ${pathname === '/products' ? 'text-blue-400 font-bold' : 'hover:text-blue-400'}`}
         >
           <Grid className="w-5 h-5 stroke-[1.75]" />
@@ -298,6 +305,7 @@ export default function Navbar() {
         </Link>
         <Link 
           href="/cart" 
+          prefetch={true}
           className={`flex flex-col items-center gap-1 relative ${pathname === '/cart' ? 'text-blue-400 font-bold' : 'hover:text-blue-400'}`}
         >
           <ShoppingBag className="w-5 h-5 stroke-[1.75]" />
@@ -310,6 +318,7 @@ export default function Navbar() {
         </Link>
         <Link 
           href={user ? '/profile' : '/login'} 
+          prefetch={true}
           className={`flex flex-col items-center gap-1 ${pathname === '/profile' || pathname === '/login' ? 'text-blue-400 font-bold' : 'hover:text-blue-400'}`}
         >
           <User className="w-5 h-5 stroke-[1.75]" />

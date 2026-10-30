@@ -3,7 +3,20 @@ import { formatPrice, getDiscountPercentage } from '@/lib/utils';
 import { notFound } from 'next/navigation';
 import ProductDetailClient from './ProductDetailClient';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  return [
+    { slug: 'kaos-forge' },
+    { slug: 'hoodie-bbn-premium' },
+    { slug: 'sneakers-vortex' },
+    { slug: 'jaket-windbreaker' },
+    { slug: 'tas-sling-bbn' },
+    { slug: 'topi-trucker' },
+    { slug: 'smartwatch-forge-x' },
+    { slug: 'backpack-cyber-bbn' },
+  ];
+}
 
 const fallbackProductsMap: Record<string, any> = {
   'sneakers-vortex': {

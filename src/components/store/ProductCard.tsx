@@ -90,6 +90,7 @@ export default function ProductCard({
         <div className="relative aspect-square w-full bg-[#10192e] overflow-hidden flex items-center justify-center p-4 sm:p-5 before:absolute before:inset-0 before:-translate-x-full group-hover:before:translate-x-full before:bg-gradient-to-r before:from-transparent before:via-white/5 before:to-transparent before:transition-transform before:duration-700 before:z-20 pointer-events-none">
           <Link 
             href={`/products/${product.slug}`} 
+            prefetch={true}
             className="w-full h-full flex items-center justify-center pointer-events-auto"
           >
             {/* Main Product Image (object-contain with comfortable breathing room) */}
@@ -120,6 +121,7 @@ export default function ProductCard({
           <div className="absolute inset-x-3.5 bottom-3.5 z-20 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 ease-out pointer-events-auto">
             <Link
               href={`/products/${product.slug}`}
+              prefetch={true}
               className="flex-1 py-1.5 px-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-bold shadow-lg shadow-blue-600/40 flex items-center justify-center gap-1.5 transition-all hover:scale-[1.02] active:scale-[0.98]"
             >
               <Eye className="w-3 h-3" />
@@ -142,7 +144,7 @@ export default function ProductCard({
           
           <div>
             {/* 1. Nama Produk: Font Semibold, Ukuran 17-19px (Responsive), Line-height nyaman */}
-            <Link href={`/products/${product.slug}`} className="block group/title">
+            <Link href={`/products/${product.slug}`} prefetch={true} className="block group/title">
               <h3 className="line-clamp-2 leading-snug text-sm sm:text-[15px] md:text-base lg:text-[18px] font-semibold text-white group-hover/title:text-blue-400 transition-colors tracking-tight">
                 {productName}
               </h3>
