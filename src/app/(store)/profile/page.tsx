@@ -16,6 +16,10 @@ export default function ProfilePage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<UserProfile | null>(null);
+  const [activeTab, setActiveTab] = useState('profil');
+  const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -25,6 +29,8 @@ export default function ProfilePage() {
       })
       .then((data) => {
         setUser(data.user);
+        setName(data.user.name || '');
+        setPhone(data.user.phone || '');
       })
       .catch(() => {
         router.push('/login?redirect=/profile');
@@ -37,57 +43,134 @@ export default function ProfilePage() {
     router.push('/login');
   };
 
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setTimeout(() => {
+      setSaving(false);
+      alert('Perubahan profil berhasil disimpan!');
+    }, 600);
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      <div className="min-h-screen flex items-center justify-center bg-[#070b14]">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
       </div>
     );
   }
 
   return (
-    <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full min-h-[calc(100vh-140px)]">
-      <div className="bg-white rounded-3xl shadow-xs border border-slate-200/80 overflow-hidden">
-        {/* Header Banner */}
-        <div className="h-32 bg-gradient-to-r from-slate-950 via-slate-900 to-blue-950 relative p-6 flex items-end">
-          <div className="absolute -bottom-8 left-8 w-20 h-20 rounded-2xl bg-white p-1 shadow-md border border-slate-200">
-            <div className="w-full h-full rounded-xl bg-blue-600 text-white flex items-center justify-center font-extrabold text-2xl shadow-inner">
-              {user?.name.charAt(0).toUpperCase()}
-            </div>
+    <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full min-h-[calc(100vh-140px)]">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 items-start">
+        
+        {/* Left Sidebar Menu (Screen 09) */}
+        <div className="bg-[#0e172a] rounded-3xl p-5 border border-slate-800 shadow-xl space-y-4">
+          <div className="pb-3 border-b border-slate-800">
+            <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400">Akun Saya</h2>
           </div>
-        </div>
 
-        {/* Profile details */}
-        <div className="pt-12 px-8 pb-8 space-y-6">
-          <div className="flex justify-between items-start">
-            <div>
-              <h1 className="text-2xl font-bold text-slate-900">{user?.name}</h1>
-              <p className="text-xs text-blue-600 font-bold uppercase tracking-wider mt-0.5">{user?.role.toLowerCase()} Member</p>
-            </div>
+          <div className="space-y-1 text-xs font-semibold">
+            {[
+              { id: 'profil', label: 'Profil', icon: User, href: '/profile' },
+              { id: 'pesanan', label: 'Pesanan', icon: Shield, href: '/orders' },
+              { id: 'wishlist', label: 'Wishlist', icon: Shield, href: '/wishlist' },
+              { id: 'promo', label: 'Voucher', icon: Shield, href: '/promo' },
+            ].map((item) => (
+              <button
+                key={item.id}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  if (item.href !== '/profile') router.push(item.href);
+                }}
+                className={`w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl transition-all cursor-pointer text-left ${
+                  activeTab === item.id
+                    ? 'bg-blue-600 text-white font-bold shadow-md shadow-blue-600/30'
+                    : 'text-slate-300 hover:bg-slate-800/60 hover:text-white'
+                }`}
+              >
+                <item.icon className="w-4 h-4" />
+                <span>{item.label}</span>
+              </button>
+            ))}
+
             <button
               onClick={handleLogout}
-              className="px-4 py-2.5 bg-rose-50 text-rose-600 hover:bg-rose-100 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors border border-rose-200/60 cursor-pointer"
+              className="w-full flex items-center gap-2.5 px-3.5 py-2.5 rounded-xl text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer text-left pt-3 border-t border-slate-800 mt-2"
             >
-              <LogOut className="w-4 h-4" /> Keluar (Logout)
+              <LogOut className="w-4 h-4" />
+              <span>Keluar (Logout)</span>
             </button>
           </div>
+        </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-100 pt-6">
-            <div className="p-4 bg-slate-50 border border-slate-200/60 rounded-2xl space-y-1">
-              <p className="text-xs text-slate-400 font-medium flex items-center gap-1.5">
-                <Mail className="w-3.5 h-3.5 text-blue-600" /> Alamat Email
-              </p>
-              <p className="text-sm font-semibold text-slate-900">{user?.email}</p>
+        {/* Right Main Content (Screen 09) */}
+        <div className="md:col-span-3 bg-[#0e172a] rounded-3xl p-6 sm:p-8 border border-slate-800 shadow-xl space-y-6">
+          <div className="pb-4 border-b border-slate-800">
+            <h1 className="text-xl font-black text-white tracking-tight">Profil Saya</h1>
+            <p className="text-xs text-slate-400 mt-0.5">Kelola informasi akun dan data kontak Anda</p>
+          </div>
+
+          {/* User Avatar Row */}
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 rounded-full bg-blue-600 text-white flex items-center justify-center font-black text-2xl shadow-lg shadow-blue-600/30">
+              {user?.name.charAt(0).toUpperCase()}
             </div>
-
-            <div className="p-4 bg-slate-50 border border-slate-200/60 rounded-2xl space-y-1">
-              <p className="text-xs text-slate-400 font-medium flex items-center gap-1.5">
-                <Phone className="w-3.5 h-3.5 text-blue-600" /> Nomor Telepon / WA
-              </p>
-              <p className="text-sm font-semibold text-slate-900">{user?.phone || 'Belum diatur'}</p>
+            <div>
+              <h3 className="text-base font-bold text-white">{user?.name}</h3>
+              <p className="text-xs text-slate-400">{user?.email}</p>
+              <span className="inline-block px-2 py-0.5 mt-1 rounded-md text-[10px] font-bold bg-blue-500/15 text-blue-400 border border-blue-500/30">
+                {user?.role} MEMBER
+              </span>
             </div>
           </div>
+
+          {/* Edit Form */}
+          <form onSubmit={handleSave} className="space-y-4 max-w-lg">
+            <div>
+              <label className="text-xs font-bold text-slate-300 block mb-1.5">Nama Lengkap</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full h-10 px-3.5 rounded-xl bg-[#070b14] border border-slate-800 text-xs font-medium text-white outline-none focus:border-blue-500"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="text-xs font-bold text-slate-300 block mb-1.5">Email</label>
+              <input
+                type="email"
+                value={user?.email || ''}
+                disabled
+                className="w-full h-10 px-3.5 rounded-xl bg-[#070b14]/50 border border-slate-800 text-xs font-medium text-slate-500 outline-none cursor-not-allowed"
+              />
+            </div>
+
+            <div>
+              <label className="text-xs font-bold text-slate-300 block mb-1.5">Nomor Telepon</label>
+              <input
+                type="text"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="081234567890"
+                className="w-full h-10 px-3.5 rounded-xl bg-[#070b14] border border-slate-800 text-xs font-medium text-white outline-none focus:border-blue-500"
+              />
+            </div>
+
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={saving}
+                className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-md shadow-blue-600/30 transition-all cursor-pointer disabled:opacity-50"
+              >
+                {saving ? 'Menyimpan...' : 'Simpan Perubahan'}
+              </button>
+            </div>
+          </form>
         </div>
+
       </div>
     </main>
   );

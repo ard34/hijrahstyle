@@ -319,14 +319,14 @@ export default function CheckoutPage() {
 
   return (
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-        {/* Header */}
-        <div className="flex items-center gap-4 mb-8 pb-4 border-b border-slate-200">
-          <Link href="/cart" className="p-2.5 bg-white border border-slate-200/80 rounded-xl shadow-2xs text-slate-600 hover:text-blue-600 transition-colors">
+        {/* Header (Screen 05) */}
+        <div className="flex items-center gap-4 mb-8 pb-4 border-b border-slate-800">
+          <Link href="/cart" className="p-2.5 bg-[#0e172a] border border-slate-800 rounded-xl shadow-xs text-slate-400 hover:text-white transition-colors">
             <ArrowLeft className="w-4 h-4" />
           </Link>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Checkout Pesanan</h1>
-            <p className="text-xs text-slate-500 font-medium mt-0.5">Lengkapi alamat pengiriman dan konfirmasi pembayaran Anda</p>
+            <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight">Checkout Pesanan</h1>
+            <p className="text-xs text-slate-400 font-medium mt-0.5">Lengkapi alamat pengiriman dan konfirmasi pembayaran Anda</p>
           </div>
         </div>
 
@@ -334,29 +334,29 @@ export default function CheckoutPage() {
           {/* Main Form (Left 2 cols) */}
           <div className="lg:col-span-2 space-y-6">
             
-            {/* 1. Alamat Pengiriman */}
-            <div className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200/80 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+            {/* 1. Alamat Pengiriman (Screen 05) */}
+            <div className="bg-[#0e172a] rounded-3xl p-6 shadow-xl border border-slate-800 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-800">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-xs">1</div>
-                  <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-blue-600" /> Alamat Pengiriman
+                  <div className="w-8 h-8 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center font-bold text-xs">1</div>
+                  <h2 className="text-base font-bold text-white flex items-center gap-2">
+                    <MapPin className="w-4 h-4 text-blue-400" /> Informasi Pembeli &amp; Alamat
                   </h2>
                 </div>
                 <button
                   onClick={() => setShowAddressModal(true)}
-                  className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1 bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200 transition-colors"
+                  className="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1 bg-blue-600/10 px-3 py-1.5 rounded-xl border border-blue-500/30 transition-colors cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" /> Tambah Alamat
                 </button>
               </div>
 
               {addresses.length === 0 ? (
-                <div className="text-center py-8 border-2 border-dashed border-slate-200 rounded-2xl p-6">
-                  <p className="text-xs text-slate-500 mb-4">Belum ada alamat pengiriman tersimpan</p>
+                <div className="text-center py-8 border-2 border-dashed border-slate-800 rounded-2xl p-6">
+                  <p className="text-xs text-slate-400 mb-4">Belum ada alamat pengiriman tersimpan</p>
                   <button
                     onClick={() => setShowAddressModal(true)}
-                    className="px-4 py-2 bg-blue-600 text-white text-xs font-semibold rounded-xl hover:bg-blue-700 transition-colors shadow-xs"
+                    className="px-4 py-2 bg-blue-600 text-white text-xs font-semibold rounded-xl hover:bg-blue-500 transition-colors shadow-xs cursor-pointer"
                   >
                     + Tambah Alamat Baru
                   </button>
@@ -369,20 +369,20 @@ export default function CheckoutPage() {
                       onClick={() => setSelectedAddressId(addr.id)}
                       className={`p-4 rounded-2xl border-2 cursor-pointer transition-all ${
                         selectedAddressId === addr.id
-                          ? 'border-blue-600 bg-blue-50/40 shadow-2xs'
-                          : 'border-slate-200 hover:border-slate-300 bg-white'
+                          ? 'border-blue-500 bg-blue-600/15 shadow-md'
+                          : 'border-slate-800 hover:border-slate-700 bg-[#070b14]'
                       }`}
                     >
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-[10px] font-bold text-blue-900 bg-blue-100 px-2 py-0.5 rounded-md">
-                          Alamat Pengiriman
+                        <span className="text-[10px] font-bold text-blue-400 bg-blue-500/15 border border-blue-500/30 px-2 py-0.5 rounded-md">
+                          Alamat Terpilih
                         </span>
                         {selectedAddressId === addr.id && (
-                          <Check className="w-4 h-4 text-blue-600" />
+                          <Check className="w-4 h-4 text-blue-400" />
                         )}
                       </div>
-                      <p className="font-bold text-xs text-slate-900">{addr.recipientName} ({addr.phone})</p>
-                      <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                      <p className="font-bold text-xs text-white">{addr.recipientName} ({addr.phone})</p>
+                      <p className="text-xs text-slate-400 mt-1 leading-relaxed">
                         {addr.addressDetail}, {addr.district}, {addr.city}, {addr.province} {addr.postalCode}
                       </p>
                     </div>
@@ -391,20 +391,21 @@ export default function CheckoutPage() {
               )}
             </div>
 
-            {/* 2. Opsi Pengiriman */}
-            <div className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200/80 space-y-4">
-              <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
-                <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-xs">2</div>
-                <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <Truck className="w-4 h-4 text-blue-600" /> Pengiriman &amp; Kurir
+            {/* 2. Opsi Pengiriman (Screen 05) */}
+            <div className="bg-[#0e172a] rounded-3xl p-6 shadow-xl border border-slate-800 space-y-4">
+              <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
+                <div className="w-8 h-8 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center font-bold text-xs">2</div>
+                <h2 className="text-base font-bold text-white flex items-center gap-2">
+                  <Truck className="w-4 h-4 text-blue-400" /> Pilih Kurir Pengiriman
                 </h2>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[
-                  { id: 'JNE', name: 'JNE Express', cost: 15000, etd: '2-3 hari' },
-                  { id: 'JNT', name: 'J&T Express', cost: 14000, etd: '1-2 hari' },
-                  { id: 'POS', name: 'Pos Indonesia', cost: 12000, etd: '3-4 hari' },
+                  { id: 'JNE', name: 'JNE Express', cost: 18000, etd: '2-3 hari' },
+                  { id: 'SiCepat', name: 'SiCepat Reguler', cost: 15000, etd: '1-2 hari' },
+                  { id: 'JNT', name: 'J&T Express', cost: 16000, etd: '1-2 hari' },
+                  { id: 'GoSend', name: 'GoSend Instant', cost: 25000, etd: 'Hari ini' },
                 ].map((c) => (
                   <div
                     key={c.id}
@@ -414,24 +415,24 @@ export default function CheckoutPage() {
                     }}
                     className={`p-3.5 rounded-2xl border-2 cursor-pointer text-center transition-all ${
                       courier === c.id
-                        ? 'border-blue-600 bg-blue-50/40 shadow-2xs'
-                        : 'border-slate-200 hover:border-slate-300 bg-white'
+                        ? 'border-blue-500 bg-blue-600/15 shadow-md'
+                        : 'border-slate-800 hover:border-slate-700 bg-[#070b14]'
                     }`}
                   >
-                    <p className="font-bold text-xs text-slate-900">{c.name}</p>
-                    <p className="text-xs text-blue-600 font-extrabold mt-1">{formatRupiah(c.cost)}</p>
-                    <p className="text-[10px] text-slate-400 font-medium mt-0.5">Estimasi {c.etd}</p>
+                    <p className="font-bold text-xs text-white">{c.name}</p>
+                    <p className="text-xs text-blue-400 font-black mt-1">{formatRupiah(c.cost)}</p>
+                    <p className="text-[10px] text-slate-400 font-medium mt-0.5">{c.etd}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* 3. Metode Pembayaran */}
-            <div className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200/80 space-y-4">
-              <div className="flex items-center gap-3 pb-3 border-b border-slate-100">
-                <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-xs">3</div>
-                <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <CreditCard className="w-4 h-4 text-blue-600" /> Metode Pembayaran
+            {/* 3. Metode Pembayaran (Screen 05 & 06) */}
+            <div className="bg-[#0e172a] rounded-3xl p-6 shadow-xl border border-slate-800 space-y-4">
+              <div className="flex items-center gap-3 pb-3 border-b border-slate-800">
+                <div className="w-8 h-8 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center font-bold text-xs">3</div>
+                <h2 className="text-base font-bold text-white flex items-center gap-2">
+                  <CreditCard className="w-4 h-4 text-blue-400" /> Metode Pembayaran
                 </h2>
               </div>
 
@@ -439,29 +440,23 @@ export default function CheckoutPage() {
                 {[
                   { 
                     id: 'bank_transfer', 
-                    name: 'Virtual Account Bank (BCA, Mandiri, BNI, BRI, Permata)', 
-                    desc: 'Otomatis terverifikasi instan via Duitku Virtual Account',
+                    name: 'Duitku Payment Gateway (Virtual Account)', 
+                    desc: 'BCA, Mandiri, BNI, BRI, Permata - Otomatis terverifikasi instan',
                     badge: 'Duitku VA' 
                   },
                   { 
                     id: 'qris', 
-                    name: 'QRIS & E-Wallet (GoPay, ShopeePay, OVO, DANA, LinkAja)', 
-                    desc: 'Scan QRIS langsung dari aplikasi e-wallet apa saja via Duitku Sandbox',
+                    name: 'Duitku QRIS & E-Wallet', 
+                    desc: 'Scan QRIS via GoPay, OVO, ShopeePay, DANA, LinkAja',
                     badge: 'Duitku QRIS' 
-                  },
-                  { 
-                    id: 'cod', 
-                    name: 'COD (Bayar Tunai di Tempat)', 
-                    desc: 'Bayar tunai ke kurir saat busana muslim Anda tiba di rumah',
-                    badge: 'Manual COD' 
                   },
                 ].map((pm) => (
                   <label
                     key={pm.id}
                     className={`flex items-start justify-between gap-3 p-4 rounded-2xl border-2 cursor-pointer transition-all ${
                       paymentMethod === pm.id
-                        ? 'border-blue-600 bg-blue-50/40 shadow-2xs'
-                        : 'border-slate-200 hover:border-slate-300 bg-white'
+                        ? 'border-blue-500 bg-blue-600/15 shadow-md'
+                        : 'border-slate-800 hover:border-slate-700 bg-[#070b14]'
                     }`}
                   >
                     <div className="flex items-start gap-3">
@@ -470,18 +465,14 @@ export default function CheckoutPage() {
                         name="payment"
                         checked={paymentMethod === pm.id}
                         onChange={() => setPaymentMethod(pm.id)}
-                        className="mt-1 accent-blue-600"
+                        className="mt-1 accent-blue-500"
                       />
                       <div>
-                        <p className="font-bold text-xs text-slate-900">{pm.name}</p>
-                        <p className="text-[11px] text-slate-500 mt-0.5">{pm.desc}</p>
+                        <p className="font-bold text-xs text-white">{pm.name}</p>
+                        <p className="text-[11px] text-slate-400 mt-0.5">{pm.desc}</p>
                       </div>
                     </div>
-                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0 ${
-                      pm.badge.includes('Duitku') 
-                        ? 'text-blue-700 bg-blue-50 border border-blue-200' 
-                        : 'text-slate-600 bg-slate-100'
-                    }`}>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md shrink-0 text-blue-400 bg-blue-500/15 border border-blue-500/30">
                       {pm.badge}
                     </span>
                   </label>
@@ -490,25 +481,25 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {/* Right Column: Order Summary */}
+          {/* Right Column: Order Summary (Screen 05) */}
           <div className="space-y-6">
-            <div className="bg-white rounded-2xl p-6 shadow-xs border border-slate-200/80 sticky top-28">
-              <h2 className="text-base font-bold text-slate-900 mb-4 pb-3 border-b border-slate-100">
-                Ringkasan Belanja
+            <div className="bg-[#0e172a] rounded-3xl p-6 shadow-xl border border-slate-800 sticky top-28">
+              <h2 className="text-base font-bold text-white mb-4 pb-3 border-b border-slate-800">
+                Ringkasan Pesanan
               </h2>
 
               {/* Product items list */}
               <div className="space-y-3 max-h-60 overflow-y-auto pr-1 mb-4">
                 {cartItems.map((item) => (
                   <div key={item.id} className="flex gap-3 text-xs items-center">
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold shrink-0 border border-blue-100">
+                    <div className="w-10 h-10 rounded-xl bg-[#070b14] text-blue-400 flex items-center justify-center font-bold shrink-0 border border-slate-800">
                       📦
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="font-bold text-slate-900 truncate">{getItemName(item)}</p>
+                      <p className="font-bold text-white truncate">{getItemName(item)}</p>
                       <p className="text-[11px] text-slate-400">{getItemVariantLabel(item)} x {item.quantity}</p>
                     </div>
-                    <span className="font-extrabold text-slate-900">
+                    <span className="font-extrabold text-white">
                       {formatRupiah(getItemPrice(item) * item.quantity)}
                     </span>
                   </div>
@@ -516,69 +507,62 @@ export default function CheckoutPage() {
               </div>
 
               {/* Voucher code input */}
-              <div className="mb-4 pt-3 border-t border-slate-100">
+              <div className="mb-4 pt-3 border-t border-slate-800">
                 <div className="flex gap-2">
                   <div className="relative flex-1 flex items-center">
-                    <Tag className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none z-10" />
+                    <Tag className="w-4 h-4 text-slate-500 absolute left-3.5 pointer-events-none z-10" />
                     <input
                       type="text"
-                      placeholder="Kode Voucher (Coba: SAMPLE10)"
+                      placeholder="Kode Voucher (Coba: DISKON50K)"
                       value={voucherCode}
-                      onChange={(e) => setVoucherCode(e.target.value)}
+                      onChange={(e) => setVoucherCode(e.target.value.toUpperCase())}
                       style={{ paddingLeft: '44px' }}
-                      className="w-full text-xs h-10 pr-3 bg-slate-50 border border-slate-300 rounded-xl focus:border-blue-600 uppercase font-semibold text-slate-900 outline-none"
+                      className="w-full text-xs h-10 pr-3 bg-[#070b14] border border-slate-800 rounded-xl focus:border-blue-500 uppercase font-semibold text-white outline-none"
                     />
                   </div>
                   <button
                     type="button"
                     onClick={handleApplyVoucher}
-                    className="px-4 h-10 bg-blue-600 text-white text-xs font-semibold rounded-xl hover:bg-blue-700 transition-colors shrink-0"
+                    className="px-4 h-10 bg-blue-600 text-white text-xs font-semibold rounded-xl hover:bg-blue-500 transition-colors shrink-0 cursor-pointer"
                   >
-                    Gunakan
+                    Pakai
                   </button>
                 </div>
-                {voucherError && <p className="text-[11px] text-rose-600 font-medium mt-1">{voucherError}</p>}
+                {voucherError && <p className="text-[11px] text-rose-400 font-medium mt-1">{voucherError}</p>}
                 {appliedVoucher && (
-                  <p className="text-[11px] text-emerald-600 font-bold mt-1">
-                    Voucher &quot;{appliedVoucher.code}&quot; terpasang! Diskon {formatRupiah(appliedVoucher.discount)}
+                  <p className="text-[11px] text-emerald-400 font-bold mt-1">
+                    ✓ Voucher &quot;{appliedVoucher.code}&quot; terpasang! Diskon {formatRupiah(appliedVoucher.discount)}
                   </p>
                 )}
               </div>
 
               {/* Breakdown */}
-              <div className="space-y-2 text-xs border-t border-slate-100 pt-4">
-                <div className="flex justify-between text-slate-600">
+              <div className="space-y-2 text-xs border-t border-slate-800 pt-4">
+                <div className="flex justify-between text-slate-300">
                   <span>Subtotal Produk</span>
-                  <span className="font-bold text-slate-900">{formatRupiah(subtotal)}</span>
+                  <span className="font-bold text-white">{formatRupiah(subtotal)}</span>
                 </div>
                 {discount > 0 && (
-                  <div className="flex justify-between text-emerald-600 font-semibold">
+                  <div className="flex justify-between text-emerald-400 font-semibold">
                     <span>Diskon Voucher</span>
                     <span>-{formatRupiah(discount)}</span>
                   </div>
                 )}
-                <div className="flex justify-between text-slate-600">
-                  <span>Biaya Pengiriman</span>
-                  <span className="font-bold text-slate-900">{formatRupiah(shippingCost)}</span>
+                <div className="flex justify-between text-slate-300">
+                  <span>Ongkos Kirim</span>
+                  <span className="font-bold text-white">{formatRupiah(shippingCost)}</span>
                 </div>
-                <div className="flex justify-between text-slate-600 items-center">
-                  <span className="flex items-center gap-1.5">
-                    Biaya Layanan &amp; Pengemasan
-                    <span className="text-[10px] px-1.5 py-0.5 bg-blue-50 text-blue-700 font-bold rounded-md border border-blue-200">Box &amp; Bubble Wrap</span>
-                  </span>
-                  <span className="font-bold text-slate-900">{formatRupiah(adminFee)}</span>
-                </div>
-                <div className="flex justify-between text-sm font-extrabold text-slate-900 border-t border-slate-100 pt-3 mt-3">
+                <div className="flex justify-between text-sm font-extrabold text-white border-t border-slate-800 pt-3 mt-3">
                   <span>Total Pembayaran</span>
-                  <span className="text-blue-600">{formatRupiah(grandTotal)}</span>
+                  <span className="text-blue-400 font-black text-lg">{formatRupiah(grandTotal)}</span>
                 </div>
               </div>
 
-              {/* Action Button */}
+              {/* Action Button (Screen 05) */}
               <button
                 onClick={handlePlaceOrder}
                 disabled={submitting || !selectedAddressId}
-                className="w-full mt-6 py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/25 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                className="w-full mt-6 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-black text-xs rounded-xl shadow-lg shadow-blue-600/30 transition-all disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
               >
                 {submitting ? (
                   <>
@@ -586,7 +570,7 @@ export default function CheckoutPage() {
                   </>
                 ) : (
                   <>
-                    <ShieldCheck className="w-4 h-4" /> Buat Pesanan &amp; Bayar via Duitku
+                    <ShieldCheck className="w-4 h-4" /> Bayar Sekarang (Duitku)
                   </>
                 )}
               </button>
@@ -596,72 +580,72 @@ export default function CheckoutPage() {
 
       {/* Modal Tambah Alamat */}
       {showAddressModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl">
-            <h3 className="text-lg font-bold font-heading text-gray-900 mb-4">Tambah Alamat Pengiriman</h3>
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-[#0e172a] rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-800">
+            <h3 className="text-lg font-bold text-white mb-4">Tambah Alamat Pengiriman</h3>
             <form onSubmit={handleAddAddress} className="space-y-3">
               <div>
-                <label className="text-xs font-semibold text-gray-700">Label Alamat</label>
+                <label className="text-xs font-semibold text-slate-300">Label Alamat</label>
                 <input
                   type="text"
                   placeholder="Contoh: Rumah, Kantor"
                   value={newAddress.label}
                   onChange={(e) => setNewAddress({ ...newAddress, label: e.target.value })}
-                  className="w-full text-xs p-2.5 border border-gray-200 rounded-lg"
+                  className="w-full text-xs p-2.5 bg-[#070b14] border border-slate-800 text-white rounded-xl focus:border-blue-500 outline-none"
                   required
                 />
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-xs font-semibold text-gray-700">Nama Penerima</label>
+                  <label className="text-xs font-semibold text-slate-300">Nama Penerima</label>
                   <input
                     type="text"
                     value={newAddress.recipientName}
                     onChange={(e) => setNewAddress({ ...newAddress, recipientName: e.target.value })}
-                    className="w-full text-xs p-2.5 border border-gray-200 rounded-lg"
+                    className="w-full text-xs p-2.5 bg-[#070b14] border border-slate-800 text-white rounded-xl focus:border-blue-500 outline-none"
                     required
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-gray-700">No. HP / WA</label>
+                  <label className="text-xs font-semibold text-slate-300">No. HP / WA</label>
                   <input
                     type="text"
                     value={newAddress.phone}
                     onChange={(e) => setNewAddress({ ...newAddress, phone: e.target.value })}
-                    className="w-full text-xs p-2.5 border border-gray-200 rounded-lg"
+                    className="w-full text-xs p-2.5 bg-[#070b14] border border-slate-800 text-white rounded-xl focus:border-blue-500 outline-none"
                     required
                   />
                 </div>
               </div>
               <div>
-                <label className="text-xs font-semibold text-gray-700">Alamat Lengkap</label>
+                <label className="text-xs font-semibold text-slate-300">Alamat Lengkap</label>
                 <textarea
                   rows={2}
-                  placeholder="Jl. Merdeka No. 12, RT 01/02"
+                  placeholder="Jl. Contoh No. 123, RT 01/02"
                   value={newAddress.fullAddress}
                   onChange={(e) => setNewAddress({ ...newAddress, fullAddress: e.target.value })}
-                  className="w-full text-xs p-2.5 border border-gray-200 rounded-lg"
+                  className="w-full text-xs p-2.5 bg-[#070b14] border border-slate-800 text-white rounded-xl focus:border-blue-500 outline-none"
                   required
                 />
               </div>
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="text-xs font-semibold text-gray-700">Kota / Kabupaten</label>
+                  <label className="text-xs font-semibold text-slate-300">Kota / Kabupaten</label>
                   <input
                     type="text"
                     value={newAddress.city}
                     onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
-                    className="w-full text-xs p-2.5 border border-gray-200 rounded-lg"
+                    className="w-full text-xs p-2.5 bg-[#070b14] border border-slate-800 text-white rounded-xl focus:border-blue-500 outline-none"
                     required
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-gray-700">Kode Pos</label>
+                  <label className="text-xs font-semibold text-slate-300">Kode Pos</label>
                   <input
                     type="text"
                     value={newAddress.postalCode}
                     onChange={(e) => setNewAddress({ ...newAddress, postalCode: e.target.value })}
-                    className="w-full text-xs p-2.5 border border-gray-200 rounded-lg"
+                    className="w-full text-xs p-2.5 bg-[#070b14] border border-slate-800 text-white rounded-xl focus:border-blue-500 outline-none"
                     required
                   />
                 </div>
@@ -670,13 +654,13 @@ export default function CheckoutPage() {
                 <button
                   type="button"
                   onClick={() => setShowAddressModal(false)}
-                  className="flex-1 py-2 text-xs font-semibold text-gray-600 bg-gray-100 rounded-lg"
+                  className="flex-1 py-2 text-xs font-semibold text-slate-400 bg-slate-800 rounded-xl cursor-pointer"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-2 text-xs font-semibold text-white bg-primary-600 rounded-lg hover:bg-primary-700"
+                  className="flex-1 py-2 text-xs font-semibold text-white bg-blue-600 rounded-xl hover:bg-blue-500 cursor-pointer"
                 >
                   Simpan Alamat
                 </button>
@@ -686,42 +670,53 @@ export default function CheckoutPage() {
         </div>
       )}
 
-      {/* Duitku Sandbox Simulation Modal */}
+      {/* Duitku Sandbox Simulation Modal (Screen 06) */}
       {mockDuitkuModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-xs p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-blue-100 space-y-6 text-center">
-            <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center mx-auto shadow-inner">
-              <CreditCard className="w-8 h-8" />
-            </div>
-
-            <div className="space-y-2">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold bg-amber-50 text-amber-800 border border-amber-200">
-                <Sparkles className="w-3.5 h-3.5 text-amber-600" /> Mode Duitku Sandbox (Testing)
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-xs p-4 animate-in fade-in duration-200">
+          <div className="bg-[#0e172a] rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-800 space-y-6 text-left">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center gap-2">
+                <CreditCard className="w-6 h-6 text-blue-400" />
+                <h3 className="text-lg font-black text-white tracking-tight">
+                  Pembayaran via Duitku
+                </h3>
               </div>
-              <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">
-                Simulasi Pembayaran Duitku
-              </h3>
-              <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                Pesanan <strong className="text-slate-800 font-mono">#{mockDuitkuModal.orderNumber}</strong> berhasil dibuat di sistem database.
-              </p>
+              <span className="text-[11px] font-bold text-blue-400 bg-blue-500/10 border border-blue-500/30 px-2.5 py-1 rounded-full">
+                Sandbox Mode
+              </span>
             </div>
 
-            <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200/80 text-left space-y-2 text-xs">
-              <div className="flex justify-between items-center text-slate-600">
-                <span>Metode Pembayaran:</span>
-                <span className="font-bold text-slate-900 uppercase">
-                  {mockDuitkuModal.paymentType === 'bank_transfer' ? 'Virtual Account Bank' : mockDuitkuModal.paymentType}
+            {/* Virtual Account Detail Box (Screen 06) */}
+            <div className="p-4 rounded-2xl bg-[#070b14] border border-slate-800 space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-white">BCA Virtual Account</span>
+                <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/15 border border-emerald-500/30 px-2 py-0.5 rounded-md">
+                  Aktif
                 </span>
               </div>
-              <div className="flex justify-between items-center text-slate-600">
-                <span>Total Tagihan:</span>
-                <span className="font-extrabold text-blue-600 text-sm">
+              <div>
+                <p className="text-[10px] text-slate-400 uppercase tracking-wider">Nomor Virtual Account:</p>
+                <div className="flex items-center justify-between mt-1">
+                  <span className="text-lg font-mono font-black text-blue-400 tracking-wider">
+                    1234 5678 9012 3456
+                  </span>
+                  <button 
+                    onClick={() => navigator.clipboard?.writeText('1234567890123456')}
+                    className="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-200 hover:text-white text-[11px] font-bold transition-colors cursor-pointer"
+                  >
+                    Salin
+                  </button>
+                </div>
+              </div>
+              <div className="flex justify-between items-center pt-2 border-t border-slate-800/80">
+                <span className="text-xs text-slate-400">Total Pembayaran:</span>
+                <span className="text-base font-black text-white">
                   {formatRupiah(mockDuitkuModal.totalAmount)}
                 </span>
               </div>
-              <div className="flex justify-between items-center text-slate-600">
-                <span>Status Saat Ini:</span>
-                <span className="font-bold text-amber-600">Menunggu Pembayaran</span>
+              <div className="flex justify-between items-center text-[11px] text-amber-400">
+                <span>Batas Waktu Pembayaran:</span>
+                <span className="font-bold">23 Jam 59 Menit</span>
               </div>
             </div>
 
@@ -731,9 +726,9 @@ export default function CheckoutPage() {
                   href={mockDuitkuModal.paymentUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer border border-blue-200"
+                  className="w-full py-3 bg-blue-600/15 hover:bg-blue-600/25 text-blue-400 font-bold text-xs rounded-xl transition-all flex items-center justify-center gap-2 cursor-pointer border border-blue-500/30"
                 >
-                  Buka Halaman Pembayaran Duitku Sandbox &rarr;
+                  Buka Portal Duitku Checkout Pop-up &rarr;
                 </a>
               )}
 
@@ -741,15 +736,15 @@ export default function CheckoutPage() {
                 type="button"
                 onClick={handleSimulatePaymentSuccess}
                 disabled={isSimulatingPayment}
-                className="w-full py-3.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-600/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-600/30 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {isSimulatingPayment ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin" /> Memproses Webhook...
+                    <Loader2 className="w-4 h-4 animate-spin" /> Memproses Callback Duitku...
                   </>
                 ) : (
                   <>
-                    <CheckCircle2 className="w-4 h-4" /> Simulasikan Bayar Lunas (Tes Webhook Duitku)
+                    <CheckCircle2 className="w-4 h-4" /> Simulasikan Bayar Berhasil (Sandbox)
                   </>
                 )}
               </button>
@@ -757,15 +752,11 @@ export default function CheckoutPage() {
               <button
                 type="button"
                 onClick={() => router.push(`/orders?orderId=${mockDuitkuModal.orderId}`)}
-                className="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-all cursor-pointer"
+                className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs rounded-xl transition-all cursor-pointer text-center block"
               >
-                Bayar Nanti (Ke Daftar Pesanan)
+                Bayar Nanti (Ke Riwayat Pesanan)
               </button>
             </div>
-
-            <p className="text-[10px] text-slate-400 leading-tight">
-              Tips: Masukkan Merchant Code &amp; API Key Duitku Anda di file <code className="font-mono text-blue-600">.env</code> untuk mengaktifkan Popup POP resmi Duitku Sandbox.
-            </p>
           </div>
         </div>
       )}

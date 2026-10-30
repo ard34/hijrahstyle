@@ -1,20 +1,19 @@
 import Link from 'next/link';
 import prisma from '@/lib/prisma';
-import { formatPrice } from '@/lib/utils';
 import { 
   ArrowRight, Truck, ShieldCheck, RefreshCw, CreditCard, 
-  Star, ShoppingBag, Sparkles, ChevronRight, Award, Flame, Tag, Layers
+  Sparkles, ChevronRight, Flame, Shirt, Footprints, Glasses, 
+  Briefcase, Watch, LayoutGrid 
 } from 'lucide-react';
 import ProductCard from '@/components/store/ProductCard';
 
 export const dynamic = 'force-dynamic';
 
 async function getHomeData() {
-  const [categories, newProducts, bestSellers, promoProducts] = await Promise.all([
+  const [categories, products, promoProducts] = await Promise.all([
     prisma.category.findMany({
       where: { status: 'ACTIVE' },
       orderBy: { sortOrder: 'asc' },
-      take: 8,
     }),
     prisma.product.findMany({
       where: { status: 'ACTIVE' },
@@ -25,18 +24,7 @@ async function getHomeData() {
         reviews: true,
       },
       orderBy: { createdAt: 'desc' },
-      take: 10,
-    }),
-    prisma.product.findMany({
-      where: { status: 'ACTIVE' },
-      include: {
-        images: { orderBy: { sortOrder: 'asc' }, take: 1 },
-        category: true,
-        variants: { where: { status: 'ACTIVE' } },
-        reviews: true,
-      },
-      orderBy: { totalSold: 'desc' },
-      take: 5,
+      take: 8,
     }),
     prisma.product.findMany({
       where: {
@@ -53,90 +41,85 @@ async function getHomeData() {
     }),
   ]);
 
-  return { categories, newProducts, bestSellers, promoProducts };
+  return { categories, products, promoProducts };
 }
 
 export default async function HomePage() {
-  const { categories, newProducts, bestSellers, promoProducts } = await getHomeData();
+  const { categories, products, promoProducts } = await getHomeData();
+
+  // Category Icon Mapper matching Mockup 01
+  const getCatIcon = (slug: string) => {
+    switch (slug.toLowerCase()) {
+      case 'pakaian': return <Shirt className="w-6 h-6 text-blue-400 group-hover:scale-110 transition-transform" />;
+      case 'sepatu': return <Footprints className="w-6 h-6 text-blue-400 group-hover:scale-110 transition-transform" />;
+      case 'aksesoris': return <Glasses className="w-6 h-6 text-blue-400 group-hover:scale-110 transition-transform" />;
+      case 'tas': return <Briefcase className="w-6 h-6 text-blue-400 group-hover:scale-110 transition-transform" />;
+      case 'elektronik': return <Watch className="w-6 h-6 text-blue-400 group-hover:scale-110 transition-transform" />;
+      default: return <LayoutGrid className="w-6 h-6 text-blue-400 group-hover:scale-110 transition-transform" />;
+    }
+  };
 
   return (
-    <div className="min-h-screen space-y-12 pb-24">
+    <div className="min-h-screen space-y-12 pb-20">
       
-      {/* ─── 1. Modern Flagship Hero Banner ─────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 pt-4 sm:pt-6">
-        <div className="relative rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-blue-950 text-white p-8 sm:p-12 md:p-14 overflow-hidden border border-slate-800/80 shadow-2xl min-h-[460px] flex flex-col md:flex-row items-center justify-between gap-10">
+      {/* ─── 01. Flagship Cyber Hero Banner (Screen 01) ────────────────────── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
+        <div className="relative rounded-3xl bg-gradient-to-r from-[#0a1122] via-[#0d1730] to-[#070b14] text-white p-6 sm:p-10 md:p-12 overflow-hidden border border-slate-800/90 shadow-2xl min-h-[440px] flex flex-col md:flex-row items-center justify-between gap-8">
           
-          {/* Ambient Glows */}
-          <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl pointer-events-none" />
+          {/* Ambient Cyber Neon Glow */}
+          <div className="absolute top-1/2 right-1/4 -translate-y-1/2 w-80 h-80 bg-blue-600/25 rounded-full blur-[100px] pointer-events-none" />
+          <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-blue-500/10 rounded-full blur-[90px] pointer-events-none" />
 
           {/* Left Text Content */}
-          <div className="relative z-10 max-w-xl space-y-5 text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-blue-500/10 text-blue-400 border border-blue-500/30 backdrop-blur-xs">
-              <Sparkles className="w-3.5 h-3.5 text-blue-400" /> Toko Sample BBN • Official Store
+          <div className="relative z-10 max-w-lg space-y-5 text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-blue-500/15 text-blue-400 border border-blue-500/30 backdrop-blur-md">
+              <Sparkles className="w-3.5 h-3.5 text-blue-400" /> BBN DIGITAL FORGE • OFFICIAL
             </div>
 
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-[1.15]">
-              Belanja Modern &amp; Berkualitas Tinggi.
-            </h1>
+            <div className="space-y-1">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-white leading-tight">
+                Style Modern
+              </h1>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-300 leading-tight">
+                Untuk Setiap Aktivitas
+              </h2>
+            </div>
 
-            <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed max-w-md">
-              Koleksi produk pilihan dengan jaminan 100% original, transaksi instan terverifikasi otomatis via <strong>Duitku Sandbox</strong>, dan pengiriman kilat.
+            <p className="text-xs sm:text-sm text-slate-300 font-normal leading-relaxed">
+              Produk berkualitas, harga terbaik, dan pengiriman cepat ke seluruh Indonesia. Transaksi otomatis via Duitku Gateway.
             </p>
 
             <div className="pt-2 flex flex-wrap items-center gap-3">
               <Link
                 href="/products"
-                className="px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-600/30 transition-all flex items-center gap-2"
+                className="px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-bold shadow-lg shadow-blue-600/40 hover:shadow-blue-500/60 transition-all flex items-center gap-2 cursor-pointer"
               >
-                <span>Mulai Belanja Sekarang</span>
+                <span>Belanja Sekarang</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
               
               <Link
-                href="/products?sort=promo"
-                className="px-6 py-3.5 rounded-xl bg-slate-800/80 hover:bg-slate-700/80 text-white text-xs sm:text-sm font-bold border border-slate-700 transition-all flex items-center gap-2"
+                href="/promo"
+                className="px-5 py-3 rounded-full bg-slate-900/80 hover:bg-slate-800 text-slate-200 hover:text-white text-xs sm:text-sm font-bold border border-slate-700/80 transition-all flex items-center gap-2"
               >
                 <Flame className="w-4 h-4 text-amber-400" />
-                <span>Lihat Promo Spesial</span>
+                <span>Lihat Promo</span>
               </Link>
-            </div>
-
-            {/* Quick Guarantees Pill */}
-            <div className="pt-4 flex flex-wrap items-center gap-4 text-[11px] text-slate-400 border-t border-slate-800/80">
-              <span className="flex items-center gap-1.5 font-medium">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" /> 100% Original
-              </span>
-              <span>•</span>
-              <span className="flex items-center gap-1.5 font-medium">
-                <CreditCard className="w-4 h-4 text-blue-400" /> Duitku Verified
-              </span>
-              <span>•</span>
-              <span className="flex items-center gap-1.5 font-medium">
-                <Truck className="w-4 h-4 text-amber-400" /> Pengiriman Kilat
-              </span>
             </div>
           </div>
 
-          {/* Right Visual Banner Showcase */}
-          <div className="relative z-10 w-full md:w-1/2 flex justify-center md:justify-end">
-            <div className="relative w-full max-w-md aspect-[4/3] rounded-2xl overflow-hidden border border-slate-700/60 shadow-2xl bg-slate-900 group">
+          {/* Right Floating Sneaker Visual */}
+          <div className="relative z-10 w-full md:w-1/2 flex items-center justify-center">
+            <div className="relative w-72 sm:w-88 md:w-96 aspect-square flex items-center justify-center">
+              {/* Radial Glow Disc */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-600/30 to-cyan-400/20 blur-2xl animate-pulse" />
               <img
-                src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80"
-                alt="Toko Sample BBN Showcase"
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=800&auto=format&fit=crop"
+                alt="Sneakers Vortex BBN Edition"
+                className="w-full h-auto object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.8)] hover:scale-105 transition-transform duration-500 rotate-[-12deg]"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
-              
-              {/* Floating Feature Tag */}
-              <div className="absolute bottom-4 left-4 right-4 p-3.5 rounded-xl bg-slate-900/90 backdrop-blur-md border border-slate-700/80 flex items-center justify-between">
-                <div>
-                  <p className="text-[10px] uppercase tracking-wider text-blue-400 font-bold">Produk Pilihan</p>
-                  <p className="text-xs font-bold text-white">Koleksi Terpopuler &amp; Terbaik</p>
-                </div>
-                <div className="flex items-center gap-1 text-amber-400 text-xs font-bold bg-amber-400/10 px-2 py-1 rounded-lg">
-                  <Star className="w-3.5 h-3.5 fill-current" /> 4.9/5
-                </div>
+              <div className="absolute -bottom-2 px-4 py-1.5 rounded-full bg-[#0b1120]/90 border border-blue-500/40 text-[11px] font-bold text-white shadow-xl backdrop-blur-md">
+                Sneakers Vortex BBN Edition
               </div>
             </div>
           </div>
@@ -144,66 +127,80 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ─── 2. Kategori Pilihan (Interactive Grid) ────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
-        <div className="flex items-center justify-between mb-5">
+      {/* ─── 02. Trust Badges Row (Screen 01) ──────────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+          {[
+            { icon: ShieldCheck, title: '100% Original', desc: 'Garansi Keaslian' },
+            { icon: Truck, title: 'Pengiriman Cepat', desc: 'Resi Otomatis' },
+            { icon: CreditCard, title: 'Pembayaran Aman Duitku', desc: 'VA, QRIS & E-Wallet' },
+            { icon: RefreshCw, title: 'Garansi Retur', desc: '7 Hari Pengembalian' },
+          ].map((item, idx) => (
+            <div 
+              key={idx} 
+              className="p-3.5 sm:p-4 rounded-2xl bg-[#0e172a] border border-slate-800/80 shadow-md flex items-center gap-3 hover:border-blue-500/40 transition-colors"
+            >
+              <div className="w-9 h-9 rounded-xl bg-blue-600/15 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0">
+                <item.icon className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <p className="text-xs font-bold text-white truncate">{item.title}</p>
+                <p className="text-[10px] text-slate-400 truncate">{item.desc}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ─── 03. Kategori Populer (Screen 01 & 10) ─────────────────────────── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between mb-4">
           <div>
-            <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-              <Layers className="w-5 h-5 text-blue-600" /> Kategori Pilihan
+            <h2 className="text-base sm:text-lg font-extrabold text-white tracking-tight">
+              Kategori Populer
             </h2>
-            <p className="text-xs text-slate-500 font-medium">Temukan produk berdasarkan kategori kebutuhan Anda</p>
+            <p className="text-xs text-slate-400">Pilih kategori produk favorit Anda</p>
           </div>
-          <Link href="/products" className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 group">
+          <Link href="/categories" className="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1">
             <span>Lihat Semua</span>
-            <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+            <ChevronRight className="w-3.5 h-3.5" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-8 gap-3 sm:gap-4">
+        <div className="grid grid-cols-3 sm:grid-cols-6 gap-3 sm:gap-4">
           {categories.map((cat) => (
             <Link
               key={cat.id}
               href={`/products?category=${cat.slug}`}
-              className="p-3 sm:p-4 rounded-2xl bg-white border border-slate-200/80 hover:border-blue-500/40 hover:bg-blue-50/30 hover:shadow-md transition-all text-center flex flex-col items-center justify-center gap-2 group"
+              className="p-4 rounded-2xl bg-[#0e172a] border border-slate-800/80 hover:border-blue-500/50 hover:bg-[#111c33] transition-all text-center flex flex-col items-center justify-center gap-2.5 group shadow-sm hover:shadow-[0_0_20px_rgba(37,99,235,0.2)]"
             >
-              <div className="w-12 h-12 rounded-xl bg-slate-100 group-hover:bg-blue-100/60 flex items-center justify-center text-slate-700 group-hover:text-blue-600 transition-colors">
-                <ShoppingBag className="w-5 h-5" />
+              <div className="w-12 h-12 rounded-xl bg-[#070b14] border border-slate-800 flex items-center justify-center group-hover:border-blue-500/40 transition-colors">
+                {getCatIcon(cat.slug)}
               </div>
-              <span className="text-xs font-bold text-slate-800 group-hover:text-blue-600 truncate max-w-full">
+              <span className="text-xs font-bold text-slate-200 group-hover:text-blue-400 transition-colors truncate max-w-full">
                 {cat.name}
               </span>
             </Link>
           ))}
-          <Link
-            href="/products"
-            className="p-3 sm:p-4 rounded-2xl bg-slate-900 text-white hover:bg-blue-600 transition-all text-center flex flex-col items-center justify-center gap-2 group shadow-sm"
-          >
-            <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center text-white">
-              <ArrowRight className="w-5 h-5" />
-            </div>
-            <span className="text-xs font-bold truncate max-w-full">
-              Semua
-            </span>
-          </Link>
         </div>
       </section>
 
-      {/* ─── 3. Flash Sale / Promo Banner Highlight ──────────────────────── */}
+      {/* ─── 04. Flash Sale / Promo Banner (Screen 11) ─────────────────────── */}
       {promoProducts.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
-          <div className="rounded-3xl bg-gradient-to-r from-blue-700 via-indigo-700 to-slate-900 text-white p-6 sm:p-8 relative overflow-hidden shadow-xl">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="rounded-3xl bg-gradient-to-r from-blue-950 via-[#0d1730] to-[#070b14] p-6 sm:p-8 border border-blue-900/40 relative overflow-hidden shadow-2xl">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
               <div className="space-y-1">
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[11px] font-extrabold bg-rose-500 text-white">
-                  <Flame className="w-3.5 h-3.5 fill-current" /> FLASH PROMO
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-[11px] font-extrabold bg-rose-600 text-white shadow-xs">
+                  <Flame className="w-3.5 h-3.5 fill-current" /> FLASH SALE 70%
                 </div>
-                <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight">Penawaran Spesial Terbatas</h2>
-                <p className="text-xs text-blue-100">Dapatkan harga hemat spesial untuk produk-produk terbaik kami</p>
+                <h2 className="text-xl sm:text-2xl font-black text-white tracking-tight">Penawaran Spesial Hari Ini</h2>
+                <p className="text-xs text-slate-400">Koleksi terbatas dengan harga diskon khusus</p>
               </div>
 
               <Link
-                href="/products?sort=promo"
-                className="px-4 py-2.5 rounded-xl bg-white text-slate-900 hover:bg-blue-50 font-bold text-xs transition-colors shrink-0 shadow-xs"
+                href="/promo"
+                className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs transition-all shadow-md shadow-blue-600/30"
               >
                 Lihat Semua Promo &rarr;
               </Link>
@@ -218,88 +215,24 @@ export default async function HomePage() {
         </section>
       )}
 
-      {/* ─── 4. Produk Terbaru Section ───────────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
+      {/* ─── 05. Katalog Produk Pilihan (Screen 01 & 02) ────────────────────── */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-5">
           <div>
-            <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
-              Produk Terbaru
+            <h2 className="text-base sm:text-xl font-extrabold text-white tracking-tight">
+              Katalog Produk Pilihan
             </h2>
-            <p className="text-xs text-slate-500 font-medium">Koleksi produk yang baru saja mendarat di toko kami</p>
+            <p className="text-xs text-slate-400">Temukan koleksi pakaian, sepatu, dan aksesoris terbaik</p>
           </div>
-          <Link href="/products?sort=newest" className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 group">
-            <span>Lihat Semua</span>
+          <Link href="/products" className="text-xs font-bold text-blue-400 hover:text-blue-300 flex items-center gap-1 group">
+            <span>Lihat Semua Produk</span>
             <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
-          {newProducts.slice(0, 5).map((product) => (
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3.5 sm:gap-5">
+          {products.map((product) => (
             <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </section>
-
-      {/* ─── 5. Produk Terlaris Section ──────────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12">
-        <div className="flex items-center justify-between mb-5">
-          <div>
-            <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 tracking-tight">
-              Produk Terlaris
-            </h2>
-            <p className="text-xs text-slate-500 font-medium">Pilihan favorit pelanggan dengan ulasan terbaik</p>
-          </div>
-          <Link href="/products?sort=best-selling" className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 group">
-            <span>Lihat Semua</span>
-            <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4">
-          {bestSellers.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </section>
-
-      {/* ─── 6. Trust Highlights Bar ─────────────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-8 lg:px-12 pt-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            {
-              icon: ShieldCheck,
-              title: '100% Produk Original',
-              desc: 'Garansi produk asli dan berkualitas terbaik dari Toko Sample BBN.',
-              color: 'text-blue-600 bg-blue-50',
-            },
-            {
-              icon: CreditCard,
-              title: 'Pembayaran Duitku',
-              desc: 'Transaksi instan otomatis via Virtual Account, QRIS, & e-Wallet.',
-              color: 'text-indigo-600 bg-indigo-50',
-            },
-            {
-              icon: Truck,
-              title: 'Pengiriman Terlacak',
-              desc: 'Bekerja sama dengan kurir terpercaya dan nomor resi otomatis.',
-              color: 'text-emerald-600 bg-emerald-50',
-            },
-            {
-              icon: RefreshCw,
-              title: 'Layanan Responsif',
-              desc: 'Customer support yang siap membantu keluhan & pertanyaan Anda.',
-              color: 'text-amber-600 bg-amber-50',
-            },
-          ].map((item, idx) => (
-            <div key={idx} className="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs hover:shadow-md transition-all flex items-start gap-4">
-              <div className={`w-10 h-10 rounded-xl ${item.color} flex items-center justify-center font-bold text-xs shrink-0 shadow-2xs`}>
-                <item.icon className="w-5 h-5" />
-              </div>
-              <div className="space-y-0.5">
-                <h3 className="font-bold text-slate-900 text-xs sm:text-sm">{item.title}</h3>
-                <p className="text-[11px] text-slate-500 font-medium leading-relaxed">{item.desc}</p>
-              </div>
-            </div>
           ))}
         </div>
       </section>

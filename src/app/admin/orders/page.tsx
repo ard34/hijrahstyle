@@ -1,9 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { 
   ShoppingBag, Search, Filter, Truck, CheckCircle2, 
-  Clock, Package, AlertCircle, Edit2, Loader2 
+  Clock, Package, AlertCircle, Edit2, Loader2, X, Eye
 } from 'lucide-react';
 import { formatRupiah, formatDate } from '@/lib/utils';
 
@@ -88,117 +89,125 @@ export default function AdminOrdersPage() {
 
   const filteredOrders = orders.filter((o) => {
     const matchSearch =
-      o.orderNumber.toLowerCase().includes(search.toLowerCase()) ||
-      o.user.name.toLowerCase().includes(search.toLowerCase()) ||
-      o.user.email.toLowerCase().includes(search.toLowerCase());
+      o.orderNumber?.toLowerCase().includes(search.toLowerCase()) ||
+      o.user?.name?.toLowerCase().includes(search.toLowerCase()) ||
+      o.user?.email?.toLowerCase().includes(search.toLowerCase());
     const matchStatus = statusFilter === 'ALL' || o.status === statusFilter;
     return matchSearch && matchStatus;
   });
 
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case 'PAID':
+        return <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Dibayar</span>;
+      case 'PROCESSING':
+        return <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-amber-500/10 text-amber-400 border border-amber-500/20">Diproses</span>;
+      case 'SHIPPED':
+        return <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-purple-500/10 text-purple-400 border border-purple-500/20">Dikirim</span>;
+      case 'COMPLETED':
+      case 'DELIVERED':
+        return <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20">Selesai</span>;
+      case 'CANCELLED':
+        return <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-rose-500/10 text-rose-400 border border-rose-500/20">Dibatalkan</span>;
+      default:
+        return <span className="px-2.5 py-1 rounded-md text-[11px] font-bold bg-slate-500/10 text-slate-400 border border-slate-500/20">Menunggu</span>;
+    }
+  };
+
   return (
     <div className="space-y-6 pb-12">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs">
+      {/* Screen 16 Top Header */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#0e172a] p-6 rounded-2xl border border-slate-800/80 shadow-lg">
         <div>
-          <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">Manajemen Pesanan Customer</h1>
-          <p className="text-xs text-slate-500 font-medium mt-1">Kelola status transaksi, update pembayaran, dan input nomor resi pengiriman kurir.</p>
+          <h1 className="text-xl sm:text-2xl font-black text-white tracking-tight">Daftar Pesanan</h1>
+          <p className="text-xs text-slate-400 font-medium mt-1">Kelola dan lacak status pesanan.</p>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="text-xs px-3.5 h-10 bg-[#070b14] border border-slate-800 rounded-xl font-semibold text-slate-200 outline-none focus:border-blue-500"
+          >
+            <option value="ALL">Semua Status</option>
+            <option value="PENDING_PAYMENT">Menunggu Pembayaran</option>
+            <option value="PAID">Dibayar</option>
+            <option value="PROCESSING">Diproses</option>
+            <option value="SHIPPED">Dikirim</option>
+            <option value="COMPLETED">Selesai</option>
+          </select>
         </div>
       </div>
 
-      {/* Filter and Search */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col sm:flex-row justify-between gap-4">
+      {/* Search Input */}
+      <div className="bg-[#0e172a] p-4 rounded-2xl border border-slate-800/80 shadow-md">
         <div className="relative flex-1 flex items-center">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 pointer-events-none z-10" />
           <input
             type="text"
-            placeholder="Cari berdasarkan Order ID, nama pelanggan, atau email..."
+            placeholder="Cari berdasarkan No. Pesanan, nama atau email customer..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             style={{ paddingLeft: '44px' }}
-            className="w-full text-xs h-10 pr-4 bg-slate-50 border border-slate-300 rounded-xl focus:border-blue-600 outline-none text-slate-900 placeholder:text-slate-400"
+            className="w-full text-xs h-10 pr-4 bg-[#070b14] border border-slate-800 rounded-xl focus:border-blue-500 outline-none text-white placeholder:text-slate-500 transition-colors"
           />
         </div>
-
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="text-xs px-3.5 h-10 bg-slate-50 border border-slate-300 rounded-xl font-semibold text-slate-800 outline-none focus:border-blue-600"
-        >
-          <option value="ALL">Semua Status Pesanan</option>
-          <option value="PENDING_PAYMENT">Menunggu Pembayaran</option>
-          <option value="PAID">Sudah Bayar</option>
-          <option value="PROCESSING">Diproses</option>
-          <option value="SHIPPED">Dikirim</option>
-          <option value="COMPLETED">Selesai</option>
-        </select>
       </div>
 
-      {/* Orders Table */}
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      {/* Screen 16 Table */}
+      <div className="bg-[#0e172a] rounded-2xl border border-slate-800/80 shadow-lg overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-slate-50 text-[11px] font-semibold uppercase text-slate-400 border-b border-slate-100">
-                <th className="py-3 px-6">Order ID</th>
-                <th className="py-3 px-6">Pelanggan</th>
-                <th className="py-3 px-6">Tanggal</th>
-                <th className="py-3 px-6">Total Biaya</th>
-                <th className="py-3 px-6">Status</th>
-                <th className="py-3 px-6">No. Resi</th>
-                <th className="py-3 px-6 text-right">Aksi</th>
+              <tr className="bg-[#0b1120] text-[11px] font-bold uppercase text-slate-400 border-b border-slate-800/80">
+                <th className="py-4 px-6">#Pesanan</th>
+                <th className="py-4 px-6">Tanggal</th>
+                <th className="py-4 px-6">Pelanggan</th>
+                <th className="py-4 px-6">Total</th>
+                <th className="py-4 px-6">Status</th>
+                <th className="py-4 px-6 text-right">Aksi</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-xs">
+            <tbody className="divide-y divide-slate-800/60 text-xs">
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="text-center py-12">
-                    <Loader2 className="w-6 h-6 animate-spin text-blue-600 mx-auto" />
+                  <td colSpan={6} className="text-center py-12">
+                    <Loader2 className="w-6 h-6 animate-spin text-blue-500 mx-auto" />
                   </td>
                 </tr>
               ) : filteredOrders.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="text-center py-12 text-slate-400">
-                    Tidak ada pesanan ditemukan
+                  <td colSpan={6} className="text-center py-12 text-slate-500">
+                    Tidak ada pesanan ditemukan.
                   </td>
                 </tr>
               ) : (
                 filteredOrders.map((order) => (
-                  <tr key={order.id} className="hover:bg-slate-50/60 transition">
-                    <td className="py-3.5 px-6 font-mono font-bold text-slate-800">
+                  <tr key={order.id} className="hover:bg-[#131f37] transition-colors">
+                    <td className="py-4 px-6 font-mono font-bold text-white">
                       #{order.orderNumber}
                     </td>
-                    <td className="py-3.5 px-6">
-                      <p className="font-semibold text-slate-900">{order.user.name}</p>
-                      <p className="text-[11px] text-slate-400">{order.user.email}</p>
+                    <td className="py-4 px-6 text-slate-400">{formatDate(order.createdAt)}</td>
+                    <td className="py-4 px-6">
+                      <p className="font-bold text-white">{order.user?.name || 'Pelanggan'}</p>
+                      <p className="text-[11px] text-slate-400">{order.user?.email}</p>
                     </td>
-                    <td className="py-3.5 px-6 text-slate-500">{formatDate(order.createdAt)}</td>
-                    <td className="py-3.5 px-6 font-bold text-slate-900">
+                    <td className="py-4 px-6 font-black text-white">
                       {formatRupiah(order.totalAmount)}
                     </td>
-                    <td className="py-3.5 px-6">
-                      <span className={`inline-flex px-2 py-0.5 rounded-full text-[11px] font-bold ${
-                        order.status === 'PENDING_PAYMENT' ? 'bg-amber-100 text-amber-800' :
-                        order.status === 'PAID' ? 'bg-blue-100 text-blue-800' :
-                        order.status === 'PROCESSING' ? 'bg-sky-100 text-sky-800' :
-                        order.status === 'SHIPPED' ? 'bg-indigo-100 text-indigo-800' :
-                        order.status === 'CANCELLED' ? 'bg-rose-100 text-rose-800' :
-                        'bg-emerald-100 text-emerald-800'
-                      }`}>
-                        {order.status}
-                      </span>
+                    <td className="py-4 px-6">
+                      {getStatusBadge(order.status)}
                     </td>
-                    <td className="py-3.5 px-6 font-mono text-slate-600">
-                      {order.shipment?.trackingNumber || '-'}
-                    </td>
-                    <td className="py-3.5 px-6 text-right">
+                    <td className="py-4 px-6 text-right">
                       <button
                         onClick={() => {
                           setSelectedOrder(order);
                           setNewStatus(order.status);
                           setResi(order.shipment?.trackingNumber || '');
                         }}
-                        className="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg text-xs font-semibold flex items-center gap-1 ml-auto cursor-pointer"
+                        className="px-3 py-1.5 bg-blue-600/10 text-blue-400 border border-blue-500/20 hover:bg-blue-600 hover:text-white rounded-lg text-xs font-bold transition-all ml-auto cursor-pointer"
                       >
-                        <Edit2 className="w-3.5 h-3.5" /> Kelola Status
+                        Lihat / Kelola
                       </button>
                     </td>
                   </tr>
@@ -211,38 +220,42 @@ export default function AdminOrdersPage() {
 
       {/* Edit Status & Resi Modal */}
       {selectedOrder && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl space-y-4">
-            <h3 className="text-lg font-bold font-heading text-slate-900">
-              Update Order #{selectedOrder.orderNumber}
-            </h3>
+        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#0e172a] border border-slate-800 rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 relative">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <h3 className="text-base font-black text-white">
+                Update #{selectedOrder.orderNumber}
+              </h3>
+              <button onClick={() => setSelectedOrder(null)} className="text-slate-400 hover:text-white p-1">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
-            <form onSubmit={handleUpdateOrder} className="space-y-4">
+            <form onSubmit={handleUpdateOrder} className="space-y-4 pt-2">
               <div>
-                <label className="text-xs font-semibold text-slate-700">Ubah Status Pesanan</label>
+                <label className="text-xs font-semibold text-slate-300">Ubah Status Pesanan</label>
                 <select
                   value={newStatus}
                   onChange={(e) => setNewStatus(e.target.value)}
-                  className="w-full text-xs p-2.5 border border-slate-200 rounded-xl mt-1"
+                  className="w-full text-xs p-3 border border-slate-800 bg-[#070b14] text-white rounded-xl mt-1.5 outline-none focus:border-blue-500"
                 >
-                  <option value="PENDING_PAYMENT">PENDING_PAYMENT</option>
-                  <option value="PAID">PAID (Pembayaran Berhasil)</option>
-                  <option value="PROCESSING">PROCESSING (Diproses Toko)</option>
-                  <option value="SHIPPED">SHIPPED (Dikirim Kurir)</option>
-                  <option value="DELIVERED">DELIVERED (Sampai Tujuan)</option>
-                  <option value="COMPLETED">COMPLETED (Selesai)</option>
-                  <option value="CANCELLED">CANCELLED (Dibatalkan)</option>
+                  <option value="PENDING_PAYMENT">Menunggu Pembayaran</option>
+                  <option value="PAID">Dibayar (Lunas)</option>
+                  <option value="PROCESSING">Diproses Toko</option>
+                  <option value="SHIPPED">Dikirim Kurir</option>
+                  <option value="COMPLETED">Selesai</option>
+                  <option value="CANCELLED">Dibatalkan</option>
                 </select>
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-700">Nomor Resi Pengiriman</label>
+                <label className="text-xs font-semibold text-slate-300">Nomor Resi Pengiriman</label>
                 <input
                   type="text"
-                  placeholder="Contoh: JNE123456789"
+                  placeholder="Contoh: JNE829103847"
                   value={resi}
                   onChange={(e) => setResi(e.target.value)}
-                  className="w-full text-xs p-2.5 border border-slate-200 rounded-xl font-mono uppercase mt-1"
+                  className="w-full text-xs p-3 border border-slate-800 bg-[#070b14] text-white rounded-xl font-mono uppercase mt-1.5 outline-none focus:border-blue-500"
                 />
               </div>
 
@@ -250,16 +263,16 @@ export default function AdminOrdersPage() {
                 <button
                   type="button"
                   onClick={() => setSelectedOrder(null)}
-                  className="flex-1 py-2 text-xs font-semibold text-slate-600 bg-slate-100 rounded-xl"
+                  className="flex-1 py-3 text-xs font-semibold text-slate-400 bg-slate-900 hover:bg-slate-800 rounded-xl"
                 >
                   Batal
                 </button>
                 <button
                   type="submit"
                   disabled={updating}
-                  className="flex-1 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-500 rounded-xl transition-all shadow-xs"
+                  className="flex-1 py-3 text-xs font-bold text-white bg-blue-600 hover:bg-blue-500 rounded-xl transition-all shadow-md shadow-blue-600/30 cursor-pointer"
                 >
-                  {updating ? 'Disimpan...' : 'Simpan Perubahan'}
+                  {updating ? 'Disimpan...' : 'Simpan Status'}
                 </button>
               </div>
             </form>
