@@ -3,15 +3,15 @@ import "./globals.css";
 import ToastContainer from "@/components/ui/ToastContainer";
 
 export const metadata: Metadata = {
-  title: "Toko Sample BBN — Mudah, Aman & Terpercaya",
-  description: "Belanja produk berkualitas di Toko Sample BBN. Koleksi lengkap dengan harga terjangkau. Pengiriman cepat ke seluruh Indonesia.",
-  keywords: "toko sample bbn, toko online, e-commerce, belanja online",
+  title: "HijrahStyle — Butik Busana Muslimah Modern & Elegan",
+  description: "Belanja busana muslimah, gamis, dan mukena berkualitas butik di HijrahStyle. Bahan premium, jahitan rapi, dan pengiriman kilat ke seluruh Indonesia dari Kota Serang.",
+  keywords: "hijrahstyle, butik muslimah, gamis modern, mukena premium, hijab serang, fashion syar'i",
   openGraph: {
-    title: "Toko Sample BBN",
-    description: "Belanja produk berkualitas di Toko Sample BBN — Mudah, Aman & Terpercaya",
+    title: "HijrahStyle — Butik Busana Muslimah",
+    description: "Koleksi busana muslimah, mukena, dan gamis modern berkualitas butik dari Kota Serang, Banten.",
     type: "website",
     locale: "id_ID",
-    siteName: "Toko Sample BBN",
+    siteName: "HijrahStyle",
   },
 };
 

@@ -21,11 +21,11 @@ export default function Footer() {
       {/* Main Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative space-y-16">
         
-        {/* ─── Screen 20 Feature Highlights: Mengapa Belanja di Toko Sample BBN? ─── */}
+        {/* ─── Feature Highlights: Mengapa Belanja di HijrahStyle? ─── */}
         <div>
           <div className="text-center max-w-2xl mx-auto mb-10">
             <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">
-              Mengapa Belanja di Toko Sample BBN?
+              Mengapa Belanja di HijrahStyle?
             </h3>
           </div>
 
@@ -34,22 +34,22 @@ export default function Footer() {
               {
                 icon: ShieldCheck,
                 title: 'Produk Original',
-                desc: '100% asli & berkualitas',
+                desc: '100% asli & berkualitas butik',
               },
               {
                 icon: Truck,
                 title: 'Pengiriman Cepat',
-                desc: 'Seluruh Indonesia',
+                desc: 'Langsung dari Kota Serang',
               },
               {
                 icon: Lock,
                 title: 'Pembayaran Aman',
-                desc: 'Dijamin oleh Duitku',
+                desc: 'Metode pembayaran terpercaya',
               },
               {
                 icon: RotateCcw,
                 title: 'Garansi Retur',
-                desc: 'Mudah & transparan',
+                desc: 'Mudah jika barang tidak sesuai',
               },
             ].map((feat, i) => {
               const Icon = feat.icon;
@@ -75,7 +75,7 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* ─── Screen 20 Main 4-Column Grid ─── */}
+        {/* ─── Main 4-Column Grid ─── */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-10 pb-12 border-b border-slate-800/80">
           
           {/* Col 1: Brand Information (Span 5 cols) */}
@@ -84,22 +84,22 @@ export default function Footer() {
               <div className="w-10 h-10 rounded-xl bg-[#0b1220] border border-blue-500/40 p-1 flex items-center justify-center shadow-lg shadow-blue-500/20 shrink-0">
                 <img
                   src="/logo.png"
-                  alt="GBN Digital Forge Logo"
+                  alt="HijrahStyle Logo"
                   className="w-full h-full object-contain"
                 />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xl font-black text-white tracking-wider font-sans">GBN</span>
+                  <span className="text-xl font-black text-white tracking-wider font-sans">HIJRAH</span>
                   <span className="text-[10px] font-black text-blue-400 tracking-widest uppercase bg-blue-500/10 border border-blue-500/30 px-1.5 py-0.5 rounded">
-                    DIGITAL FORGE
+                    STYLE
                   </span>
                 </div>
               </div>
             </div>
 
             <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-sm">
-              Toko Sample BBN adalah platform e-commerce modern dengan produk berkualitas untuk mendukung setiap aktivitas Anda.
+              HijrahStyle adalah butik busana muslimah, mukena, dan gamis modern berkualitas dari Kota Serang, Banten.
             </p>
 
             {/* Social Media Links */}
@@ -150,7 +150,7 @@ export default function Footer() {
                 { label: 'Beranda', href: '/' },
                 { label: 'Produk', href: '/products' },
                 { label: 'Promo', href: '/promo' },
-                { label: 'Tentang Kami', href: '/profile' },
+                { label: 'Tentang Kami', href: '/about' },
                 { label: 'Kontak', href: '#footer' },
               ].map((link) => (
                 <li key={link.label}>
@@ -206,16 +206,16 @@ export default function Footer() {
               </div>
               <div className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-blue-400 shrink-0" />
-                <span>support@bbn.id</span>
+                <span>cs@hijrahstyle.com</span>
               </div>
             </div>
           </div>
 
         </div>
 
-        {/* ─── Screen 20 Bottom: Copyright & Admin Portal Link ─── */}
+        {/* ─── Bottom: Copyright & Admin Portal Link ─── */}
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500 text-center sm:text-left">
-          <p>© 2026 Toko Sample BBN - BBN Digital Forge. All rights reserved.</p>
+          <p>© 2026 HijrahStyle. All rights reserved.</p>
           <Link 
             href="/admin/dashboard" 
             className="text-slate-400 hover:text-blue-400 transition-colors flex items-center gap-1 font-semibold"

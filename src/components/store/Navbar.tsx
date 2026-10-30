@@ -51,7 +51,7 @@ export default function Navbar() {
     { label: 'Produk', href: '/products' },
     { label: 'Kategori', href: '/categories' },
     { label: 'Promo', href: '/promo' },
-    { label: 'Tentang', href: '/profile' },
+    { label: 'Tentang', href: '/about' },
     { label: 'Kontak', href: '/#footer' },
   ];
 
@@ -62,13 +62,13 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5">
           <div className="flex items-center justify-between gap-4 lg:gap-8">
             
-            {/* 1. Cyber Logo (Ref: Screen 01) */}
+            {/* 1. Brand Logo */}
             <Link href="/" className="flex items-center gap-3 shrink-0 group">
               <div className="relative flex items-center justify-center">
                 <div className="w-10 h-10 rounded-xl bg-[#0b1220] border border-blue-500/40 p-1.5 flex items-center justify-center shadow-[0_0_15px_rgba(37,99,235,0.35)] group-hover:scale-105 transition-transform">
                   <img
                     src="/logo.png"
-                    alt="BBN Digital Forge"
+                    alt="HijrahStyle"
                     className="w-full h-full object-contain"
                   />
                 </div>
@@ -76,10 +76,10 @@ export default function Navbar() {
               <div className="flex flex-col">
                 <div className="flex items-center gap-1.5">
                   <span className="text-xl sm:text-2xl font-black text-white tracking-wider font-sans group-hover:text-blue-400 transition-colors">
-                    GBN
+                    HIJRAH
                   </span>
                   <span className="text-[10px] font-black text-blue-400 tracking-widest uppercase bg-blue-500/10 border border-blue-500/30 px-1.5 py-0.5 rounded">
-                    FORGE
+                    STYLE
                   </span>
                 </div>
               </div>
